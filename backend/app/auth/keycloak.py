@@ -103,7 +103,7 @@ async def verify_token(token: str) -> Dict:
 
 
 async def get_current_user(
-    credentials: HTTPAuthorizationCredentials = Depends(security)
+    credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)
 ) -> Dict:
     """
     Dependency to get current authenticated user from JWT token
@@ -117,6 +117,23 @@ async def get_current_user(
     Raises:
         HTTPException: If authentication fails
     """
+    # Development mode bypass - if Keycloak URL is default/not configured
+    if settings.keycloak_url == "https://keycloak.example.com" or settings.debug:
+        logger.warning("Auth bypass enabled - using mock user for development")
+        return {
+            "sub": "dev-user-123",
+            "email": "dev@example.com",
+            "name": "Development User",
+            "roles": ["tenant-admin", "admin"],
+        }
+    
+    if not credentials:
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Authorization required",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+    
     token = credentials.credentials
     payload = await verify_token(token)
     
