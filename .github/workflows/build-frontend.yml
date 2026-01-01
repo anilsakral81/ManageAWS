@@ -1,0 +1,70 @@
+name: Build and Push Frontend to ECR
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'frontend/**'
+  workflow_dispatch:  # Allows manual trigger
+
+env:
+  AWS_REGION: ap-south-1
+  ECR_REPOSITORY: tenant-management-frontend
+
+jobs:
+  build-and-push:
+    name: Build Frontend Docker Image
+    runs-on: ubuntu-latest  # AMD64 runner - no emulation needed!
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v2
+
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          cd frontend
+          
+          echo "Building Docker image for AMD64..."
+          docker build --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          
+          echo "Pushing to ECR..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+          
+          echo "✅ Successfully pushed:"
+          echo "  - $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+          echo "  - $ECR_REGISTRY/$ECR_REPOSITORY:latest"
+
+      - name: Update EKS deployment
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: ${{ github.sha }}
+        run: |
+          # Update kubeconfig for EKS cluster
+          aws eks update-kubeconfig --region $AWS_REGION --name wonderful-blues-rainbow
+          
+          # Update the deployment with new image
+          kubectl set image deployment/frontend-deployment \
+            frontend=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            -n tenant-management
+          
+          # Wait for rollout to complete
+          kubectl rollout status deployment/frontend-deployment -n tenant-management --timeout=5m
+          
+          echo "✅ Frontend deployment updated successfully!"

@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: tenant-management
+  labels:
+    app: tenant-management
+    environment: local
