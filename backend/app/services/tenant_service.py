@@ -11,7 +11,9 @@ from fastapi import HTTPException, status
 from app.models.tenant import Tenant, TenantStatus
 from app.models.audit_log import AuditLog, AuditAction
 from app.schemas.tenant import TenantCreate, TenantUpdate, TenantResponse
+from app.schemas.user import UserInfo
 from app.services.k8s_client import get_k8s_client
+from app.auth.keycloak import get_user_allowed_namespaces
 
 logger = logging.getLogger(__name__)
 
@@ -23,19 +25,43 @@ class TenantService:
         self.db = db
         self.k8s_client = get_k8s_client()
     
+    async def _check_namespace_access(
+        self,
+        namespace: str,
+        user: UserInfo
+    ) -> bool:
+        """Check if user has access to namespace"""
+        # Get allowed namespaces from database
+        if not user.allowed_namespaces:
+            user.allowed_namespaces = await get_user_allowed_namespaces(user, self.db)
+        
+        # Admins have access to all
+        if "*" in user.allowed_namespaces or "admin" in user.roles or "tenant-admin" in user.roles:
+            return True
+        
+        # Check specific namespace permission
+        return namespace in user.allowed_namespaces
+    
     async def list_tenants(
         self,
-        user_id: str,
+        user: UserInfo,
         skip: int = 0,
         limit: int = 100
     ) -> List[TenantResponse]:
         """List all tenants (namespaces) accessible to user"""
+        # Get user's allowed namespaces
+        allowed_namespaces = await get_user_allowed_namespaces(user, self.db)
+        
         # Get all non-system namespaces from K8s
-        namespaces = await self.k8s_client.list_namespaces(exclude_system=True)
+        all_namespaces = await self.k8s_client.list_namespaces(exclude_system=True)
+        
+        # Filter by user permissions
+        if "*" not in allowed_namespaces:
+            all_namespaces = [ns for ns in all_namespaces if ns in allowed_namespaces]
         
         # Get deployment info for each namespace
         tenants = []
-        for namespace in namespaces[skip:skip+limit]:
+        for namespace in all_namespaces[skip:skip+limit]:
             # Get deployments in this namespace
             deployments = await self.k8s_client.list_namespace_deployments(namespace)
             
@@ -106,9 +132,16 @@ class TenantService:
     async def get_tenant(
         self,
         namespace: str,
-        user_id: str
+        user: UserInfo
     ) -> Optional[TenantResponse]:
         """Get tenant by namespace"""
+        # Check access
+        if not await self._check_namespace_access(namespace, user):
+            raise HTTPException(
+                status_code=status.HTTP_403_FORBIDDEN,
+                detail=f"Access denied to namespace '{namespace}'"
+            )
+        
         # Check if namespace exists in K8s
         if not await self.k8s_client.namespace_exists(namespace):
             return None

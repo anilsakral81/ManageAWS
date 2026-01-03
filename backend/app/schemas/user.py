@@ -1,10 +1,21 @@
 """User schemas"""
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from pydantic import BaseModel, EmailStr, ConfigDict
 
 from app.models.user_permission import UserRole
+
+
+class UserInfo(BaseModel):
+    """Current user information from Keycloak"""
+    sub: str  # Keycloak user ID
+    email: Optional[EmailStr] = None
+    preferred_username: str
+    name: Optional[str] = None
+    roles: List[str] = []
+    groups: List[str] = []
+    allowed_namespaces: List[str] = []
 
 
 class UserResponse(BaseModel):
@@ -26,3 +37,20 @@ class UserPermissionResponse(BaseModel):
     created_at: datetime
     updated_at: datetime
     granted_by: Optional[str]
+
+
+class UserNamespaceCreate(BaseModel):
+    """Grant namespace access to user"""
+    user_id: str
+    namespace: str
+    
+
+class UserNamespaceResponse(BaseModel):
+    """User namespace permission"""
+    user_id: str
+    namespace: str
+    enabled: bool
+    granted_by: Optional[str]
+    granted_at: datetime
+    
+    model_config = ConfigDict(from_attributes=True)

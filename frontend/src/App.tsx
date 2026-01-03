@@ -6,6 +6,7 @@ import Schedules from './pages/Schedules'
 import AuditLogs from './pages/AuditLogs'
 import Settings from './pages/Settings'
 import Login from './pages/Login'
+import UserManagement from './pages/UserManagement'
 
 function App() {
   // TODO: Integrate Keycloak authentication
@@ -23,6 +24,7 @@ function App() {
         <Route path="/tenants" element={<Tenants />} />
         <Route path="/schedules" element={<Schedules />} />
         <Route path="/audit-logs" element={<AuditLogs />} />
+        <Route path="/users" element={<UserManagement />} />
         <Route path="/settings" element={<Settings />} />
         <Route path="*" element={<Navigate to="/dashboard" replace />} />
       </Routes>

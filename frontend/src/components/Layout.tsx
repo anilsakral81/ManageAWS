@@ -24,6 +24,7 @@ import {
   History as HistoryIcon,
   Settings as SettingsIcon,
   AccountCircle,
+  People as PeopleIcon,
 } from '@mui/icons-material'
 import { useNavigate, useLocation } from 'react-router-dom'
 
@@ -34,6 +35,7 @@ const menuItems = [
   { text: 'Tenants', icon: <StorageIcon />, path: '/tenants' },
   { text: 'Schedules', icon: <ScheduleIcon />, path: '/schedules' },
   { text: 'Audit Logs', icon: <HistoryIcon />, path: '/audit-logs' },
+  { text: 'User Management', icon: <PeopleIcon />, path: '/users' },
   { text: 'Settings', icon: <SettingsIcon />, path: '/settings' },
 ]
 

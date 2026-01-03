@@ -13,6 +13,7 @@ from app.schemas.tenant import (
     TenantResponse,
     TenantScaleRequest,
 )
+from app.schemas.user import UserInfo
 from app.services.tenant_service import TenantService
 
 router = APIRouter()
@@ -29,7 +30,7 @@ async def list_tenants(
     skip: int = 0,
     limit: int = 100,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> List[TenantResponse]:
     """
     List all tenants accessible to the current user
@@ -45,7 +46,7 @@ async def list_tenants(
     """
     service = TenantService(db)
     tenants = await service.list_tenants(
-        user_id=current_user.get("sub"),
+        user=current_user,
         skip=skip,
         limit=limit,
     )
@@ -56,7 +57,7 @@ async def list_tenants(
 async def get_tenant(
     namespace: str,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> TenantResponse:
     """
     Get tenant by namespace
@@ -72,7 +73,7 @@ async def get_tenant(
     service = TenantService(db)
     tenant = await service.get_tenant(
         namespace=namespace,
-        user_id=current_user.get("sub"),
+        user=current_user,
     )
     if not tenant:
         raise HTTPException(
@@ -86,7 +87,7 @@ async def get_tenant(
 async def start_tenant(
     namespace: str,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> TenantResponse:
     """
     Start tenant (scale all deployments to 1 replica)
@@ -102,7 +103,7 @@ async def start_tenant(
     service = TenantService(db)
     return await service.start_tenant(
         namespace=namespace,
-        user_id=current_user.get("sub"),
+        user_id=current_user.sub,
     )
 
 
@@ -110,7 +111,7 @@ async def start_tenant(
 async def stop_tenant(
     namespace: str,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> TenantResponse:
     """
     Stop tenant (scale all deployments to 0 replicas)
@@ -126,7 +127,7 @@ async def stop_tenant(
     service = TenantService(db)
     return await service.stop_tenant(
         namespace=namespace,
-        user_id=current_user.get("sub"),
+        user_id=current_user.sub,
     )
 
 
@@ -135,7 +136,7 @@ async def scale_tenant(
     namespace: str,
     scale_request: TenantScaleRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> TenantResponse:
     """
     Scale all deployments in tenant namespace to specific replica count
@@ -153,7 +154,7 @@ async def scale_tenant(
     return await service.scale_tenant(
         namespace=namespace,
         replicas=scale_request.replicas,
-        user_id=current_user.get("sub"),
+        user_id=current_user.sub,
     )
 
 
@@ -161,7 +162,7 @@ async def scale_tenant(
 async def get_tenant_pods(
     namespace: str,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> List[Dict]:
     """
     Get all pods in tenant namespace
@@ -177,7 +178,7 @@ async def get_tenant_pods(
     service = TenantService(db)
     return await service.get_tenant_pods(
         namespace=namespace,
-        user_id=current_user.get("sub"),
+        user_id=current_user.sub,
     )
 
 
@@ -186,7 +187,7 @@ async def get_pod_containers(
     namespace: str,
     pod_name: str,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> List[Dict]:
     """
     Get all containers in a pod
@@ -211,7 +212,7 @@ async def get_pod_logs(
     container: str = None,
     tail_lines: int = 100,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> Dict:
     """
     Get logs from a pod container
@@ -243,7 +244,7 @@ async def exec_pod_command(
     pod_name: str,
     exec_request: ExecCommandRequest,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> Dict:
     """
     Execute a command in a pod container

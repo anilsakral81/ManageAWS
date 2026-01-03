@@ -1,7 +1,7 @@
 """Keycloak authentication and JWT validation"""
 
 import logging
-from typing import Dict, Optional
+from typing import Dict, Optional, List
 from functools import lru_cache
 
 from fastapi import Depends, HTTPException, status
@@ -11,6 +11,7 @@ from keycloak import KeycloakOpenID
 import httpx
 
 from app.config import settings
+from app.schemas.user import UserInfo
 
 logger = logging.getLogger(__name__)
 security = HTTPBearer(auto_error=False)  # Don't auto-error if no auth header
@@ -104,7 +105,7 @@ async def verify_token(token: str) -> Dict:
 
 async def get_current_user(
     credentials: Optional[HTTPAuthorizationCredentials] = Depends(security)
-) -> Dict:
+) -> UserInfo:
     """
     Dependency to get current authenticated user from JWT token
     
@@ -112,7 +113,7 @@ async def get_current_user(
         credentials: HTTP authorization credentials
         
     Returns:
-        Dict: User information from token
+        UserInfo: User information from token
         
     Raises:
         HTTPException: If authentication fails
@@ -120,12 +121,15 @@ async def get_current_user(
     # Development mode bypass - if Keycloak URL is default/not configured OR debug mode
     if settings.keycloak_url == "https://keycloak.example.com" or settings.debug:
         logger.warning("Auth bypass enabled - using mock user for development")
-        return {
-            "sub": "dev-user-123",
-            "email": "dev@example.com",
-            "name": "Development User",
-            "roles": ["tenant-admin", "admin"],
-        }
+        return UserInfo(
+            sub="dev-user-123",
+            email="dev@example.com",
+            preferred_username="developer",
+            name="Development User",
+            roles=["admin", "tenant-admin"],
+            groups=[],
+            allowed_namespaces=["*"]  # Admin has access to all
+        )
     
     if not credentials:
         raise HTTPException(
@@ -137,15 +141,24 @@ async def get_current_user(
     token = credentials.credentials
     payload = await verify_token(token)
     
-    # Extract user info from token
-    user_info = {
-        "sub": payload.get("sub"),
-        "email": payload.get("email"),
-        "name": payload.get("name", payload.get("preferred_username")),
-        "roles": extract_roles(payload),
-    }
+    # Extract roles
+    roles = extract_roles(payload)
     
-    if not user_info.get("sub"):
+    # Extract groups
+    groups = payload.get("groups", [])
+    
+    # Extract user info from token
+    user_info = UserInfo(
+        sub=payload.get("sub"),
+        email=payload.get("email"),
+        preferred_username=payload.get("preferred_username", payload.get("email")),
+        name=payload.get("name"),
+        roles=roles,
+        groups=groups,
+        allowed_namespaces=[]  # Will be populated from database
+    )
+    
+    if not user_info.sub:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token payload",
@@ -188,8 +201,8 @@ def check_permission(required_roles: list[str]):
     Returns:
         Dependency function
     """
-    async def permission_checker(current_user: Dict = Depends(get_current_user)) -> Dict:
-        user_roles = current_user.get("roles", [])
+    async def permission_checker(current_user: UserInfo = Depends(get_current_user)) -> UserInfo:
+        user_roles = current_user.roles
         
         # Check if user has any of the required roles
         if not any(role in user_roles for role in required_roles):
@@ -207,6 +220,39 @@ def check_permission(required_roles: list[str]):
 require_admin = check_permission(["tenant-admin", "admin"])
 require_operator = check_permission(["tenant-admin", "tenant-operator", "admin"])
 require_viewer = check_permission(["tenant-admin", "tenant-operator", "tenant-viewer", "admin"])
+
+
+async def get_user_allowed_namespaces(
+    user: UserInfo,
+    db
+) -> List[str]:
+    """
+    Get list of namespaces user is allowed to access
+    
+    Args:
+        user: User information
+        db: Database session
+        
+    Returns:
+        List[str]: List of allowed namespace names, or ["*"] for admins
+    """
+    from sqlalchemy import select
+    from app.models.user_namespace import UserNamespace
+    
+    # Admins can access all namespaces
+    if "admin" in user.roles or "tenant-admin" in user.roles:
+        return ["*"]
+    
+    # Get user-specific namespace permissions
+    result = await db.execute(
+        select(UserNamespace.namespace)
+        .where(UserNamespace.user_id == user.sub)
+        .where(UserNamespace.enabled == True)
+    )
+    
+    namespaces = [row[0] for row in result.all()]
+    return namespaces if namespaces else []
+
 
 
 async def get_current_user_ws(token: str = None) -> Dict:
