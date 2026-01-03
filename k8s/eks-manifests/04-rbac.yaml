@@ -23,9 +23,29 @@ rules:
 - apiGroups: ["apps"]
   resources: ["statefulsets", "statefulsets/scale"]
   verbs: ["get", "list", "watch", "update", "patch"]
+# Allow managing daemonsets for tenant namespaces
+- apiGroups: ["apps"]
+  resources: ["daemonsets"]
+  verbs: ["get", "list", "watch", "update", "patch"]
 # Allow reading pods for status
 - apiGroups: [""]
   resources: ["pods"]
+  verbs: ["get", "list", "watch"]
+# Allow reading pod logs
+- apiGroups: [""]
+  resources: ["pods/log"]
+  verbs: ["get", "list"]
+# Allow exec into pods
+- apiGroups: [""]
+  resources: ["pods/exec"]
+  verbs: ["create", "get"]
+# Allow reading VirtualServices (Istio)
+- apiGroups: ["networking.istio.io"]
+  resources: ["virtualservices"]
+  verbs: ["get", "list", "watch"]
+# Allow reading ingresses (fallback)
+- apiGroups: ["networking.k8s.io"]
+  resources: ["ingresses"]
   verbs: ["get", "list", "watch"]
 
 ---

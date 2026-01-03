@@ -13,7 +13,7 @@ import httpx
 from app.config import settings
 
 logger = logging.getLogger(__name__)
-security = HTTPBearer()
+security = HTTPBearer(auto_error=False)  # Don't auto-error if no auth header
 
 
 @lru_cache()
@@ -117,7 +117,7 @@ async def get_current_user(
     Raises:
         HTTPException: If authentication fails
     """
-    # Development mode bypass - if Keycloak URL is default/not configured
+    # Development mode bypass - if Keycloak URL is default/not configured OR debug mode
     if settings.keycloak_url == "https://keycloak.example.com" or settings.debug:
         logger.warning("Auth bypass enabled - using mock user for development")
         return {
@@ -207,3 +207,35 @@ def check_permission(required_roles: list[str]):
 require_admin = check_permission(["tenant-admin", "admin"])
 require_operator = check_permission(["tenant-admin", "tenant-operator", "admin"])
 require_viewer = check_permission(["tenant-admin", "tenant-operator", "tenant-viewer", "admin"])
+
+
+async def get_current_user_ws(token: str = None) -> Dict:
+    """
+    Get current user for WebSocket connections
+    
+    Args:
+        token: Bearer token
+        
+    Returns:
+        Dict: User information
+    """
+    # Development bypass
+    if settings.auth_bypass_enabled:
+        return {
+            "sub": "dev-user",
+            "email": "dev@example.com",
+            "preferred_username": "developer",
+            "name": "Development User"
+        }
+    
+    if not token:
+        return None
+    
+    try:
+        token_info = keycloak_openid.introspect(token)
+        if token_info.get("active"):
+            return token_info
+    except:
+        pass
+    
+    return None

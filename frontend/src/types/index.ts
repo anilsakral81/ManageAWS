@@ -1,3 +1,9 @@
+export interface VirtualService {
+  name: string
+  host: string
+  gateways: string
+}
+
 export interface Tenant {
   id: number
   name: string
@@ -11,6 +17,31 @@ export interface Tenant {
   last_action?: string
   last_action_by?: string
   last_action_at?: string
+  virtualservices?: VirtualService[]
+}
+
+export interface Pod {
+  name: string
+  status: string
+  ready: number
+  total_containers: number
+  restarts: number
+  node: string
+  created_at: string
+}
+
+export interface Container {
+  name: string
+  image: string
+  ready: boolean
+  restart_count: number
+  state: string
+}
+
+export interface PodLogs {
+  logs: string
+  pod: string
+  container: string | null
 }
 
 export interface TenantCreate {

@@ -1,0 +1,28 @@
+---
+# Istio Gateway for EKS deployment
+# This uses the existing istio-ingressgateway in your cluster
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  name: tenant-management-gateway
+  namespace: tenant-management
+spec:
+  selector:
+    istio: ingressgateway # Uses your existing Istio ingress gateway
+  servers:
+  - port:
+      number: 80
+      name: http
+      protocol: HTTP
+    hosts:
+    - "*"
+  # Add HTTPS if you have ACM certificate configured in ALB
+  # - port:
+  #     number: 443
+  #     name: https
+  #     protocol: HTTPS
+  #   tls:
+  #     mode: SIMPLE
+  #     credentialName: tenant-management-tls
+  #   hosts:
+  #   - "*"

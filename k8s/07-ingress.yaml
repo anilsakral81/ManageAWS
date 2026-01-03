@@ -5,15 +5,40 @@ metadata:
   name: tenant-management-ingress
   namespace: tenant-management
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
     nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # Use regex to properly route API calls
+    nginx.ingress.kubernetes.io/use-regex: "true"
 spec:
   ingressClassName: nginx
   rules:
   - host: localhost
     http:
       paths:
-      # Frontend
+      # Backend API - must come before frontend to avoid conflicts
+      - path: /api/v1(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8000
+      # Backend Health Check
+      - path: /health
+        pathType: Exact
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8000
+      # Backend Docs (if debug mode)
+      - path: /(docs|redoc|openapi.json)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8000
+      # Frontend - catches all other routes for SPA
       - path: /
         pathType: Prefix
         backend:
@@ -21,11 +46,3 @@ spec:
             name: frontend-service
             port:
               number: 80
-      # Backend API
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-service
-            port:
-              number: 8000

@@ -1,0 +1,107 @@
+---
+# Istio VirtualService - Routes traffic from Gateway to services
+# All routes are prefixed with /tm to segregate from other applications
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tenant-management-vs
+  namespace: tenant-management
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - tenant-management-gateway
+  http:
+  # Backend API - highest priority - rewrite /tm/api/v1 to /api/v1
+  - match:
+    - uri:
+        prefix: /tm/api/v1
+    rewrite:
+      uri: /api/v1
+    route:
+    - destination:
+        host: backend-service
+        port:
+          number: 8000
+  
+  # Backend Health Check - rewrite to /health
+  - match:
+    - uri:
+        exact: /tm/health
+    rewrite:
+      uri: /health
+    route:
+    - destination:
+        host: backend-service
+        port:
+          number: 8000
+  
+  # Backend Metrics - rewrite to /metrics
+  - match:
+    - uri:
+        prefix: /tm/metrics
+    rewrite:
+      uri: /metrics
+    route:
+    - destination:
+        host: backend-service
+        port:
+          number: 9090
+  
+  # Backend Docs (if debug enabled) - rewrite paths
+  - match:
+    - uri:
+        prefix: /tm/docs
+    rewrite:
+      uri: /docs
+    route:
+    - destination:
+        host: backend-service
+        port:
+          number: 8000
+  
+  - match:
+    - uri:
+        prefix: /tm/redoc
+    rewrite:
+      uri: /redoc
+    route:
+    - destination:
+        host: backend-service
+        port:
+          number: 8000
+  
+  - match:
+    - uri:
+        exact: /tm/openapi.json
+    rewrite:
+      uri: /openapi.json
+    route:
+    - destination:
+        host: backend-service
+        port:
+          number: 8000
+  
+  # Frontend - lowest priority (catches /tm and /tm/*)
+  - match:
+    - uri:
+        prefix: /tm/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: frontend-service
+        port:
+          number: 80
+  
+  # Handle exact /tm path
+  - match:
+    - uri:
+        exact: /tm
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: frontend-service
+        port:
+          number: 80

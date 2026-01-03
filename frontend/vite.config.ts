@@ -5,6 +5,7 @@ import path from 'path'
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
+  base: '/tm/',
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),
@@ -13,7 +14,7 @@ export default defineConfig({
   server: {
     port: 3000,
     proxy: {
-      '/api': {
+      '/tm/api': {
         target: 'http://localhost:8000',
         changeOrigin: true,
       },

@@ -9,8 +9,8 @@ export const dashboardService = {
     
     const stats: DashboardStats = {
       total_tenants: tenants.length,
-      running_tenants: tenants.filter(t => t.status === 'Running').length,
-      stopped_tenants: tenants.filter(t => t.status === 'Stopped').length,
+      running_tenants: tenants.filter(t => t.status.toLowerCase() === 'running').length,
+      stopped_tenants: tenants.filter(t => t.status.toLowerCase() === 'stopped').length,
       scheduled_actions: 0, // Will be calculated from schedules
     }
     

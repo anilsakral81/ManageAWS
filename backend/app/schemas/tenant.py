@@ -1,7 +1,7 @@
 """Tenant schemas"""
 
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List, Dict
 from pydantic import BaseModel, Field, ConfigDict
 
 from app.models.tenant import TenantStatus
@@ -46,3 +46,4 @@ class TenantResponse(TenantBase):
     updated_at: datetime
     last_scaled_at: Optional[datetime]
     last_scaled_by: Optional[str]
+    virtualservices: List[Dict[str, str]] = []

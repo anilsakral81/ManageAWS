@@ -1,8 +1,9 @@
 """Tenant management endpoints"""
 
-from typing import List, Dict
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List, Dict, Optional
+from fastapi import APIRouter, Depends, HTTPException, status, Body
 from sqlalchemy.ext.asyncio import AsyncSession
+from pydantic import BaseModel
 
 from app.database import get_db
 from app.auth.keycloak import get_current_user
@@ -15,6 +16,12 @@ from app.schemas.tenant import (
 from app.services.tenant_service import TenantService
 
 router = APIRouter()
+
+
+class ExecCommandRequest(BaseModel):
+    """Request schema for exec command"""
+    command: List[str]
+    container: Optional[str] = None
 
 
 @router.get("", response_model=List[TenantResponse])
@@ -45,41 +52,17 @@ async def list_tenants(
     return tenants
 
 
-@router.post("", response_model=TenantResponse, status_code=status.HTTP_201_CREATED)
-async def create_tenant(
-    tenant: TenantCreate,
-    db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
-) -> TenantResponse:
-    """
-    Create a new tenant
-    
-    Args:
-        tenant: Tenant creation data
-        db: Database session
-        current_user: Current authenticated user
-        
-    Returns:
-        TenantResponse: Created tenant
-    """
-    service = TenantService(db)
-    return await service.create_tenant(
-        tenant=tenant,
-        user_id=current_user.get("sub"),
-    )
-
-
-@router.get("/{tenant_id}", response_model=TenantResponse)
+@router.get("/{namespace}", response_model=TenantResponse)
 async def get_tenant(
-    tenant_id: int,
+    namespace: str,
     db: AsyncSession = Depends(get_db),
     current_user: Dict = Depends(get_current_user),
 ) -> TenantResponse:
     """
-    Get tenant by ID
+    Get tenant by namespace
     
     Args:
-        tenant_id: Tenant ID
+        namespace: Kubernetes namespace
         db: Database session
         current_user: Current authenticated user
         
@@ -88,76 +71,28 @@ async def get_tenant(
     """
     service = TenantService(db)
     tenant = await service.get_tenant(
-        tenant_id=tenant_id,
+        namespace=namespace,
         user_id=current_user.get("sub"),
     )
     if not tenant:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail=f"Tenant {tenant_id} not found",
+            detail=f"Namespace {namespace} not found",
         )
     return tenant
 
 
-@router.patch("/{tenant_id}", response_model=TenantResponse)
-async def update_tenant(
-    tenant_id: int,
-    tenant_update: TenantUpdate,
-    db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
-) -> TenantResponse:
-    """
-    Update tenant
-    
-    Args:
-        tenant_id: Tenant ID
-        tenant_update: Tenant update data
-        db: Database session
-        current_user: Current authenticated user
-        
-    Returns:
-        TenantResponse: Updated tenant
-    """
-    service = TenantService(db)
-    return await service.update_tenant(
-        tenant_id=tenant_id,
-        tenant_update=tenant_update,
-        user_id=current_user.get("sub"),
-    )
-
-
-@router.delete("/{tenant_id}", status_code=status.HTTP_204_NO_CONTENT)
-async def delete_tenant(
-    tenant_id: int,
-    db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
-) -> None:
-    """
-    Delete tenant
-    
-    Args:
-        tenant_id: Tenant ID
-        db: Database session
-        current_user: Current authenticated user
-    """
-    service = TenantService(db)
-    await service.delete_tenant(
-        tenant_id=tenant_id,
-        user_id=current_user.get("sub"),
-    )
-
-
-@router.post("/{tenant_id}/start", response_model=TenantResponse)
+@router.post("/{namespace}/start", response_model=TenantResponse)
 async def start_tenant(
-    tenant_id: int,
+    namespace: str,
     db: AsyncSession = Depends(get_db),
     current_user: Dict = Depends(get_current_user),
 ) -> TenantResponse:
     """
-    Start tenant (scale to desired replicas)
+    Start tenant (scale all deployments to 1 replica)
     
     Args:
-        tenant_id: Tenant ID
+        namespace: Kubernetes namespace
         db: Database session
         current_user: Current authenticated user
         
@@ -166,22 +101,22 @@ async def start_tenant(
     """
     service = TenantService(db)
     return await service.start_tenant(
-        tenant_id=tenant_id,
+        namespace=namespace,
         user_id=current_user.get("sub"),
     )
 
 
-@router.post("/{tenant_id}/stop", response_model=TenantResponse)
+@router.post("/{namespace}/stop", response_model=TenantResponse)
 async def stop_tenant(
-    tenant_id: int,
+    namespace: str,
     db: AsyncSession = Depends(get_db),
     current_user: Dict = Depends(get_current_user),
 ) -> TenantResponse:
     """
-    Stop tenant (scale to 0 replicas)
+    Stop tenant (scale all deployments to 0 replicas)
     
     Args:
-        tenant_id: Tenant ID
+        namespace: Kubernetes namespace
         db: Database session
         current_user: Current authenticated user
         
@@ -190,23 +125,23 @@ async def stop_tenant(
     """
     service = TenantService(db)
     return await service.stop_tenant(
-        tenant_id=tenant_id,
+        namespace=namespace,
         user_id=current_user.get("sub"),
     )
 
 
-@router.post("/{tenant_id}/scale", response_model=TenantResponse)
+@router.post("/{namespace}/scale", response_model=TenantResponse)
 async def scale_tenant(
-    tenant_id: int,
+    namespace: str,
     scale_request: TenantScaleRequest,
     db: AsyncSession = Depends(get_db),
     current_user: Dict = Depends(get_current_user),
 ) -> TenantResponse:
     """
-    Scale tenant to specific replica count
+    Scale all deployments in tenant namespace to specific replica count
     
     Args:
-        tenant_id: Tenant ID
+        namespace: Kubernetes namespace
         scale_request: Scale request with target replicas
         db: Database session
         current_user: Current authenticated user
@@ -216,31 +151,117 @@ async def scale_tenant(
     """
     service = TenantService(db)
     return await service.scale_tenant(
-        tenant_id=tenant_id,
+        namespace=namespace,
         replicas=scale_request.replicas,
         user_id=current_user.get("sub"),
     )
 
 
-@router.get("/{tenant_id}/status", response_model=Dict[str, str])
-async def get_tenant_status(
-    tenant_id: int,
+@router.get("/{namespace}/pods", response_model=List[Dict])
+async def get_tenant_pods(
+    namespace: str,
     db: AsyncSession = Depends(get_db),
     current_user: Dict = Depends(get_current_user),
-) -> Dict[str, str]:
+) -> List[Dict]:
     """
-    Get real-time tenant status from Kubernetes
+    Get all pods in tenant namespace
     
     Args:
-        tenant_id: Tenant ID
+        namespace: Kubernetes namespace
         db: Database session
         current_user: Current authenticated user
         
     Returns:
-        Dict: Tenant status information
+        List[Dict]: List of pods with status
     """
     service = TenantService(db)
-    return await service.get_tenant_k8s_status(
-        tenant_id=tenant_id,
+    return await service.get_tenant_pods(
+        namespace=namespace,
         user_id=current_user.get("sub"),
+    )
+
+
+@router.get("/{namespace}/pods/{pod_name}/containers", response_model=List[Dict])
+async def get_pod_containers(
+    namespace: str,
+    pod_name: str,
+    db: AsyncSession = Depends(get_db),
+    current_user: Dict = Depends(get_current_user),
+) -> List[Dict]:
+    """
+    Get all containers in a pod
+    
+    Args:
+        namespace: Kubernetes namespace
+        pod_name: Pod name
+        db: Database session
+        current_user: Current authenticated user
+        
+    Returns:
+        List[Dict]: List of containers
+    """
+    service = TenantService(db)
+    return await service.get_pod_containers(namespace=namespace, pod_name=pod_name)
+
+
+@router.get("/{namespace}/pods/{pod_name}/logs")
+async def get_pod_logs(
+    namespace: str,
+    pod_name: str,
+    container: str = None,
+    tail_lines: int = 100,
+    db: AsyncSession = Depends(get_db),
+    current_user: Dict = Depends(get_current_user),
+) -> Dict:
+    """
+    Get logs from a pod container
+    
+    Args:
+        namespace: Kubernetes namespace
+        pod_name: Pod name
+        container: Container name (optional)
+        tail_lines: Number of lines to retrieve
+        db: Database session
+        current_user: Current authenticated user
+        
+    Returns:
+        Dict: Pod logs
+    """
+    service = TenantService(db)
+    logs = await service.get_pod_logs(
+        namespace=namespace,
+        pod_name=pod_name,
+        container=container,
+        tail_lines=tail_lines
+    )
+    return {"logs": logs, "pod": pod_name, "container": container}
+
+
+@router.post("/{namespace}/pods/{pod_name}/exec")
+async def exec_pod_command(
+    namespace: str,
+    pod_name: str,
+    exec_request: ExecCommandRequest,
+    db: AsyncSession = Depends(get_db),
+    current_user: Dict = Depends(get_current_user),
+) -> Dict:
+    """
+    Execute a command in a pod container
+    
+    Args:
+        namespace: Kubernetes namespace
+        pod_name: Pod name
+        exec_request: Exec request with command and optional container
+        db: Database session
+        current_user: Current authenticated user
+        
+    Returns:
+        Dict: Command output
+    """
+    service = TenantService(db)
+    return await service.exec_pod_command(
+        namespace=namespace,
+        pod_name=pod_name,
+        command=exec_request.command,
+        container=exec_request.container
     )

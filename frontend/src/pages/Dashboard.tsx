@@ -48,13 +48,13 @@ export default function Dashboard() {
   // Calculate stats
   const stats = {
     totalTenants: tenants.length,
-    runningTenants: tenants.filter(t => t.status === 'Running').length,
-    stoppedTenants: tenants.filter(t => t.status === 'Stopped').length,
+    runningTenants: tenants.filter(t => t.status.toLowerCase() === 'running').length,
+    stoppedTenants: tenants.filter(t => t.status.toLowerCase() === 'stopped').length,
     scheduledActions: schedules.filter(s => s.enabled).length,
   }
 
   // Get active tenants (running ones)
-  const activeTenants = tenants.filter(t => t.status === 'Running').slice(0, 4)
+  const activeTenants = tenants.filter(t => t.status.toLowerCase() === 'running').slice(0, 4)
 
   // Format audit logs for recent activity
   const recentActivity = auditLogs.slice(0, 4).map(log => ({
@@ -100,7 +100,10 @@ export default function Dashboard() {
           {/* Stats Cards */}
           <Grid container spacing={3} sx={{ mb: 3 }}>
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card 
+            sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+            onClick={() => navigate('/tenants?status=all')}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
@@ -116,7 +119,10 @@ export default function Dashboard() {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card 
+            sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+            onClick={() => navigate('/tenants?status=running')}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
@@ -134,7 +140,10 @@ export default function Dashboard() {
         </Grid>
 
         <Grid item xs={12} sm={6} md={3}>
-          <Card>
+          <Card 
+            sx={{ cursor: 'pointer', '&:hover': { boxShadow: 4 } }}
+            onClick={() => navigate('/tenants?status=stopped')}
+          >
             <CardContent>
               <Box display="flex" alignItems="center" justifyContent="space-between">
                 <Box>
@@ -197,11 +206,29 @@ export default function Dashboard() {
                       />
                     </Box>
                     <Grid container spacing={2}>
-                      <Grid item xs={12}>
+                      <Grid item xs={12} sm={6}>
                         <Typography variant="body2" color="textSecondary">
                           Replicas: {tenant.current_replicas} / {tenant.desired_replicas}
                         </Typography>
+                        <Typography variant="body2" color="textSecondary">
+                          Resources: {tenant.deployment_name}
+                        </Typography>
                       </Grid>
+                      {tenant.virtualservices && tenant.virtualservices.length > 0 && (
+                        <Grid item xs={12} sm={6}>
+                          <Typography variant="body2" color="textSecondary">
+                            Host:{' '}
+                            <a
+                              href={`http://${tenant.virtualservices[0].host}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              style={{ color: '#1976d2', textDecoration: 'none' }}
+                            >
+                              {tenant.virtualservices[0].host}
+                            </a>
+                          </Typography>
+                        </Grid>
+                      )}
                     </Grid>
                   </CardContent>
                   <CardActions>

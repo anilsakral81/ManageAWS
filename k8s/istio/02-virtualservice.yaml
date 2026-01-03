@@ -1,0 +1,66 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: tenant-management-vs
+  namespace: tenant-management
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - tenant-management-gateway
+  http:
+  # Backend API routes with /tm prefix - rewrite to /api/v1
+  - match:
+    - uri:
+        prefix: /tm/api/v1
+    rewrite:
+      uri: /api/v1
+    route:
+    - destination:
+        host: backend
+        port:
+          number: 8000
+  # Health check endpoint for backend
+  - match:
+    - uri:
+        exact: /tm/health
+    rewrite:
+      uri: /health
+    route:
+    - destination:
+        host: backend
+        port:
+          number: 8000
+  # Metrics endpoint for backend
+  - match:
+    - uri:
+        prefix: /tm/metrics
+    rewrite:
+      uri: /metrics
+    route:
+    - destination:
+        host: backend
+        port:
+          number: 9090
+  # Frontend static files and SPA routing
+  - match:
+    - uri:
+        prefix: /tm/
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: frontend
+        port:
+          number: 80
+  # Handle exact /tm path
+  - match:
+    - uri:
+        exact: /tm
+    rewrite:
+      uri: /
+    route:
+    - destination:
+        host: frontend
+        port:
+          number: 80

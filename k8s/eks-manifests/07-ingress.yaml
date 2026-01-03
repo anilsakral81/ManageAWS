@@ -5,15 +5,47 @@ metadata:
   name: tenant-management-ingress
   namespace: tenant-management
   annotations:
-    nginx.ingress.kubernetes.io/rewrite-target: /
-    nginx.ingress.kubernetes.io/ssl-redirect: "false"
+    # AWS Load Balancer Controller annotations
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}]'
+    alb.ingress.kubernetes.io/healthcheck-path: /health
+    alb.ingress.kubernetes.io/healthcheck-protocol: HTTP
+    alb.ingress.kubernetes.io/success-codes: "200"
+    # Enable sticky sessions for frontend
+    alb.ingress.kubernetes.io/target-group-attributes: stickiness.enabled=true,stickiness.lb_cookie.duration_seconds=86400
+    # Tags for AWS resources
+    alb.ingress.kubernetes.io/tags: Environment=production,Application=tenant-management
 spec:
-  ingressClassName: nginx
+  ingressClassName: alb
   rules:
-  - host: localhost
-    http:
+  - http:
       paths:
-      # Frontend
+      # Backend API - must come before frontend to avoid conflicts
+      - path: /api/v1(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8000
+      # Backend Health Check
+      - path: /health
+        pathType: Exact
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8000
+      # Backend Docs (if debug mode)
+      - path: /(docs|redoc|openapi.json)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend-service
+            port:
+              number: 8000
+      # Frontend - catches all other routes for SPA
       - path: /
         pathType: Prefix
         backend:
@@ -21,11 +53,3 @@ spec:
             name: frontend-service
             port:
               number: 80
-      # Backend API
-      - path: /api
-        pathType: Prefix
-        backend:
-          service:
-            name: backend-service
-            port:
-              number: 8000

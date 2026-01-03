@@ -12,8 +12,8 @@ RUN npm ci --prefer-offline --no-audit
 # Copy application files
 COPY . .
 
-# Build application with memory limits
-ENV NODE_OPTIONS="--max-old-space-size=2048"
+# Build application with increased memory limits
+    ENV NODE_OPTIONS="--max-old-space-size=4096"
 RUN npm run build
 
 # Production stage
