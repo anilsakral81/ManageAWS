@@ -560,37 +560,38 @@ export default function Tenants() {
                   ) : tenantMetrics ? (
                     <Box>
                       {/* Current State */}
-                      <Typography variant="h6" gutterBottom>Current State</Typography>
-                      <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
-                        <Stack spacing={2}>
+                      <Typography variant="subtitle2" gutterBottom fontWeight="bold">Current State</Typography>
+                      <Paper variant="outlined" sx={{ p: 1.5, mb: 2 }}>
+                        <Stack direction="row" spacing={3} alignItems="center">
                           <Box>
-                            <Typography variant="body2" color="textSecondary">Status</Typography>
+                            <Typography variant="caption" color="textSecondary" display="block">Status</Typography>
                             <Chip 
                               label={tenantMetrics.current_state.current_state.toUpperCase()}
                               color={tenantMetrics.current_state.current_state === 'running' ? 'success' : 
                                      tenantMetrics.current_state.current_state === 'stopped' ? 'default' : 'warning'}
+                              size="small"
                               sx={{ mt: 0.5 }}
                             />
                           </Box>
                           {tenantMetrics.current_state.current_state === 'running' && (
-                            <Box>
-                              <Typography variant="body2" color="textSecondary">Uptime from Last Startup</Typography>
-                              <Typography variant="h5" color="success.main" fontWeight="bold">
+                            <Box flex={1}>
+                              <Typography variant="caption" color="textSecondary" display="block">Uptime from Last Startup</Typography>
+                              <Typography variant="h6" color="success.main" fontWeight="bold">
                                 {tenantMetrics.current_state.duration_formatted}
                               </Typography>
                               {tenantMetrics.current_state.state_since && (
-                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 0.5 }}>
+                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
                                   Started: {new Date(tenantMetrics.current_state.state_since).toLocaleString()}
                                 </Typography>
                               )}
                             </Box>
                           )}
                           {tenantMetrics.current_state.current_state !== 'running' && (
-                            <Box>
-                              <Typography variant="body2" color="textSecondary">Duration in Current State</Typography>
-                              <Typography variant="h6">{tenantMetrics.current_state.duration_formatted}</Typography>
+                            <Box flex={1}>
+                              <Typography variant="caption" color="textSecondary" display="block">Duration in Current State</Typography>
+                              <Typography variant="body1" fontWeight="bold">{tenantMetrics.current_state.duration_formatted}</Typography>
                               {tenantMetrics.current_state.state_since && (
-                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block', mt: 0.5 }}>
+                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
                                   Since: {new Date(tenantMetrics.current_state.state_since).toLocaleString()}
                                 </Typography>
                               )}
@@ -602,28 +603,15 @@ export default function Tenants() {
                       {/* Monthly Metrics */}
                       {tenantMetrics.monthly_metrics && (
                         <>
-                          <Typography variant="h6" gutterBottom>
-                            Total Time from 1st of {new Date(tenantMetrics.monthly_metrics.year, tenantMetrics.monthly_metrics.month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                          <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                            Monthly Uptime - {new Date(tenantMetrics.monthly_metrics.year, tenantMetrics.monthly_metrics.month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
                           </Typography>
-                          <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
-                            <Stack spacing={3}>
-                              {/* Total Uptime Summary */}
-                              <Box sx={{ bgcolor: 'success.50', p: 2, borderRadius: 1, border: '1px solid', borderColor: 'success.200' }}>
-                                <Typography variant="body2" color="textSecondary" gutterBottom>Total Uptime This Month</Typography>
-                                <Typography variant="h4" color="success.main" fontWeight="bold">
-                                  {tenantMetrics.monthly_metrics.uptime_formatted}
-                                </Typography>
-                                <Typography variant="caption" color="textSecondary">
-                                  {tenantMetrics.monthly_metrics.uptime_percentage.toFixed(1)}% of the month
-                                  {tenantMetrics.monthly_metrics.scaling_seconds > 0 && 
-                                    ` (includes ${tenantMetrics.monthly_metrics.scaling_formatted} scaling time)`}
-                                </Typography>
-                              </Box>
-
-                              {/* Progress Bars */}
+                          <Paper variant="outlined" sx={{ p: 1.5, mb: 2 }}>
+                            <Stack spacing={1.5}>
+                              {/* Uptime */}
                               <Box>
-                                <Box display="flex" justifyContent="space-between" mb={1}>
-                                  <Typography variant="body2">Running Time</Typography>
+                                <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={0.5}>
+                                  <Typography variant="body2">Uptime</Typography>
                                   <Typography variant="body2" fontWeight="bold" color="success.main">
                                     {tenantMetrics.monthly_metrics.uptime_percentage.toFixed(1)}%
                                   </Typography>
@@ -632,12 +620,17 @@ export default function Tenants() {
                                   variant="determinate" 
                                   value={tenantMetrics.monthly_metrics.uptime_percentage} 
                                   color="success"
-                                  sx={{ height: 10, borderRadius: 5 }}
+                                  sx={{ height: 8, borderRadius: 4 }}
                                 />
+                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
+                                  {tenantMetrics.monthly_metrics.uptime_formatted}
+                                </Typography>
                               </Box>
+                              
+                              {/* Downtime */}
                               <Box>
-                                <Box display="flex" justifyContent="space-between" mb={1}>
-                                  <Typography variant="body2">Stopped Time</Typography>
+                                <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={0.5}>
+                                  <Typography variant="body2">Downtime</Typography>
                                   <Typography variant="body2" fontWeight="bold" color="error.main">
                                     {tenantMetrics.monthly_metrics.downtime_percentage.toFixed(1)}%
                                   </Typography>
@@ -646,10 +639,10 @@ export default function Tenants() {
                                   variant="determinate" 
                                   value={tenantMetrics.monthly_metrics.downtime_percentage} 
                                   color="error"
-                                  sx={{ height: 10, borderRadius: 5 }}
+                                  sx={{ height: 8, borderRadius: 4 }}
                                 />
-                                <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
-                                  {tenantMetrics.monthly_metrics.downtime_formatted} stopped
+                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
+                                  {tenantMetrics.monthly_metrics.downtime_formatted}
                                 </Typography>
                               </Box>
                             </Stack>
@@ -660,8 +653,8 @@ export default function Tenants() {
                       {/* Recent History */}
                       {tenantMetrics.recent_history && tenantMetrics.recent_history.length > 0 && (
                         <>
-                          <Typography variant="h6" gutterBottom>Recent State Changes</Typography>
-                          <TableContainer component={Paper} variant="outlined">
+                          <Typography variant="subtitle2" gutterBottom fontWeight="bold">Recent State Changes</Typography>
+                          <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 220 }}>
                             <Table size="small">
                               <TableHead>
                                 <TableRow>
