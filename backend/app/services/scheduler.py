@@ -77,13 +77,11 @@ class SchedulerManager:
         if self.scheduler.get_job(job_id):
             self.scheduler.remove_job(job_id)
         
-        # Use the schedule's timezone, fallback to global setting
-        schedule_timezone = getattr(schedule, 'timezone', None) or settings.scheduler_timezone
-        
-        # Parse cron expression and create trigger in the schedule's timezone
+        # Always use UTC for execution (cron expression is already in UTC)
+        # The timezone field is stored for UI display purposes only
         trigger = CronTrigger.from_crontab(
             schedule.cron_expression,
-            timezone=schedule_timezone  # Use schedule's timezone
+            timezone="UTC"  # Always execute in UTC
         )
         
         # Add job to scheduler
@@ -97,7 +95,7 @@ class SchedulerManager:
             misfire_grace_time=300,  # 5 minutes grace period
         )
         
-        logger.info(f"Added schedule {schedule.id} to scheduler with job_id {job_id} (timezone: {schedule_timezone})")
+        logger.info(f"Added schedule {schedule.id} to scheduler with job_id {job_id} (UTC)")
     
     def remove_schedule(self, schedule_id: int):
         """Remove a schedule from APScheduler"""

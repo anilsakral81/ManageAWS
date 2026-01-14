@@ -172,7 +172,6 @@ export default function Schedules() {
               <TableCell>Tenant</TableCell>
               <TableCell>Action</TableCell>
               <TableCell>Schedule (Cron)</TableCell>
-              <TableCell>Timezone</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Next Run</TableCell>
               <TableCell>Status</TableCell>
@@ -182,13 +181,13 @@ export default function Schedules() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                   <CircularProgress />
                 </TableCell>
               </TableRow>
             ) : schedules.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
                   <Typography color="textSecondary">No schedules found</Typography>
                 </TableCell>
               </TableRow>
@@ -207,15 +206,13 @@ export default function Schedules() {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" fontFamily="monospace">
-                      {schedule.cron_expression}
+                      {schedule.cron_expression} (UTC)
                     </Typography>
-                  </TableCell>
-                  <TableCell>
-                    <Chip
-                      label={schedule.timezone || 'UTC'}
-                      size="small"
-                      variant="outlined"
-                    />
+                    {schedule.timezone && schedule.timezone !== 'UTC' && (
+                      <Typography variant="caption" color="textSecondary" display="block">
+                        Your timezone: {schedule.timezone}
+                      </Typography>
+                    )}
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="textSecondary">
@@ -304,10 +301,10 @@ export default function Schedules() {
 
             <Alert severity="info" sx={{ mt: 1 }}>
               <Typography variant="body2">
-                <strong>Timezone:</strong> {formData.timezone || 'UTC'}
+                <strong>Your Timezone:</strong> {formData.timezone || 'UTC'}
               </Typography>
               <Typography variant="caption" color="textSecondary">
-                Schedule times are in your local timezone. The system will handle conversion automatically.
+                Schedule will be stored and executed in UTC. We save your timezone for display reference only.
               </Typography>
             </Alert>
 
