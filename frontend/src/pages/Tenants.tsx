@@ -30,8 +30,6 @@ import {
   ListItem,
   ListItemText,
   Divider,
-  Tabs,
-  Tab,
   LinearProgress,
 } from '@mui/material'
 import {
@@ -61,7 +59,6 @@ export default function Tenants() {
   const [actionDialogOpen, setActionDialogOpen] = useState(false)
   const [actionType, setActionType] = useState<'start' | 'stop'>('start')
   const [infoDialogOpen, setInfoDialogOpen] = useState(false)
-  const [infoTab, setInfoTab] = useState(0)
   const [logsDialogOpen, setLogsDialogOpen] = useState(false)
   const [terminalDialogOpen, setTerminalDialogOpen] = useState(false)
   const [metricsDialogOpen, setMetricsDialogOpen] = useState(false)
@@ -100,7 +97,7 @@ export default function Tenants() {
   const { data: tenantMetrics, isLoading: isLoadingMetrics } = useQuery({
     queryKey: ['tenant-metrics', selectedTenant?.namespace],
     queryFn: () => tenantService.getMetrics(selectedTenant!.namespace),
-    enabled: !!selectedTenant && (infoDialogOpen || metricsDialogOpen),
+    enabled: !!selectedTenant && metricsDialogOpen,
     refetchInterval: 30000, // Refresh every 30 seconds
   })
 
@@ -422,17 +419,10 @@ export default function Tenants() {
         fullWidth
       >
         <DialogTitle>Tenant Information - {selectedTenant?.name}</DialogTitle>
-        <Tabs value={infoTab} onChange={(_, newValue) => setInfoTab(newValue)} sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
-          <Tab label="Details & Pods" />
-          <Tab label="Uptime Metrics" icon={<TimelineIcon />} iconPosition="start" />
-        </Tabs>
         <DialogContent>
           {selectedTenant && (
             <Box>
-              {/* Tab 0: Details & Pods */}
-              {infoTab === 0 && (
-                <>
-                  <Typography variant="h6" gutterBottom>Details</Typography>
+              <Typography variant="h6" gutterBottom>Details</Typography>
                   <Stack spacing={1} mb={3}>
                     <Typography><strong>Namespace:</strong> {selectedTenant.namespace}</Typography>
                     <Typography><strong>Status:</strong> {selectedTenant.status}</Typography>
@@ -558,161 +548,6 @@ export default function Tenants() {
                       ))}
                     </List>
                   )}
-                </>
-              )}
-
-              {/* Tab 1: Metrics */}
-              {infoTab === 1 && (
-                <>
-                  {isLoadingMetrics ? (
-                    <Box display="flex" justifyContent="center" py={4}>
-                      <CircularProgress />
-                    </Box>
-                  ) : tenantMetrics ? (
-                    <Box>
-                      {/* Current State */}
-                      <Typography variant="subtitle2" gutterBottom fontWeight="bold">Current State</Typography>
-                      <Paper variant="outlined" sx={{ p: 1.5, mb: 2 }}>
-                        <Stack direction="row" spacing={3} alignItems="center">
-                          <Box>
-                            <Typography variant="caption" color="textSecondary" display="block">Status</Typography>
-                            <Chip 
-                              label={tenantMetrics.current_state.current_state.toUpperCase()}
-                              color={tenantMetrics.current_state.current_state === 'running' ? 'success' : 
-                                     tenantMetrics.current_state.current_state === 'stopped' ? 'default' : 'warning'}
-                              size="small"
-                              sx={{ mt: 0.5 }}
-                            />
-                          </Box>
-                          {tenantMetrics.current_state.current_state === 'running' && (
-                            <Box flex={1}>
-                              <Typography variant="caption" color="textSecondary" display="block">Uptime from Last Startup</Typography>
-                              <Typography variant="h6" color="success.main" fontWeight="bold">
-                                {tenantMetrics.current_state.duration_formatted}
-                              </Typography>
-                              {tenantMetrics.current_state.state_since && (
-                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
-                                  Started: {new Date(tenantMetrics.current_state.state_since).toLocaleString()}
-                                </Typography>
-                              )}
-                            </Box>
-                          )}
-                          {tenantMetrics.current_state.current_state !== 'running' && (
-                            <Box flex={1}>
-                              <Typography variant="caption" color="textSecondary" display="block">Duration in Current State</Typography>
-                              <Typography variant="body1" fontWeight="bold">{tenantMetrics.current_state.duration_formatted}</Typography>
-                              {tenantMetrics.current_state.state_since && (
-                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
-                                  Since: {new Date(tenantMetrics.current_state.state_since).toLocaleString()}
-                                </Typography>
-                              )}
-                            </Box>
-                          )}
-                        </Stack>
-                      </Paper>
-
-                      {/* Monthly Metrics */}
-                      {tenantMetrics.monthly_metrics && (
-                        <>
-                          <Typography variant="subtitle2" gutterBottom fontWeight="bold">
-                            Monthly Uptime - {new Date(tenantMetrics.monthly_metrics.year, tenantMetrics.monthly_metrics.month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
-                          </Typography>
-                          <Paper variant="outlined" sx={{ p: 1.5, mb: 2 }}>
-                            <Stack spacing={1.5}>
-                              {/* Uptime */}
-                              <Box>
-                                <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={0.5}>
-                                  <Typography variant="body2">Uptime</Typography>
-                                  <Typography variant="body2" fontWeight="bold" color="success.main">
-                                    {tenantMetrics.monthly_metrics.uptime_percentage.toFixed(1)}%
-                                  </Typography>
-                                </Box>
-                                <LinearProgress 
-                                  variant="determinate" 
-                                  value={tenantMetrics.monthly_metrics.uptime_percentage} 
-                                  color="success"
-                                  sx={{ height: 8, borderRadius: 4 }}
-                                />
-                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
-                                  {tenantMetrics.monthly_metrics.uptime_formatted}
-                                </Typography>
-                              </Box>
-                              
-                              {/* Downtime */}
-                              <Box>
-                                <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={0.5}>
-                                  <Typography variant="body2">Downtime</Typography>
-                                  <Typography variant="body2" fontWeight="bold" color="error.main">
-                                    {tenantMetrics.monthly_metrics.downtime_percentage.toFixed(1)}%
-                                  </Typography>
-                                </Box>
-                                <LinearProgress 
-                                  variant="determinate" 
-                                  value={tenantMetrics.monthly_metrics.downtime_percentage} 
-                                  color="error"
-                                  sx={{ height: 8, borderRadius: 4 }}
-                                />
-                                <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
-                                  {tenantMetrics.monthly_metrics.downtime_formatted}
-                                </Typography>
-                              </Box>
-                            </Stack>
-                          </Paper>
-                        </>
-                      )}
-
-                      {/* Recent History */}
-                      {tenantMetrics.recent_history && tenantMetrics.recent_history.length > 0 && (
-                        <>
-                          <Typography variant="subtitle2" gutterBottom fontWeight="bold">Recent State Changes</Typography>
-                          <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 220 }}>
-                            <Table size="small">
-                              <TableHead>
-                                <TableRow>
-                                  <TableCell>Time</TableCell>
-                                  <TableCell>State Change</TableCell>
-                                  <TableCell>Replicas</TableCell>
-                                </TableRow>
-                              </TableHead>
-                              <TableBody>
-                                {tenantMetrics.recent_history.map((record) => (
-                                  <TableRow key={record.id}>
-                                    <TableCell>
-                                      <Typography variant="caption">
-                                        {new Date(record.changed_at).toLocaleString()}
-                                      </Typography>
-                                    </TableCell>
-                                    <TableCell>
-                                      <Stack direction="row" spacing={1} alignItems="center">
-                                        {record.previous_state && (
-                                          <Chip label={record.previous_state} size="small" />
-                                        )}
-                                        <Typography variant="caption">→</Typography>
-                                        <Chip 
-                                          label={record.new_state} 
-                                          size="small"
-                                          color={record.new_state === 'running' ? 'success' : 
-                                                 record.new_state === 'stopped' ? 'default' : 'warning'}
-                                        />
-                                      </Stack>
-                                    </TableCell>
-                                    <TableCell>
-                                      {record.previous_replicas !== null && `${record.previous_replicas} → `}
-                                      {record.new_replicas}
-                                    </TableCell>
-                                  </TableRow>
-                                ))}
-                              </TableBody>
-                            </Table>
-                          </TableContainer>
-                        </>
-                      )}
-                    </Box>
-                  ) : (
-                    <Alert severity="info">No metrics available for this tenant</Alert>
-                  )}
-                </>
-              )}
             </Box>
           )}
         </DialogContent>
