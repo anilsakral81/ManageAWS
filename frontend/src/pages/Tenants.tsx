@@ -64,6 +64,7 @@ export default function Tenants() {
   const [infoTab, setInfoTab] = useState(0)
   const [logsDialogOpen, setLogsDialogOpen] = useState(false)
   const [terminalDialogOpen, setTerminalDialogOpen] = useState(false)
+  const [metricsDialogOpen, setMetricsDialogOpen] = useState(false)
   const [selectedPod, setSelectedPod] = useState<string>('')
   const [selectedContainer, setSelectedContainer] = useState<string>('')
   const [availableContainers, setAvailableContainers] = useState<any[]>([])
@@ -99,7 +100,7 @@ export default function Tenants() {
   const { data: tenantMetrics, isLoading: isLoadingMetrics } = useQuery({
     queryKey: ['tenant-metrics', selectedTenant?.namespace],
     queryFn: () => tenantService.getMetrics(selectedTenant!.namespace),
-    enabled: !!selectedTenant && infoDialogOpen,
+    enabled: !!selectedTenant && (infoDialogOpen || metricsDialogOpen),
     refetchInterval: 30000, // Refresh every 30 seconds
   })
 
@@ -178,6 +179,11 @@ export default function Tenants() {
   const handleShowInfo = (tenant: Tenant) => {
     setSelectedTenant(tenant)
     setInfoDialogOpen(true)
+  }
+
+  const handleShowMetrics = (tenant: Tenant) => {
+    setSelectedTenant(tenant)
+    setMetricsDialogOpen(true)
   }
 
   const handleShowPodLogs = (podName: string) => {
@@ -351,6 +357,11 @@ export default function Tenants() {
                           </IconButton>
                         </Tooltip>
                       )}
+                      <Tooltip title="Uptime Metrics">
+                        <IconButton size="small" onClick={() => handleShowMetrics(tenant)} color="primary">
+                          <TimelineIcon />
+                        </IconButton>
+                      </Tooltip>
                       <Tooltip title="Tenant Info">
                         <IconButton size="small" onClick={() => handleShowInfo(tenant)}>
                           <Info />
@@ -785,6 +796,170 @@ export default function Tenants() {
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setTerminalDialogOpen(false)}>Close</Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Metrics Dialog */}
+      <Dialog 
+        open={metricsDialogOpen} 
+        onClose={() => setMetricsDialogOpen(false)}
+        maxWidth="md"
+        fullWidth
+      >
+        <DialogTitle>
+          Uptime Metrics - {selectedTenant?.name}
+        </DialogTitle>
+        <DialogContent>
+          {isLoadingMetrics ? (
+            <Box display="flex" justifyContent="center" py={4}>
+              <CircularProgress />
+            </Box>
+          ) : tenantMetrics ? (
+            <Box>
+              {/* Current State */}
+              <Typography variant="subtitle2" gutterBottom fontWeight="bold">Current State</Typography>
+              <Paper variant="outlined" sx={{ p: 1.5, mb: 2 }}>
+                <Stack direction="row" spacing={3} alignItems="center">
+                  <Box>
+                    <Typography variant="caption" color="textSecondary" display="block">Status</Typography>
+                    <Chip 
+                      label={tenantMetrics.current_state.current_state.toUpperCase()}
+                      color={tenantMetrics.current_state.current_state === 'running' ? 'success' : 
+                             tenantMetrics.current_state.current_state === 'stopped' ? 'default' : 'warning'}
+                      size="small"
+                      sx={{ mt: 0.5 }}
+                    />
+                  </Box>
+                  {tenantMetrics.current_state.current_state === 'running' && (
+                    <Box flex={1}>
+                      <Typography variant="caption" color="textSecondary" display="block">Uptime from Last Startup</Typography>
+                      <Typography variant="h6" color="success.main" fontWeight="bold">
+                        {tenantMetrics.current_state.duration_formatted}
+                      </Typography>
+                      {tenantMetrics.current_state.state_since && (
+                        <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
+                          Started: {new Date(tenantMetrics.current_state.state_since).toLocaleString()}
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                  {tenantMetrics.current_state.current_state !== 'running' && (
+                    <Box flex={1}>
+                      <Typography variant="caption" color="textSecondary" display="block">Duration in Current State</Typography>
+                      <Typography variant="body1" fontWeight="bold">{tenantMetrics.current_state.duration_formatted}</Typography>
+                      {tenantMetrics.current_state.state_since && (
+                        <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
+                          Since: {new Date(tenantMetrics.current_state.state_since).toLocaleString()}
+                        </Typography>
+                      )}
+                    </Box>
+                  )}
+                </Stack>
+              </Paper>
+
+              {/* Monthly Metrics */}
+              {tenantMetrics.monthly_metrics && (
+                <>
+                  <Typography variant="subtitle2" gutterBottom fontWeight="bold">
+                    Monthly Uptime - {new Date(tenantMetrics.monthly_metrics.year, tenantMetrics.monthly_metrics.month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                  </Typography>
+                  <Paper variant="outlined" sx={{ p: 1.5, mb: 2 }}>
+                    <Stack spacing={1.5}>
+                      {/* Uptime */}
+                      <Box>
+                        <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={0.5}>
+                          <Typography variant="body2">Uptime</Typography>
+                          <Typography variant="body2" fontWeight="bold" color="success.main">
+                            {tenantMetrics.monthly_metrics.uptime_percentage.toFixed(1)}%
+                          </Typography>
+                        </Box>
+                        <LinearProgress 
+                          variant="determinate" 
+                          value={tenantMetrics.monthly_metrics.uptime_percentage} 
+                          color="success"
+                          sx={{ height: 8, borderRadius: 4 }}
+                        />
+                        <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
+                          {tenantMetrics.monthly_metrics.uptime_formatted}
+                        </Typography>
+                      </Box>
+                      
+                      {/* Downtime */}
+                      <Box>
+                        <Box display="flex" justifyContent="space-between" alignItems="baseline" mb={0.5}>
+                          <Typography variant="body2">Downtime</Typography>
+                          <Typography variant="body2" fontWeight="bold" color="error.main">
+                            {tenantMetrics.monthly_metrics.downtime_percentage.toFixed(1)}%
+                          </Typography>
+                        </Box>
+                        <LinearProgress 
+                          variant="determinate" 
+                          value={tenantMetrics.monthly_metrics.downtime_percentage} 
+                          color="error"
+                          sx={{ height: 8, borderRadius: 4 }}
+                        />
+                        <Typography variant="caption" color="textSecondary" sx={{ display: 'block' }}>
+                          {tenantMetrics.monthly_metrics.downtime_formatted}
+                        </Typography>
+                      </Box>
+                    </Stack>
+                  </Paper>
+                </>
+              )}
+
+              {/* Recent History */}
+              {tenantMetrics.recent_history && tenantMetrics.recent_history.length > 0 && (
+                <>
+                  <Typography variant="subtitle2" gutterBottom fontWeight="bold">Recent State Changes</Typography>
+                  <TableContainer component={Paper} variant="outlined" sx={{ maxHeight: 220 }}>
+                    <Table size="small">
+                      <TableHead>
+                        <TableRow>
+                          <TableCell>Time</TableCell>
+                          <TableCell>State Change</TableCell>
+                          <TableCell>Replicas</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        {tenantMetrics.recent_history.map((record) => (
+                          <TableRow key={record.id}>
+                            <TableCell>
+                              <Typography variant="caption">
+                                {new Date(record.changed_at).toLocaleString()}
+                              </Typography>
+                            </TableCell>
+                            <TableCell>
+                              <Stack direction="row" spacing={1} alignItems="center">
+                                {record.previous_state && (
+                                  <Chip label={record.previous_state} size="small" />
+                                )}
+                                <Typography variant="caption">→</Typography>
+                                <Chip 
+                                  label={record.new_state} 
+                                  size="small"
+                                  color={record.new_state === 'running' ? 'success' : 
+                                         record.new_state === 'stopped' ? 'default' : 'warning'}
+                                />
+                              </Stack>
+                            </TableCell>
+                            <TableCell>
+                              {record.previous_replicas !== null && `${record.previous_replicas} → `}
+                              {record.new_replicas}
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </TableContainer>
+                </>
+              )}
+            </Box>
+          ) : (
+            <Alert severity="info">No metrics available for this tenant</Alert>
+          )}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setMetricsDialogOpen(false)}>Close</Button>
         </DialogActions>
       </Dialog>
     </Box>
