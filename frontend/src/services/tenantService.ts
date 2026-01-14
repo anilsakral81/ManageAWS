@@ -1,5 +1,5 @@
 import { apiClient } from './apiClient'
-import { Tenant, TenantScaleRequest, Pod, Container, PodLogs } from '@/types'
+import { Tenant, TenantScaleRequest, Pod, Container, PodLogs, TenantMetrics, CurrentStateDuration, MonthlyMetrics, StateHistoryRecord } from '@/types'
 
 export const tenantService = {
   // Get all tenants (namespaces)
@@ -54,5 +54,34 @@ export const tenantService = {
       data.container = container
     }
     return apiClient.post<any>(`/tenants/${namespace}/pods/${podName}/exec`, data)
+  },
+
+  // Metrics endpoints
+  
+  // Get comprehensive metrics for a tenant
+  async getMetrics(namespace: string, includeMonthly = true, includeHistory = true, historyLimit = 10): Promise<TenantMetrics> {
+    return apiClient.get<TenantMetrics>(`/tenants/${namespace}/metrics`, {
+      include_monthly: includeMonthly,
+      include_history: includeHistory,
+      history_limit: historyLimit
+    })
+  },
+
+  // Get current state duration
+  async getCurrentStateDuration(namespace: string): Promise<CurrentStateDuration> {
+    return apiClient.get<CurrentStateDuration>(`/tenants/${namespace}/metrics/current-state`)
+  },
+
+  // Get monthly uptime/downtime metrics
+  async getMonthlyMetrics(namespace: string, year?: number, month?: number): Promise<MonthlyMetrics> {
+    const params: any = {}
+    if (year) params.year = year
+    if (month) params.month = month
+    return apiClient.get<MonthlyMetrics>(`/tenants/${namespace}/metrics/monthly`, params)
+  },
+
+  // Get state change history
+  async getStateHistory(namespace: string, limit = 100): Promise<StateHistoryRecord[]> {
+    return apiClient.get<StateHistoryRecord[]>(`/tenants/${namespace}/metrics/history`, { limit })
   },
 }

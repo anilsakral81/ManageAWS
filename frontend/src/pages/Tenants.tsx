@@ -30,6 +30,9 @@ import {
   ListItem,
   ListItemText,
   Divider,
+  Tabs,
+  Tab,
+  LinearProgress,
 } from '@mui/material'
 import {
   Search,
@@ -40,21 +43,25 @@ import {
   Schedule as ScheduleIcon,
   Terminal as TerminalIcon,
   Article as LogsIcon,
+  Timeline as TimelineIcon,
 } from '@mui/icons-material'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { useSearchParams } from 'react-router-dom'
+import { useSearchParams, useNavigate } from 'react-router-dom'
 import { tenantService } from '@/services/tenantService'
 import { Tenant } from '@/types'
 import PodTerminal from '@/components/PodTerminal'
 
 export default function Tenants() {
-  const [searchParams] = useSearchParams()
+  const [searchParams, setSearchParams] = useSearchParams()
+  const navigate = useNavigate()
   const [searchQuery, setSearchQuery] = useState('')
   const [filterStatus, setFilterStatus] = useState(searchParams.get('status') || 'all')
+  const [filterNamespace, setFilterNamespace] = useState(searchParams.get('namespace') || '')
   const [selectedTenant, setSelectedTenant] = useState<Tenant | null>(null)
   const [actionDialogOpen, setActionDialogOpen] = useState(false)
   const [actionType, setActionType] = useState<'start' | 'stop'>('start')
   const [infoDialogOpen, setInfoDialogOpen] = useState(false)
+  const [infoTab, setInfoTab] = useState(0)
   const [logsDialogOpen, setLogsDialogOpen] = useState(false)
   const [terminalDialogOpen, setTerminalDialogOpen] = useState(false)
   const [selectedPod, setSelectedPod] = useState<string>('')
@@ -67,6 +74,10 @@ export default function Tenants() {
     const status = searchParams.get('status')
     if (status && ['all', 'running', 'stopped'].includes(status)) {
       setFilterStatus(status)
+    }
+    const namespace = searchParams.get('namespace')
+    if (namespace) {
+      setFilterNamespace(namespace)
     }
   }, [searchParams])
 
@@ -82,6 +93,14 @@ export default function Tenants() {
     queryKey: ['pods', selectedTenant?.namespace],
     queryFn: () => tenantService.getPods(selectedTenant!.namespace),
     enabled: !!selectedTenant && infoDialogOpen,
+  })
+
+  // Fetch tenant metrics
+  const { data: tenantMetrics, isLoading: isLoadingMetrics } = useQuery({
+    queryKey: ['tenant-metrics', selectedTenant?.namespace],
+    queryFn: () => tenantService.getMetrics(selectedTenant!.namespace),
+    enabled: !!selectedTenant && infoDialogOpen,
+    refetchInterval: 30000, // Refresh every 30 seconds
   })
 
   // Fetch pod containers
@@ -131,10 +150,13 @@ export default function Tenants() {
   })
 
   const filteredTenants = tenants.filter((tenant) => {
+    // Filter out tenants with no deployments
+    const hasDeployments = tenant.deployment_name && !tenant.deployment_name.includes('0 deployment') && tenant.deployment_name !== 'none'
     const matchesSearch = tenant.name.toLowerCase().includes(searchQuery.toLowerCase())
     const matchesStatus =
       filterStatus === 'all' || tenant.status.toLowerCase() === filterStatus
-    return matchesSearch && matchesStatus
+    const matchesNamespace = !filterNamespace || tenant.namespace === filterNamespace
+    return hasDeployments && matchesSearch && matchesStatus && matchesNamespace
   })
 
   const handleAction = (tenant: Tenant, action: 'start' | 'stop') => {
@@ -201,7 +223,7 @@ export default function Tenants() {
 
       {/* Filters */}
       <Paper sx={{ p: 2, mb: 3 }}>
-        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
+        <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2} alignItems="center">
           <TextField
             placeholder="Search tenants..."
             variant="outlined"
@@ -229,6 +251,19 @@ export default function Tenants() {
               <MenuItem value="stopped">Stopped</MenuItem>
             </Select>
           </FormControl>
+          {filterNamespace && (
+            <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+              <Chip 
+                label={`Filtered: ${filterNamespace}`}
+                onDelete={() => {
+                  setFilterNamespace('')
+                  setSearchParams({})
+                }}
+                color="primary"
+                size="small"
+              />
+            </Box>
+          )}
         </Stack>
       </Paper>
 
@@ -322,7 +357,7 @@ export default function Tenants() {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Manage Schedule">
-                        <IconButton size="small">
+                        <IconButton size="small" onClick={() => navigate('/schedules')}>
                           <ScheduleIcon />
                         </IconButton>
                       </Tooltip>
@@ -376,133 +411,280 @@ export default function Tenants() {
         fullWidth
       >
         <DialogTitle>Tenant Information - {selectedTenant?.name}</DialogTitle>
+        <Tabs value={infoTab} onChange={(_, newValue) => setInfoTab(newValue)} sx={{ borderBottom: 1, borderColor: 'divider', px: 3 }}>
+          <Tab label="Details & Pods" />
+          <Tab label="Uptime Metrics" icon={<TimelineIcon />} iconPosition="start" />
+        </Tabs>
         <DialogContent>
           {selectedTenant && (
             <Box>
-              <Typography variant="h6" gutterBottom>Details</Typography>
-              <Stack spacing={1} mb={3}>
-                <Typography><strong>Namespace:</strong> {selectedTenant.namespace}</Typography>
-                <Typography><strong>Status:</strong> {selectedTenant.status}</Typography>
-                <Typography><strong>Replicas:</strong> {selectedTenant.current_replicas}</Typography>
-                <Typography><strong>Deployment:</strong> {selectedTenant.deployment_name}</Typography>
-              </Stack>
-
-              {selectedTenant.virtualservices && selectedTenant.virtualservices.length > 0 && (
+              {/* Tab 0: Details & Pods */}
+              {infoTab === 0 && (
                 <>
+                  <Typography variant="h6" gutterBottom>Details</Typography>
+                  <Stack spacing={1} mb={3}>
+                    <Typography><strong>Namespace:</strong> {selectedTenant.namespace}</Typography>
+                    <Typography><strong>Status:</strong> {selectedTenant.status}</Typography>
+                    <Typography><strong>Replicas:</strong> {selectedTenant.current_replicas}</Typography>
+                    <Typography><strong>Deployment:</strong> {selectedTenant.deployment_name}</Typography>
+                  </Stack>
+
+                  {selectedTenant.virtualservices && selectedTenant.virtualservices.length > 0 && (
+                    <>
+                      <Divider sx={{ my: 2 }} />
+                      <Typography variant="h6" gutterBottom>VirtualServices</Typography>
+                      <List dense>
+                        {selectedTenant.virtualservices.map((vs, index) => (
+                          <ListItem key={index}>
+                            <ListItemText
+                              primary={
+                                <a 
+                                  href={`http://${vs.host}`} 
+                                  target="_blank" 
+                                  rel="noopener noreferrer"
+                                  style={{ textDecoration: 'none', color: '#1976d2' }}
+                                >
+                                  {vs.host}
+                                </a>
+                              }
+                              secondary={`Gateway: ${vs.gateways} | VS: ${vs.name}`}
+                            />
+                          </ListItem>
+                        ))}
+                      </List>
+                    </>
+                  )}
+
                   <Divider sx={{ my: 2 }} />
-                  <Typography variant="h6" gutterBottom>VirtualServices</Typography>
-                  <List dense>
-                    {selectedTenant.virtualservices.map((vs, index) => (
-                      <ListItem key={index}>
-                        <ListItemText
-                          primary={
-                            <a 
-                              href={`http://${vs.host}`} 
-                              target="_blank" 
-                              rel="noopener noreferrer"
-                              style={{ textDecoration: 'none', color: '#1976d2' }}
-                            >
-                              {vs.host}
-                            </a>
-                          }
-                          secondary={`Gateway: ${vs.gateways} | VS: ${vs.name}`}
-                        />
-                      </ListItem>
-                    ))}
-                  </List>
+
+                  <Typography variant="h6" gutterBottom>Pods</Typography>
+                  {isLoadingPods ? (
+                    <Box display="flex" justifyContent="center" py={2}>
+                      <CircularProgress />
+                    </Box>
+                  ) : pods.length === 0 ? (
+                    <Typography color="textSecondary">No pods found</Typography>
+                  ) : (
+                    <List sx={{ py: 0 }}>
+                      {pods.map((pod: any) => (
+                        <Box key={pod.name}>
+                          <ListItem 
+                            sx={{ 
+                              py: 1,
+                              px: 2,
+                              display: 'flex',
+                              alignItems: 'flex-start',
+                              justifyContent: 'space-between',
+                              gap: 2,
+                              borderBottom: '1px solid #e0e0e0'
+                            }}
+                          >
+                            <Box sx={{ minWidth: 0 }}>
+                              <Typography variant="body2" fontWeight="medium">
+                                {pod.name}
+                              </Typography>
+                              <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, mb: 0.5 }}>
+                                <Chip 
+                                  label={pod.status} 
+                                  size="small"
+                                  color={pod.status === 'Running' ? 'success' : 'default'}
+                                  sx={{ height: 20, fontSize: '0.7rem' }}
+                                />
+                                <Typography variant="caption" color="textSecondary">
+                                  Ready: {pod.ready_containers}/{pod.total_containers}
+                                </Typography>
+                              </Stack>
+                              {pod.containers && pod.containers.length > 0 && (
+                                <Box sx={{ mt: 1, ml: 1 }}>
+                                  {pod.containers.map((container: any) => (
+                                    <Box key={container.name} sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
+                                      <Typography variant="caption" color="textSecondary" sx={{ minWidth: 20 }}>
+                                        {container.ready ? '✓' : '✗'}
+                                      </Typography>
+                                      <Typography variant="caption" sx={{ fontFamily: 'monospace' }}>
+                                        {container.name}
+                                      </Typography>
+                                      <Typography variant="caption" color="textSecondary" sx={{ ml: 1 }}>
+                                        {container.state}
+                                      </Typography>
+                                      {container.restarts > 0 && (
+                                        <Typography variant="caption" color="warning.main" sx={{ ml: 0.5 }}>
+                                          ↻{container.restarts}
+                                        </Typography>
+                                      )}
+                                    </Box>
+                                  ))}
+                                </Box>
+                              )}
+                            </Box>
+                            <Stack direction="row" spacing={0.5} sx={{ flexShrink: 0 }}>
+                              <Tooltip title="View Logs">
+                                <IconButton 
+                                  size="small"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleShowPodLogs(pod.name)
+                                  }}
+                                >
+                                  <LogsIcon fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                              <Tooltip title="Open Terminal">
+                                <IconButton 
+                                  size="small"
+                                  color="primary"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleShowPodTerminal(pod.name)
+                                  }}
+                                >
+                                  <TerminalIcon fontSize="small" />
+                                </IconButton>
+                              </Tooltip>
+                            </Stack>
+                          </ListItem>
+                        </Box>
+                      ))}
+                    </List>
+                  )}
                 </>
               )}
 
-              <Divider sx={{ my: 2 }} />
-
-              <Typography variant="h6" gutterBottom>Pods</Typography>
-              {isLoadingPods ? (
-                <Box display="flex" justifyContent="center" py={2}>
-                  <CircularProgress />
-                </Box>
-              ) : pods.length === 0 ? (
-                <Typography color="textSecondary">No pods found</Typography>
-              ) : (
-                <List sx={{ py: 0 }}>
-                  {pods.map((pod: any) => (
-                    <Box key={pod.name}>
-                      <ListItem 
-                        sx={{ 
-                          py: 1,
-                          px: 2,
-                          display: 'flex',
-                          alignItems: 'flex-start',
-                          gap: 2,
-                          borderBottom: '1px solid #e0e0e0'
-                        }}
-                      >
-                        <Box sx={{ flex: 1, minWidth: 0 }}>
-                          <Typography variant="body2" fontWeight="medium">
-                            {pod.name}
-                          </Typography>
-                          <Stack direction="row" spacing={1} alignItems="center" sx={{ mt: 0.5, mb: 0.5 }}>
+              {/* Tab 1: Metrics */}
+              {infoTab === 1 && (
+                <>
+                  {isLoadingMetrics ? (
+                    <Box display="flex" justifyContent="center" py={4}>
+                      <CircularProgress />
+                    </Box>
+                  ) : tenantMetrics ? (
+                    <Box>
+                      {/* Current State */}
+                      <Typography variant="h6" gutterBottom>Current State</Typography>
+                      <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
+                        <Stack spacing={2}>
+                          <Box>
+                            <Typography variant="body2" color="textSecondary">Status</Typography>
                             <Chip 
-                              label={pod.status} 
-                              size="small"
-                              color={pod.status === 'Running' ? 'success' : 'default'}
-                              sx={{ height: 20, fontSize: '0.7rem' }}
+                              label={tenantMetrics.current_state.current_state.toUpperCase()}
+                              color={tenantMetrics.current_state.current_state === 'running' ? 'success' : 
+                                     tenantMetrics.current_state.current_state === 'stopped' ? 'default' : 'warning'}
+                              sx={{ mt: 0.5 }}
                             />
-                            <Typography variant="caption" color="textSecondary">
-                              Ready: {pod.ready_containers}/{pod.total_containers}
-                            </Typography>
-                          </Stack>
-                          {pod.containers && pod.containers.length > 0 && (
-                            <Box sx={{ mt: 1, ml: 1 }}>
-                              {pod.containers.map((container: any) => (
-                                <Box key={container.name} sx={{ display: 'flex', gap: 1, mb: 0.5 }}>
-                                  <Typography variant="caption" color="textSecondary" sx={{ minWidth: 20 }}>
-                                    {container.ready ? '✓' : '✗'}
-                                  </Typography>
-                                  <Typography variant="caption" sx={{ fontFamily: 'monospace', flex: 1 }}>
-                                    {container.name}
-                                  </Typography>
-                                  <Typography variant="caption" color="textSecondary">
-                                    {container.state}
-                                  </Typography>
-                                  {container.restarts > 0 && (
-                                    <Typography variant="caption" color="warning.main">
-                                      ↻{container.restarts}
-                                    </Typography>
-                                  )}
-                                </Box>
-                              ))}
+                          </Box>
+                          <Box>
+                            <Typography variant="body2" color="textSecondary">Duration in Current State</Typography>
+                            <Typography variant="h6">{tenantMetrics.current_state.duration_formatted}</Typography>
+                          </Box>
+                          {tenantMetrics.current_state.state_since && (
+                            <Box>
+                              <Typography variant="body2" color="textSecondary">Since</Typography>
+                              <Typography>{new Date(tenantMetrics.current_state.state_since).toLocaleString()}</Typography>
                             </Box>
                           )}
-                        </Box>
-                        <Stack direction="row" spacing={0.5}>
-                          <Tooltip title="View Logs">
-                            <IconButton 
-                              size="small"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleShowPodLogs(pod.name)
-                              }}
-                            >
-                              <LogsIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
-                          <Tooltip title="Open Terminal">
-                            <IconButton 
-                              size="small"
-                              color="primary"
-                              onClick={(e) => {
-                                e.stopPropagation()
-                                handleShowPodTerminal(pod.name)
-                              }}
-                            >
-                              <TerminalIcon fontSize="small" />
-                            </IconButton>
-                          </Tooltip>
                         </Stack>
-                      </ListItem>
+                      </Paper>
+
+                      {/* Monthly Metrics */}
+                      {tenantMetrics.monthly_metrics && (
+                        <>
+                          <Typography variant="h6" gutterBottom>
+                            Monthly Uptime - {new Date(tenantMetrics.monthly_metrics.year, tenantMetrics.monthly_metrics.month - 1).toLocaleString('default', { month: 'long', year: 'numeric' })}
+                          </Typography>
+                          <Paper variant="outlined" sx={{ p: 2, mb: 3 }}>
+                            <Stack spacing={2}>
+                              <Box>
+                                <Box display="flex" justifyContent="space-between" mb={1}>
+                                  <Typography variant="body2">Uptime</Typography>
+                                  <Typography variant="body2" fontWeight="bold" color="success.main">
+                                    {tenantMetrics.monthly_metrics.uptime_percentage.toFixed(1)}%
+                                  </Typography>
+                                </Box>
+                                <LinearProgress 
+                                  variant="determinate" 
+                                  value={tenantMetrics.monthly_metrics.uptime_percentage} 
+                                  color="success"
+                                  sx={{ height: 8, borderRadius: 4 }}
+                                />
+                                <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
+                                  {tenantMetrics.monthly_metrics.uptime_formatted}
+                                  {tenantMetrics.monthly_metrics.scaling_seconds > 0 && 
+                                    ` (includes ${tenantMetrics.monthly_metrics.scaling_formatted} scaling)`}
+                                </Typography>
+                              </Box>
+                              <Box>
+                                <Box display="flex" justifyContent="space-between" mb={1}>
+                                  <Typography variant="body2">Downtime</Typography>
+                                  <Typography variant="body2" fontWeight="bold" color="error.main">
+                                    {tenantMetrics.monthly_metrics.downtime_percentage.toFixed(1)}%
+                                  </Typography>
+                                </Box>
+                                <LinearProgress 
+                                  variant="determinate" 
+                                  value={tenantMetrics.monthly_metrics.downtime_percentage} 
+                                  color="error"
+                                  sx={{ height: 8, borderRadius: 4 }}
+                                />
+                                <Typography variant="caption" color="textSecondary" sx={{ mt: 0.5, display: 'block' }}>
+                                  {tenantMetrics.monthly_metrics.downtime_formatted}
+                                </Typography>
+                              </Box>
+                            </Stack>
+                          </Paper>
+                        </>
+                      )}
+
+                      {/* Recent History */}
+                      {tenantMetrics.recent_history && tenantMetrics.recent_history.length > 0 && (
+                        <>
+                          <Typography variant="h6" gutterBottom>Recent State Changes</Typography>
+                          <TableContainer component={Paper} variant="outlined">
+                            <Table size="small">
+                              <TableHead>
+                                <TableRow>
+                                  <TableCell>Time</TableCell>
+                                  <TableCell>State Change</TableCell>
+                                  <TableCell>Replicas</TableCell>
+                                </TableRow>
+                              </TableHead>
+                              <TableBody>
+                                {tenantMetrics.recent_history.map((record) => (
+                                  <TableRow key={record.id}>
+                                    <TableCell>
+                                      <Typography variant="caption">
+                                        {new Date(record.changed_at).toLocaleString()}
+                                      </Typography>
+                                    </TableCell>
+                                    <TableCell>
+                                      <Stack direction="row" spacing={1} alignItems="center">
+                                        {record.previous_state && (
+                                          <Chip label={record.previous_state} size="small" />
+                                        )}
+                                        <Typography variant="caption">→</Typography>
+                                        <Chip 
+                                          label={record.new_state} 
+                                          size="small"
+                                          color={record.new_state === 'running' ? 'success' : 
+                                                 record.new_state === 'stopped' ? 'default' : 'warning'}
+                                        />
+                                      </Stack>
+                                    </TableCell>
+                                    <TableCell>
+                                      {record.previous_replicas !== null && `${record.previous_replicas} → `}
+                                      {record.new_replicas}
+                                    </TableCell>
+                                  </TableRow>
+                                ))}
+                              </TableBody>
+                            </Table>
+                          </TableContainer>
+                        </>
+                      )}
                     </Box>
-                  ))}
-                </List>
+                  ) : (
+                    <Alert severity="info">No metrics available for this tenant</Alert>
+                  )}
+                </>
               )}
             </Box>
           )}

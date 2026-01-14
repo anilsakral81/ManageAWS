@@ -5,5 +5,6 @@ from app.models.schedule import Schedule
 from app.models.audit_log import AuditLog
 from app.models.user_permission import UserPermission
 from app.models.user_namespace import UserNamespace
+from app.models.tenant_state_history import TenantStateHistory, StateType
 
-__all__ = ["Tenant", "Schedule", "AuditLog", "UserPermission", "UserNamespace"]
+__all__ = ["Tenant", "Schedule", "AuditLog", "UserPermission", "UserNamespace", "TenantStateHistory", "StateType"]

@@ -74,7 +74,8 @@ export interface Schedule {
 }
 
 export interface ScheduleCreate {
-  tenant_id: number
+  tenant_id?: number  // deprecated
+  namespace?: string
   action: 'start' | 'stop'
   cron_expression: string
   description?: string
@@ -91,6 +92,7 @@ export interface ScheduleUpdate {
 export interface AuditLog {
   id: number
   user_id: string
+  user_name?: string
   tenant_id?: number
   tenant_name?: string
   action: string
@@ -105,4 +107,94 @@ export interface DashboardStats {
   running_tenants: number
   stopped_tenants: number
   scheduled_actions: number
+}
+
+// Metrics types
+
+export interface CurrentStateDuration {
+  current_state: string
+  duration_seconds: number
+  duration_formatted: string
+  state_since: string | null
+  changed_by: string | null
+}
+
+export interface MonthlyMetrics {
+  year: number
+  month: number
+  uptime_seconds: number
+  downtime_seconds: number
+  scaling_seconds: number
+  uptime_percentage: number
+  downtime_percentage: number
+  uptime_formatted: string
+  downtime_formatted: string
+  scaling_formatted: string
+  total_seconds: number
+  month_start: string
+  month_end: string
+}
+
+export interface StateHistoryRecord {
+  id: number
+  previous_state: string | null
+  new_state: string
+  previous_replicas: number | null
+  new_replicas: number
+  changed_at: string
+  changed_by: string | null
+  reason: string | null
+}
+
+export interface TenantMetrics {
+  tenant_id: number
+  tenant_name: string
+  namespace: string
+  current_state: CurrentStateDuration
+  monthly_metrics: MonthlyMetrics | null
+  recent_history: StateHistoryRecord[]
+}
+
+export interface CurrentStateDuration {
+  current_state: string
+  duration_seconds: number
+  duration_formatted: string
+  state_since: string | null
+  changed_by: string | null
+}
+
+export interface MonthlyMetrics {
+  year: number
+  month: number
+  uptime_seconds: number
+  downtime_seconds: number
+  scaling_seconds: number
+  uptime_percentage: number
+  downtime_percentage: number
+  uptime_formatted: string
+  downtime_formatted: string
+  scaling_formatted: string
+  total_seconds: number
+  month_start: string
+  month_end: string
+}
+
+export interface StateHistoryRecord {
+  id: number
+  previous_state: string | null
+  new_state: string
+  previous_replicas: number | null
+  new_replicas: number
+  changed_at: string
+  changed_by: string | null
+  reason: string | null
+}
+
+export interface TenantMetrics {
+  tenant_id: number
+  tenant_name: string
+  namespace: string
+  current_state: CurrentStateDuration
+  monthly_metrics?: MonthlyMetrics
+  recent_history: StateHistoryRecord[]
 }
