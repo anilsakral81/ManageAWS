@@ -66,6 +66,7 @@ export interface Schedule {
   tenant_name?: string
   action: 'start' | 'stop'
   cron_expression: string
+  timezone: string
   description?: string
   enabled: boolean
   next_run?: string
@@ -78,6 +79,7 @@ export interface ScheduleCreate {
   namespace?: string
   action: 'start' | 'stop'
   cron_expression: string
+  timezone?: string  // IANA timezone, auto-detected from browser
   description?: string
   enabled?: boolean
 }
@@ -85,6 +87,7 @@ export interface ScheduleCreate {
 export interface ScheduleUpdate {
   action?: 'start' | 'stop'
   cron_expression?: string
+  timezone?: string
   description?: string
   enabled?: boolean
 }

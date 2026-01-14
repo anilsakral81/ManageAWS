@@ -517,17 +517,22 @@ class TenantService:
         
         # Fetch user name from Keycloak
         user_name = None
-        try:
-            async with httpx.AsyncClient() as client:
-                # Get admin token
-                token_response = await client.post(
-                    f"{settings.keycloak_url}/realms/master/protocol/openid-connect/token",
-                    data={
-                        "username": settings.keycloak_admin_username,
-                        "password": settings.keycloak_admin_password,
-                        "grant_type": "password",
-                        "client_id": "admin-cli"
-                    },
+        
+        # Use 'System' for scheduler instead of fetching from Keycloak
+        if user_id == "scheduler":
+            user_name = "System"
+        else:
+            try:
+                async with httpx.AsyncClient() as client:
+                    # Get admin token
+                    token_response = await client.post(
+                        f"{settings.keycloak_url}/realms/master/protocol/openid-connect/token",
+                        data={
+                            "username": settings.keycloak_admin_username,
+                            "password": settings.keycloak_admin_password,
+                            "grant_type": "password",
+                            "client_id": "admin-cli"
+                        },
                     headers={"Content-Type": "application/x-www-form-urlencoded"},
                     timeout=5.0
                 )
@@ -547,8 +552,8 @@ class TenantService:
                         first_name = user_data.get("firstName", "")
                         last_name = user_data.get("lastName", "")
                         user_name = f"{first_name} {last_name}".strip() or user_data.get("email", user_data.get("username", ""))
-        except Exception as e:
-            logger.warning(f"Could not fetch user name for audit log: {e}")
+            except Exception as e:
+                logger.warning(f"Could not fetch user name for audit log: {e}")
         
         audit_log = AuditLog(
             tenant_id=tenant_id,

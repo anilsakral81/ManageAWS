@@ -66,7 +66,7 @@ export default function Dashboard() {
     id: log.id,
     tenant: log.tenant_name || 'Unknown',
     action: log.action,
-    user: log.user_id,
+    user: log.user_id === 'scheduler' ? 'System' : (log.user_name || log.user_id),
     time: formatRelativeTime(log.created_at),
   }))
 

@@ -42,6 +42,7 @@ export default function Schedules() {
     namespace: '',
     action: 'start',
     cron_expression: '',
+    timezone: Intl.DateTimeFormat().resolvedOptions().timeZone, // Auto-detect user's timezone
     description: '',
     enabled: true,
   })
@@ -93,6 +94,7 @@ export default function Schedules() {
       namespace: '',
       action: 'start',
       cron_expression: '',
+      timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
       description: '',
       enabled: true,
     })
@@ -109,6 +111,7 @@ export default function Schedules() {
       namespace: schedule.tenant_name || '',  // Use tenant_name as namespace
       action: schedule.action,
       cron_expression: schedule.cron_expression,
+      timezone: schedule.timezone || Intl.DateTimeFormat().resolvedOptions().timeZone,
       description: schedule.description || '',
       enabled: schedule.enabled,
     })
@@ -128,6 +131,7 @@ export default function Schedules() {
         data: {
           action: formData.action,
           cron_expression: formData.cron_expression,
+          timezone: formData.timezone,
           description: formData.description,
           enabled: formData.enabled,
         },
@@ -168,6 +172,7 @@ export default function Schedules() {
               <TableCell>Tenant</TableCell>
               <TableCell>Action</TableCell>
               <TableCell>Schedule (Cron)</TableCell>
+              <TableCell>Timezone</TableCell>
               <TableCell>Description</TableCell>
               <TableCell>Next Run</TableCell>
               <TableCell>Status</TableCell>
@@ -177,13 +182,13 @@ export default function Schedules() {
           <TableBody>
             {isLoading ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
                   <CircularProgress />
                 </TableCell>
               </TableRow>
             ) : schedules.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={7} align="center" sx={{ py: 5 }}>
+                <TableCell colSpan={8} align="center" sx={{ py: 5 }}>
                   <Typography color="textSecondary">No schedules found</Typography>
                 </TableCell>
               </TableRow>
@@ -204,6 +209,13 @@ export default function Schedules() {
                     <Typography variant="body2" fontFamily="monospace">
                       {schedule.cron_expression}
                     </Typography>
+                  </TableCell>
+                  <TableCell>
+                    <Chip
+                      label={schedule.timezone || 'UTC'}
+                      size="small"
+                      variant="outlined"
+                    />
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="textSecondary">
@@ -289,6 +301,15 @@ export default function Schedules() {
               value={formData.cron_expression}
               onChange={(value) => setFormData({ ...formData, cron_expression: value })}
             />
+
+            <Alert severity="info" sx={{ mt: 1 }}>
+              <Typography variant="body2">
+                <strong>Timezone:</strong> {formData.timezone || 'UTC'}
+              </Typography>
+              <Typography variant="caption" color="textSecondary">
+                Schedule times are in your local timezone. The system will handle conversion automatically.
+              </Typography>
+            </Alert>
 
             <TextField
               fullWidth

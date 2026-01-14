@@ -165,7 +165,7 @@ export default function AuditLogs() {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" fontWeight="bold">
-                        {log.user_name || log.user_id}
+                        {log.user_id === 'scheduler' ? 'System' : (log.user_name || log.user_id)}
                       </Typography>
                     </TableCell>
                     <TableCell>

@@ -10,7 +10,8 @@ from app.models.schedule import ScheduleAction
 class ScheduleBase(BaseModel):
     """Base schedule schema"""
     action: ScheduleAction = Field(..., description="Schedule action (start/stop)")
-    cron_expression: str = Field(..., min_length=9, max_length=100, description="Cron expression")
+    cron_expression: str = Field(..., min_length=9, max_length=100, description="Cron expression in user's timezone")
+    timezone: str = Field("UTC", min_length=1, max_length=50, description="IANA timezone (e.g., 'Asia/Kolkata', 'America/New_York')")
     enabled: bool = Field(True, description="Whether schedule is enabled")
     description: Optional[str] = Field(None, max_length=500, description="Schedule description")
 
@@ -41,6 +42,7 @@ class ScheduleUpdate(BaseModel):
     """Schema for updating a schedule"""
     action: Optional[ScheduleAction] = None
     cron_expression: Optional[str] = Field(None, min_length=9, max_length=100)
+    timezone: Optional[str] = Field(None, min_length=1, max_length=50)
     enabled: Optional[bool] = None
     description: Optional[str] = Field(None, max_length=500)
 
@@ -62,6 +64,7 @@ class ScheduleResponse(ScheduleBase):
     id: int
     tenant_id: int
     tenant_name: Optional[str] = None
+    timezone: str
     last_run_at: Optional[datetime]
     next_run_at: Optional[datetime]
     last_run_status: Optional[str]
