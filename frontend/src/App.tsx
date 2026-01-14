@@ -1,4 +1,6 @@
 import { Routes, Route, Navigate } from 'react-router-dom'
+import { Box, CircularProgress, Typography } from '@mui/material'
+import { useKeycloak } from './contexts/KeycloakContext'
 import Layout from './components/Layout'
 import Dashboard from './pages/Dashboard'
 import Tenants from './pages/Tenants'
@@ -9,10 +11,31 @@ import Login from './pages/Login'
 import UserManagement from './pages/UserManagement'
 
 function App() {
-  // TODO: Integrate Keycloak authentication
-  const isAuthenticated = true // Dummy value for now
+  const { initialized, authenticated } = useKeycloak()
 
-  if (!isAuthenticated) {
+  // Show loading while Keycloak initializes
+  if (!initialized) {
+    return (
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          justifyContent: 'center',
+          alignItems: 'center',
+          minHeight: '100vh',
+          gap: 2,
+        }}
+      >
+        <CircularProgress />
+        <Typography variant="body2" color="textSecondary">
+          Initializing authentication...
+        </Typography>
+      </Box>
+    )
+  }
+
+  // Show login page if not authenticated
+  if (!authenticated) {
     return <Login />
   }
 

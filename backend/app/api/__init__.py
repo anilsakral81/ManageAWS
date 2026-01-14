@@ -12,4 +12,4 @@ api_router.include_router(tenants.router, prefix="/tenants", tags=["Tenants"])
 api_router.include_router(schedules.router, prefix="/schedules", tags=["Schedules"])
 api_router.include_router(audit_logs.router, prefix="/audit-logs", tags=["Audit Logs"])
 api_router.include_router(terminal.router, prefix="/terminal", tags=["Terminal"])
-api_router.include_router(users.router, prefix="/admin", tags=["User Management"])
+api_router.include_router(users.router, tags=["User Management"])  # No prefix - endpoints have their own paths

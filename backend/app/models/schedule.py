@@ -22,7 +22,7 @@ class Schedule(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tenant_id = Column(Integer, ForeignKey("tenants.id", ondelete="CASCADE"), nullable=False)
-    action = Column(SQLEnum(ScheduleAction), nullable=False)
+    action = Column(SQLEnum(ScheduleAction, values_callable=lambda x: [e.value for e in x]), nullable=False)
     cron_expression = Column(String(100), nullable=False)  # e.g., "0 18 * * 1-5"
     enabled = Column(Boolean, default=True, nullable=False)
     description = Column(String(500), nullable=True)

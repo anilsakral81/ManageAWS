@@ -1,0 +1,271 @@
+apiVersion: v1
+items:
+- apiVersion: networking.istio.io/v1
+  kind: Gateway
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"Gateway","metadata":{"annotations":{},"name":"tenant-management-gateway","namespace":"tenant-management"},"spec":{"selector":{"istio":"ingressgateway"},"servers":[{"hosts":["governance.mrtmcloud.com","*"],"port":{"name":"http","number":80,"protocol":"HTTP"}}]}}
+    creationTimestamp: "2026-01-01T16:14:37Z"
+    generation: 3
+    name: tenant-management-gateway
+    namespace: tenant-management
+    resourceVersion: "194316558"
+    uid: da9b9da8-1d50-4986-be65-3727cb60b2b7
+  spec:
+    selector:
+      istio: ingressgateway
+    servers:
+    - hosts:
+      - governance.mrtmcloud.com
+      - '*'
+      port:
+        name: http
+        number: 80
+        protocol: HTTP
+- apiVersion: networking.istio.io/v1
+  kind: VirtualService
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"VirtualService","metadata":{"annotations":{},"name":"keycloak-vs","namespace":"tenant-management"},"spec":{"gateways":["tenant-management-gateway"],"hosts":["*"],"http":[{"match":[{"uri":{"prefix":"/realms/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/admin/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/js/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/resources/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/robots.txt"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"}]}}
+    creationTimestamp: "2026-01-03T13:37:25Z"
+    generation: 4
+    name: keycloak-vs
+    namespace: tenant-management
+    resourceVersion: "192607521"
+    uid: a6e444d0-0704-4b32-bc75-135ea7cff51a
+  spec:
+    gateways:
+    - tenant-management-gateway
+    hosts:
+    - '*'
+    http:
+    - match:
+      - uri:
+          prefix: /realms/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - match:
+      - uri:
+          prefix: /admin/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - match:
+      - uri:
+          prefix: /js/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - match:
+      - uri:
+          prefix: /resources/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - match:
+      - uri:
+          prefix: /robots.txt
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+- apiVersion: networking.istio.io/v1
+  kind: VirtualService
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"VirtualService","metadata":{"annotations":{},"name":"tenant-management-vs","namespace":"tenant-management"},"spec":{"gateways":["tenant-management-gateway"],"hosts":["*"],"http":[{"match":[{"uri":{"prefix":"/tm/api/v1"}}],"rewrite":{"uri":"/api/v1"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"exact":"/tm/health"}}],"rewrite":{"uri":"/health"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"prefix":"/tm/metrics"}}],"rewrite":{"uri":"/metrics"},"route":[{"destination":{"host":"backend-service","port":{"number":9090}}}]},{"match":[{"uri":{"prefix":"/tm/docs"}}],"rewrite":{"uri":"/docs"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"prefix":"/tm/redoc"}}],"rewrite":{"uri":"/redoc"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"exact":"/tm/openapi.json"}}],"rewrite":{"uri":"/openapi.json"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"exact":"/"}}],"redirect":{"redirectCode":301,"uri":"/tm/"}},{"match":[{"uri":{"prefix":"/tm/"}}],"rewrite":{"uri":"/"},"route":[{"destination":{"host":"frontend-service","port":{"number":80}}}]},{"match":[{"uri":{"exact":"/tm"}}],"rewrite":{"uri":"/"},"route":[{"destination":{"host":"frontend-service","port":{"number":80}}}]}]}}
+    creationTimestamp: "2026-01-01T16:14:37Z"
+    generation: 6
+    name: tenant-management-vs
+    namespace: tenant-management
+    resourceVersion: "194321580"
+    uid: 106b1ca6-a31f-43c6-9330-d53d69b62f5f
+  spec:
+    gateways:
+    - tenant-management-gateway
+    hosts:
+    - '*'
+    http:
+    - match:
+      - uri:
+          prefix: /tm/api/v1
+      rewrite:
+        uri: /api/v1
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          exact: /tm/health
+      rewrite:
+        uri: /health
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          prefix: /tm/metrics
+      rewrite:
+        uri: /metrics
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 9090
+    - match:
+      - uri:
+          prefix: /tm/docs
+      rewrite:
+        uri: /docs
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          prefix: /tm/redoc
+      rewrite:
+        uri: /redoc
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          exact: /tm/openapi.json
+      rewrite:
+        uri: /openapi.json
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          exact: /
+      redirect:
+        redirectCode: 301
+        uri: /tm/
+    - match:
+      - uri:
+          prefix: /tm/
+      rewrite:
+        uri: /
+      route:
+      - destination:
+          host: frontend-service
+          port:
+            number: 80
+    - match:
+      - uri:
+          exact: /tm
+      rewrite:
+        uri: /
+      route:
+      - destination:
+          host: frontend-service
+          port:
+            number: 80
+- apiVersion: networking.istio.io/v1
+  kind: DestinationRule
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"DestinationRule","metadata":{"annotations":{},"name":"backend-dr","namespace":"tenant-management"},"spec":{"host":"backend-service","trafficPolicy":{"connectionPool":{"http":{"http1MaxPendingRequests":50,"http2MaxRequests":100,"maxRequestsPerConnection":2},"tcp":{"maxConnections":100}},"loadBalancer":{"simple":"LEAST_REQUEST"},"outlierDetection":{"baseEjectionTime":"30s","consecutiveErrors":3,"interval":"30s","maxEjectionPercent":50}}}}
+    creationTimestamp: "2026-01-01T16:14:38Z"
+    generation: 2
+    name: backend-dr
+    namespace: tenant-management
+    resourceVersion: "191286979"
+    uid: 7613b3f9-550d-4fc4-9533-c38480523d06
+  spec:
+    host: backend-service
+    trafficPolicy:
+      connectionPool:
+        http:
+          http1MaxPendingRequests: 50
+          http2MaxRequests: 100
+          maxRequestsPerConnection: 2
+        tcp:
+          maxConnections: 100
+      loadBalancer:
+        simple: LEAST_REQUEST
+      outlierDetection:
+        baseEjectionTime: 30s
+        consecutiveErrors: 3
+        interval: 30s
+        maxEjectionPercent: 50
+- apiVersion: networking.istio.io/v1
+  kind: DestinationRule
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"DestinationRule","metadata":{"annotations":{},"name":"frontend-dr","namespace":"tenant-management"},"spec":{"host":"frontend-service","trafficPolicy":{"connectionPool":{"http":{"http1MaxPendingRequests":25,"http2MaxRequests":50},"tcp":{"maxConnections":50}},"loadBalancer":{"simple":"ROUND_ROBIN"}}}}
+    creationTimestamp: "2026-01-01T16:14:38Z"
+    generation: 2
+    name: frontend-dr
+    namespace: tenant-management
+    resourceVersion: "191286983"
+    uid: 24502678-05ce-4bef-9084-241209499f1e
+  spec:
+    host: frontend-service
+    trafficPolicy:
+      connectionPool:
+        http:
+          http1MaxPendingRequests: 25
+          http2MaxRequests: 50
+        tcp:
+          maxConnections: 50
+      loadBalancer:
+        simple: ROUND_ROBIN
+- apiVersion: networking.istio.io/v1
+  kind: DestinationRule
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"DestinationRule","metadata":{"annotations":{},"name":"keycloak","namespace":"tenant-management"},"spec":{"host":"keycloak","trafficPolicy":{"connectionPool":{"http":{"http1MaxPendingRequests":50,"http2MaxRequests":100,"maxRequestsPerConnection":2},"tcp":{"maxConnections":100}},"loadBalancer":{"simple":"ROUND_ROBIN"}}}}
+    creationTimestamp: "2026-01-03T06:52:36Z"
+    generation: 2
+    name: keycloak
+    namespace: tenant-management
+    resourceVersion: "192597785"
+    uid: 5b315eda-4413-4cca-ad6a-3829de0e5445
+  spec:
+    host: keycloak
+    trafficPolicy:
+      connectionPool:
+        http:
+          http1MaxPendingRequests: 50
+          http2MaxRequests: 100
+          maxRequestsPerConnection: 2
+        tcp:
+          maxConnections: 100
+      loadBalancer:
+        simple: ROUND_ROBIN
+kind: List
+metadata:
+  resourceVersion: ""

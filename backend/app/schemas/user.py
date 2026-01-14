@@ -10,8 +10,8 @@ from app.models.user_permission import UserRole
 class UserInfo(BaseModel):
     """Current user information from Keycloak"""
     sub: str  # Keycloak user ID
-    email: Optional[EmailStr] = None
-    preferred_username: str
+    email: Optional[str] = None  # Changed from EmailStr to allow .local domains
+    preferred_username: Optional[str] = None
     name: Optional[str] = None
     roles: List[str] = []
     groups: List[str] = []
@@ -52,5 +52,33 @@ class UserNamespaceResponse(BaseModel):
     enabled: bool
     granted_by: Optional[str]
     granted_at: datetime
+    granted_by_email: Optional[str] = None  # Email of the user who granted access
+    granted_by_name: Optional[str] = None   # Name of the user who granted access
     
     model_config = ConfigDict(from_attributes=True)
+
+
+class UserCreate(BaseModel):
+    """Schema for creating a new user in Keycloak"""
+    username: str
+    email: str
+    firstName: str
+    lastName: str
+    password: str
+    enabled: bool = True
+    emailVerified: bool = True
+    roles: List[str] = []  # List of realm roles to assign
+
+
+class UserUpdate(BaseModel):
+    """Schema for updating a user in Keycloak"""
+    email: Optional[str] = None
+    firstName: Optional[str] = None
+    lastName: Optional[str] = None
+    enabled: Optional[bool] = None
+
+
+class PasswordReset(BaseModel):
+    """Schema for resetting user password"""
+    password: str
+    temporary: bool = False  # If True, user must change password on next login

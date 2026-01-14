@@ -1,0 +1,562 @@
+apiVersion: v1
+items:
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "41"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"backend"},"name":"backend","namespace":"tenant-management"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"backend"}},"template":{"metadata":{"labels":{"app":"backend"}},"spec":{"containers":[{"env":[{"name":"APP_NAME","valueFrom":{"configMapKeyRef":{"key":"APP_NAME","name":"backend-config"}}},{"name":"APP_ENV","valueFrom":{"configMapKeyRef":{"key":"APP_ENV","name":"backend-config"}}},{"name":"DEBUG","valueFrom":{"configMapKeyRef":{"key":"DEBUG","name":"backend-config"}}},{"name":"LOG_LEVEL","valueFrom":{"configMapKeyRef":{"key":"LOG_LEVEL","name":"backend-config"}}},{"name":"API_PREFIX","valueFrom":{"configMapKeyRef":{"key":"API_PREFIX","name":"backend-config"}}},{"name":"CORS_ORIGINS","valueFrom":{"configMapKeyRef":{"key":"CORS_ORIGINS","name":"backend-config"}}},{"name":"IN_CLUSTER","valueFrom":{"configMapKeyRef":{"key":"IN_CLUSTER","name":"backend-config"}}},{"name":"KEYCLOAK_URL","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_URL","name":"backend-config"}}},{"name":"KEYCLOAK_REALM","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_REALM","name":"backend-config"}}},{"name":"KEYCLOAK_CLIENT_ID","valueFrom":{"configMapKeyRef":{"key":"KEYCLOAK_CLIENT_ID","name":"backend-config"}}},{"name":"DATABASE_URL","valueFrom":{"secretKeyRef":{"key":"DATABASE_URL","name":"backend-secret"}}},{"name":"KEYCLOAK_CLIENT_SECRET","valueFrom":{"secretKeyRef":{"key":"KEYCLOAK_CLIENT_SECRET","name":"backend-secret"}}},{"name":"KEYCLOAK_ADMIN_USERNAME","valueFrom":{"secretKeyRef":{"key":"KEYCLOAK_ADMIN_USERNAME","name":"backend-secret"}}},{"name":"KEYCLOAK_ADMIN_PASSWORD","valueFrom":{"secretKeyRef":{"key":"KEYCLOAK_ADMIN_PASSWORD","name":"backend-secret"}}}],"image":"122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-backend:latest","imagePullPolicy":"Always","livenessProbe":{"httpGet":{"path":"/health","port":8000},"initialDelaySeconds":30,"periodSeconds":10,"timeoutSeconds":5},"name":"backend","ports":[{"containerPort":8000,"name":"http"},{"containerPort":9090,"name":"metrics"}],"readinessProbe":{"httpGet":{"path":"/health","port":8000},"initialDelaySeconds":10,"periodSeconds":5,"timeoutSeconds":3},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}}}],"initContainers":[{"command":["sh","-c","until nc -z postgres-service 5432; do echo waiting for postgres; sleep 2; done;"],"image":"busybox:1.36","name":"wait-for-postgres"}],"serviceAccountName":"tenant-manager"}}}}
+    creationTimestamp: "2026-01-01T13:17:07Z"
+    generation: 44
+    labels:
+      app: backend
+    name: backend
+    namespace: tenant-management
+    resourceVersion: "194378004"
+    uid: d69d29ad-84e1-4c5a-940b-847ce66ef4f8
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: backend
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-01-05T20:38:46+05:30"
+        creationTimestamp: null
+        labels:
+          app: backend
+      spec:
+        containers:
+        - env:
+          - name: APP_NAME
+            valueFrom:
+              configMapKeyRef:
+                key: APP_NAME
+                name: backend-config
+          - name: APP_ENV
+            valueFrom:
+              configMapKeyRef:
+                key: APP_ENV
+                name: backend-config
+          - name: DEBUG
+            valueFrom:
+              configMapKeyRef:
+                key: DEBUG
+                name: backend-config
+          - name: LOG_LEVEL
+            valueFrom:
+              configMapKeyRef:
+                key: LOG_LEVEL
+                name: backend-config
+          - name: API_PREFIX
+            valueFrom:
+              configMapKeyRef:
+                key: API_PREFIX
+                name: backend-config
+          - name: CORS_ORIGINS
+            valueFrom:
+              configMapKeyRef:
+                key: CORS_ORIGINS
+                name: backend-config
+          - name: IN_CLUSTER
+            valueFrom:
+              configMapKeyRef:
+                key: IN_CLUSTER
+                name: backend-config
+          - name: KEYCLOAK_URL
+            valueFrom:
+              configMapKeyRef:
+                key: KEYCLOAK_URL
+                name: backend-config
+          - name: KEYCLOAK_REALM
+            valueFrom:
+              configMapKeyRef:
+                key: KEYCLOAK_REALM
+                name: backend-config
+          - name: KEYCLOAK_CLIENT_ID
+            valueFrom:
+              configMapKeyRef:
+                key: KEYCLOAK_CLIENT_ID
+                name: backend-config
+          - name: DATABASE_URL
+            valueFrom:
+              secretKeyRef:
+                key: DATABASE_URL
+                name: backend-secret
+          - name: KEYCLOAK_CLIENT_SECRET
+            valueFrom:
+              secretKeyRef:
+                key: KEYCLOAK_CLIENT_SECRET
+                name: backend-secret
+          - name: KEYCLOAK_ADMIN_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: KEYCLOAK_ADMIN_USERNAME
+                name: backend-secret
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: KEYCLOAK_ADMIN_PASSWORD
+                name: backend-secret
+          image: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-backend:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: backend
+          ports:
+          - containerPort: 8000
+            name: http
+            protocol: TCP
+          - containerPort: 9090
+            name: metrics
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 8000
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 3
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        initContainers:
+        - command:
+          - sh
+          - -c
+          - until nc -z postgres-service 5432; do echo waiting for postgres; sleep
+            2; done;
+          image: busybox:1.36
+          imagePullPolicy: IfNotPresent
+          name: wait-for-postgres
+          resources: {}
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        serviceAccount: tenant-manager
+        serviceAccountName: tenant-manager
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-01T13:17:07Z"
+      lastUpdateTime: "2026-01-05T15:09:41Z"
+      message: ReplicaSet "backend-84d586f759" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-05T15:35:41Z"
+      lastUpdateTime: "2026-01-05T15:35:41Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 44
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "35"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"frontend"},"name":"frontend","namespace":"tenant-management"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"frontend"}},"template":{"metadata":{"labels":{"app":"frontend"}},"spec":{"containers":[{"envFrom":[{"configMapRef":{"name":"frontend-config"}}],"image":"122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-frontend:latest","imagePullPolicy":"Always","livenessProbe":{"httpGet":{"path":"/health","port":80},"initialDelaySeconds":10,"periodSeconds":10},"name":"frontend","ports":[{"containerPort":80,"name":"http"}],"readinessProbe":{"httpGet":{"path":"/health","port":80},"initialDelaySeconds":5,"periodSeconds":5},"resources":{"limits":{"cpu":"200m","memory":"128Mi"},"requests":{"cpu":"100m","memory":"64Mi"}}}]}}}}
+    creationTimestamp: "2026-01-01T13:17:09Z"
+    generation: 38
+    labels:
+      app: frontend
+    name: frontend
+    namespace: tenant-management
+    resourceVersion: "194401262"
+    uid: 5c86e65e-b50a-4d14-83bc-59912ca7b09b
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: frontend
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-01-04T19:54:02+05:30"
+        creationTimestamp: null
+        labels:
+          app: frontend
+      spec:
+        containers:
+        - envFrom:
+          - configMapRef:
+              name: frontend-config
+          image: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-frontend:latest
+          imagePullPolicy: Always
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: frontend
+          ports:
+          - containerPort: 80
+            name: http
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health
+              port: 80
+              scheme: HTTP
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 200m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-01T14:54:53Z"
+      lastUpdateTime: "2026-01-04T14:24:14Z"
+      message: ReplicaSet "frontend-647d44fd4f" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-05T16:12:37Z"
+      lastUpdateTime: "2026-01-05T16:12:37Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 38
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "6"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"keycloak"},"name":"keycloak","namespace":"tenant-management"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"keycloak"}},"template":{"metadata":{"labels":{"app":"keycloak"}},"spec":{"containers":[{"args":["start","--import-realm"],"env":[{"name":"KC_DB","value":"postgres"},{"name":"KC_DB_URL","value":"jdbc:postgresql://keycloak-postgres:5432/keycloak"},{"name":"KC_DB_USERNAME","valueFrom":{"secretKeyRef":{"key":"KC_DB_USERNAME","name":"keycloak-secrets"}}},{"name":"KC_DB_PASSWORD","valueFrom":{"secretKeyRef":{"key":"KC_DB_PASSWORD","name":"keycloak-secrets"}}},{"name":"KEYCLOAK_ADMIN","valueFrom":{"secretKeyRef":{"key":"KEYCLOAK_ADMIN","name":"keycloak-secrets"}}},{"name":"KEYCLOAK_ADMIN_PASSWORD","valueFrom":{"secretKeyRef":{"key":"KEYCLOAK_ADMIN_PASSWORD","name":"keycloak-secrets"}}}],"envFrom":[{"configMapRef":{"name":"keycloak-config"}}],"image":"quay.io/keycloak/keycloak:23.0","livenessProbe":{"httpGet":{"path":"/health/live","port":8080},"initialDelaySeconds":90,"periodSeconds":30,"timeoutSeconds":5},"name":"keycloak","ports":[{"containerPort":8080,"name":"http"},{"containerPort":8443,"name":"https"}],"readinessProbe":{"httpGet":{"path":"/health/ready","port":8080},"initialDelaySeconds":60,"periodSeconds":10,"timeoutSeconds":5},"resources":{"limits":{"cpu":"1000m","memory":"1Gi"},"requests":{"cpu":"500m","memory":"512Mi"}},"volumeMounts":[{"mountPath":"/opt/keycloak/data/import","name":"realm-config","readOnly":true},{"mountPath":"/opt/keycloak/themes/cvs-light/login/theme.properties","name":"cvs-theme","readOnly":true,"subPath":"theme.properties"},{"mountPath":"/opt/keycloak/themes/cvs-light/login/resources/css/cvs-custom.css","name":"cvs-theme","readOnly":true,"subPath":"cvs-custom.css"}]}],"volumes":[{"configMap":{"name":"keycloak-realm-import"},"name":"realm-config"},{"configMap":{"name":"keycloak-cvs-theme"},"name":"cvs-theme"}]}}}}
+    creationTimestamp: "2026-01-03T06:42:34Z"
+    generation: 6
+    labels:
+      app: keycloak
+    name: keycloak
+    namespace: tenant-management
+    resourceVersion: "194330294"
+    uid: a058051a-296e-4df1-992d-3997d62708b6
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: keycloak
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-01-03T21:24:46+05:30"
+        creationTimestamp: null
+        labels:
+          app: keycloak
+      spec:
+        containers:
+        - args:
+          - start
+          - --import-realm
+          env:
+          - name: KC_DB
+            value: postgres
+          - name: KC_DB_URL
+            value: jdbc:postgresql://keycloak-postgres:5432/keycloak
+          - name: KC_DB_USERNAME
+            valueFrom:
+              secretKeyRef:
+                key: KC_DB_USERNAME
+                name: keycloak-secrets
+          - name: KC_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: KC_DB_PASSWORD
+                name: keycloak-secrets
+          - name: KEYCLOAK_ADMIN
+            valueFrom:
+              secretKeyRef:
+                key: KEYCLOAK_ADMIN
+                name: keycloak-secrets
+          - name: KEYCLOAK_ADMIN_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: KEYCLOAK_ADMIN_PASSWORD
+                name: keycloak-secrets
+          envFrom:
+          - configMapRef:
+              name: keycloak-config
+          image: quay.io/keycloak/keycloak:23.0
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/live
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            successThreshold: 1
+            timeoutSeconds: 5
+          name: keycloak
+          ports:
+          - containerPort: 8080
+            name: http
+            protocol: TCP
+          - containerPort: 8443
+            name: https
+            protocol: TCP
+          readinessProbe:
+            failureThreshold: 3
+            httpGet:
+              path: /health/ready
+              port: 8080
+              scheme: HTTP
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: "1"
+              memory: 1Gi
+            requests:
+              cpu: 500m
+              memory: 512Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /opt/keycloak/data/import
+            name: realm-config
+            readOnly: true
+          - mountPath: /opt/keycloak/themes/cvs-light/login/theme.properties
+            name: cvs-theme
+            readOnly: true
+            subPath: theme.properties
+          - mountPath: /opt/keycloak/themes/cvs-light/login/resources/css/cvs-custom.css
+            name: cvs-theme
+            readOnly: true
+            subPath: cvs-custom.css
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - configMap:
+            defaultMode: 420
+            name: keycloak-realm-import
+          name: realm-config
+        - configMap:
+            defaultMode: 420
+            name: keycloak-cvs-theme
+          name: cvs-theme
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-03T13:28:02Z"
+      lastUpdateTime: "2026-01-03T15:55:52Z"
+      message: ReplicaSet "keycloak-6cfc744b74" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-05T14:27:52Z"
+      lastUpdateTime: "2026-01-05T14:27:52Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 6
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+- apiVersion: apps/v1
+  kind: Deployment
+  metadata:
+    annotations:
+      deployment.kubernetes.io/revision: "2"
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"apps/v1","kind":"Deployment","metadata":{"annotations":{},"labels":{"app":"postgres"},"name":"postgres","namespace":"tenant-management"},"spec":{"replicas":1,"selector":{"matchLabels":{"app":"postgres"}},"template":{"metadata":{"labels":{"app":"postgres"}},"spec":{"containers":[{"env":[{"name":"POSTGRES_USER","valueFrom":{"secretKeyRef":{"key":"POSTGRES_USER","name":"postgres-secret"}}},{"name":"POSTGRES_PASSWORD","valueFrom":{"secretKeyRef":{"key":"POSTGRES_PASSWORD","name":"postgres-secret"}}},{"name":"POSTGRES_DB","valueFrom":{"secretKeyRef":{"key":"POSTGRES_DB","name":"postgres-secret"}}},{"name":"PGDATA","value":"/var/lib/postgresql/data/pgdata"}],"image":"postgres:16-alpine","livenessProbe":{"exec":{"command":["pg_isready","-U","postgres"]},"initialDelaySeconds":30,"periodSeconds":10},"name":"postgres","ports":[{"containerPort":5432,"name":"postgres"}],"readinessProbe":{"exec":{"command":["pg_isready","-U","postgres"]},"initialDelaySeconds":5,"periodSeconds":5},"resources":{"limits":{"cpu":"500m","memory":"512Mi"},"requests":{"cpu":"250m","memory":"256Mi"}},"volumeMounts":[{"mountPath":"/var/lib/postgresql/data","name":"postgres-storage"}]}],"volumes":[{"name":"postgres-storage","persistentVolumeClaim":{"claimName":"postgres-pvc"}}]}}}}
+    creationTimestamp: "2026-01-01T13:12:45Z"
+    generation: 2
+    labels:
+      app: postgres
+    name: postgres
+    namespace: tenant-management
+    resourceVersion: "194374022"
+    uid: fd89e595-96a6-4e19-8e46-956020bdefbd
+  spec:
+    progressDeadlineSeconds: 600
+    replicas: 1
+    revisionHistoryLimit: 10
+    selector:
+      matchLabels:
+        app: postgres
+    strategy:
+      rollingUpdate:
+        maxSurge: 25%
+        maxUnavailable: 25%
+      type: RollingUpdate
+    template:
+      metadata:
+        annotations:
+          kubectl.kubernetes.io/restartedAt: "2026-01-01T21:44:43+05:30"
+        creationTimestamp: null
+        labels:
+          app: postgres
+      spec:
+        containers:
+        - env:
+          - name: POSTGRES_USER
+            valueFrom:
+              secretKeyRef:
+                key: POSTGRES_USER
+                name: postgres-secret
+          - name: POSTGRES_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                key: POSTGRES_PASSWORD
+                name: postgres-secret
+          - name: POSTGRES_DB
+            valueFrom:
+              secretKeyRef:
+                key: POSTGRES_DB
+                name: postgres-secret
+          - name: PGDATA
+            value: /var/lib/postgresql/data/pgdata
+          image: postgres:16-alpine
+          imagePullPolicy: IfNotPresent
+          livenessProbe:
+            exec:
+              command:
+              - pg_isready
+              - -U
+              - postgres
+            failureThreshold: 3
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            successThreshold: 1
+            timeoutSeconds: 1
+          name: postgres
+          ports:
+          - containerPort: 5432
+            name: postgres
+            protocol: TCP
+          readinessProbe:
+            exec:
+              command:
+              - pg_isready
+              - -U
+              - postgres
+            failureThreshold: 3
+            initialDelaySeconds: 5
+            periodSeconds: 5
+            successThreshold: 1
+            timeoutSeconds: 1
+          resources:
+            limits:
+              cpu: 500m
+              memory: 512Mi
+            requests:
+              cpu: 250m
+              memory: 256Mi
+          terminationMessagePath: /dev/termination-log
+          terminationMessagePolicy: File
+          volumeMounts:
+          - mountPath: /var/lib/postgresql/data
+            name: postgres-storage
+        dnsPolicy: ClusterFirst
+        restartPolicy: Always
+        schedulerName: default-scheduler
+        securityContext: {}
+        terminationGracePeriodSeconds: 30
+        volumes:
+        - name: postgres-storage
+          persistentVolumeClaim:
+            claimName: postgres-pvc
+  status:
+    availableReplicas: 1
+    conditions:
+    - lastTransitionTime: "2026-01-01T16:54:40Z"
+      lastUpdateTime: "2026-01-01T16:55:19Z"
+      message: ReplicaSet "postgres-86b5ccb5bd" has successfully progressed.
+      reason: NewReplicaSetAvailable
+      status: "True"
+      type: Progressing
+    - lastTransitionTime: "2026-01-05T15:30:34Z"
+      lastUpdateTime: "2026-01-05T15:30:34Z"
+      message: Deployment has minimum availability.
+      reason: MinimumReplicasAvailable
+      status: "True"
+      type: Available
+    observedGeneration: 2
+    readyReplicas: 1
+    replicas: 1
+    updatedReplicas: 1
+kind: List
+metadata:
+  resourceVersion: ""

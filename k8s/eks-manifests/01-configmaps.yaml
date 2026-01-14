@@ -6,12 +6,12 @@ metadata:
   namespace: tenant-management
 data:
   APP_NAME: "Kubernetes Tenant Management Portal"
-  APP_ENV: "development"
-  DEBUG: "true"
+  APP_ENV: "production"
+  DEBUG: "false"  # Disable auth bypass for production
   LOG_LEVEL: "INFO"
   API_PREFIX: "/api/v1"
   API_PORT: "8000"
-  CORS_ORIGINS: "http://localhost:3000,http://localhost:8080"
+  CORS_ORIGINS: "http://localhost:3000,http://localhost:8080,http://governance.mrtmcloud.com,https://governance.mrtmcloud.com,https://*"
   SCHEDULER_ENABLED: "true"
   SCHEDULER_TIMEZONE: "UTC"
   DEFAULT_STOP_SCHEDULE: "0 18 * * 1-5"
@@ -19,6 +19,15 @@ data:
   IN_CLUSTER: "true"
   ENABLE_METRICS: "true"
   METRICS_PORT: "9090"
+  
+  # Keycloak Configuration
+  KEYCLOAK_URL: "http://keycloak:8080"  # Same namespace, use service name directly
+  KEYCLOAK_REALM: "tenant-management"
+  KEYCLOAK_CLIENT_ID: "tenant-manager-backend"
+  KEYCLOAK_ADMIN_USERNAME: "admin"
+  KEYCLOAK_ADMIN_PASSWORD: "admin123"
+  JWT_ALGORITHM: "RS256"
+  JWT_AUDIENCE: "tenant-manager-backend"
 
 ---
 apiVersion: v1
@@ -30,6 +39,8 @@ data:
   # The API client appends /api/v1, so base URL should be the ALB + /tm
   VITE_API_BASE_URL: "/tm"
   VITE_BASE_PATH: "/tm"
-  VITE_KEYCLOAK_URL: "/auth"
-  VITE_KEYCLOAK_REALM: "saas-management"
-  VITE_KEYCLOAK_CLIENT_ID: "tenant-management-portal"
+  
+  # Keycloak Configuration - Frontend will access via Istio Gateway
+  VITE_KEYCLOAK_URL: "https://governance.mrtmcloud.com"
+  VITE_KEYCLOAK_REALM: "tenant-management"
+  VITE_KEYCLOAK_CLIENT_ID: "tenant-manager-frontend"

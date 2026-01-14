@@ -83,15 +83,16 @@ export default function PodTerminal({ namespace, podName, container }: PodTermin
 
     ws.onerror = (error) => {
       console.error('WebSocket error:', error)
-      // Don't show error immediately - wait for close event
+      setError('Failed to connect to pod')
+      setConnecting(false)
     }
 
     ws.onclose = (event) => {
-      // If never connected (closed immediately), show error
-      if (connecting) {
+      // Only show error if connection failed (not a normal close)
+      if (event.code !== 1000 && connecting) {
         setError('Failed to connect to pod')
         term.writeln('\r\n\x1b[1;31m✗ Failed to connect to pod\x1b[0m\r\n')
-      } else {
+      } else if (!connecting) {
         term.writeln('\r\n\r\n\x1b[1;31m✗ Connection closed\x1b[0m\r\n')
       }
       setConnecting(false)

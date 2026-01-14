@@ -1,49 +1,45 @@
-import { Box, Paper, Typography, Button } from '@mui/material'
-import { Login as LoginIcon } from '@mui/icons-material'
+import { useEffect } from 'react'
+import { Box, CircularProgress, Typography } from '@mui/material'
+import { useKeycloak } from '../contexts/KeycloakContext'
 
 export default function Login() {
-  const handleLogin = () => {
-    console.log('Login with Keycloak')
-    // TODO: Redirect to Keycloak login
-  }
+  const { login } = useKeycloak()
 
+  // Automatically redirect to Keycloak login when component mounts
+  useEffect(() => {
+    login()
+  }, [login])
+
+  // Show loading indicator while redirecting to Keycloak
   return (
     <Box
       sx={{
-        display: 'flex',
-        justifyContent: 'center',
-        alignItems: 'center',
         minHeight: '100vh',
-        bgcolor: 'background.default',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        bgcolor: '#f5f5f5',
       }}
     >
-      <Paper
+      <Box
         sx={{
-          p: 4,
-          maxWidth: 400,
-          width: '100%',
           textAlign: 'center',
+          p: 4,
+          bgcolor: 'white',
+          borderRadius: 2,
+          boxShadow: '0 2px 8px rgba(0,0,0,0.1)',
+          minWidth: 300,
         }}
       >
-        <Typography variant="h4" gutterBottom>
-          Tenant Management Portal
+        <Typography variant="h4" gutterBottom sx={{ fontWeight: 600, color: '#1976d2' }}>
+          Tenant Management
         </Typography>
-        <Typography variant="body1" color="textSecondary" sx={{ mb: 4 }}>
-          Please sign in to continue
+        <Typography variant="body2" color="textSecondary" sx={{ mb: 3 }}>
+          Redirecting to authentication...
         </Typography>
-        <Button
-          variant="contained"
-          size="large"
-          fullWidth
-          startIcon={<LoginIcon />}
-          onClick={handleLogin}
-        >
-          Sign in with Keycloak
-        </Button>
-        <Typography variant="caption" color="textSecondary" sx={{ mt: 3, display: 'block' }}>
-          Manage your AWS Kubernetes tenants
-        </Typography>
-      </Paper>
+        <CircularProgress />
+      </Box>
     </Box>
   )
 }

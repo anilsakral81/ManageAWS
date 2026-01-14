@@ -1,7 +1,7 @@
 """Service for calculating tenant uptime/downtime metrics"""
 
 import logging
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional
 from calendar import monthrange
 
@@ -44,7 +44,7 @@ class MetricsService:
                 "state_since": None
             }
         
-        current_time = datetime.utcnow()
+        current_time = datetime.now(timezone.utc)
         duration = current_time - latest_state.changed_at
         duration_seconds = int(duration.total_seconds())
         
@@ -73,13 +73,13 @@ class MetricsService:
         Returns:
             Dict with uptime_seconds, downtime_seconds, uptime_percentage, etc.
         """
-        # Calculate month start and end
-        month_start = datetime(year, month, 1)
+        # Calculate month start and end (timezone-aware)
+        month_start = datetime(year, month, 1, tzinfo=timezone.utc)
         last_day = monthrange(year, month)[1]
-        month_end = datetime(year, month, last_day, 23, 59, 59)
+        month_end = datetime(year, month, last_day, 23, 59, 59, tzinfo=timezone.utc)
         
         # If month hasn't ended yet, use current time
-        current_time = datetime.utcnow()
+        current_time = datetime.now(timezone.utc)
         if month_end > current_time:
             month_end = current_time
         

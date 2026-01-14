@@ -1,6 +1,6 @@
 """Audit log endpoints"""
 
-from typing import List, Dict
+from typing import List
 from datetime import datetime
 from fastapi import APIRouter, Depends, Query
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -8,6 +8,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import get_db
 from app.auth.keycloak import get_current_user
 from app.schemas.audit_log import AuditLogResponse
+from app.schemas.user import UserInfo
 from app.services.audit_service import AuditService
 
 router = APIRouter()
@@ -23,7 +24,7 @@ async def list_audit_logs(
     skip: int = 0,
     limit: int = Query(default=100, le=1000),
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> List[AuditLogResponse]:
     """
     List audit logs with optional filters
@@ -44,7 +45,7 @@ async def list_audit_logs(
     """
     service = AuditService(db)
     return await service.list_audit_logs(
-        requesting_user_id=current_user.get("sub"),
+        requesting_user_id=current_user.sub,
         tenant_id=tenant_id,
         user_id=user_id,
         action=action,
@@ -59,7 +60,7 @@ async def list_audit_logs(
 async def get_audit_log(
     log_id: int,
     db: AsyncSession = Depends(get_db),
-    current_user: Dict = Depends(get_current_user),
+    current_user: UserInfo = Depends(get_current_user),
 ) -> AuditLogResponse:
     """
     Get audit log by ID
@@ -75,5 +76,5 @@ async def get_audit_log(
     service = AuditService(db)
     return await service.get_audit_log(
         log_id=log_id,
-        user_id=current_user.get("sub"),
+        user_id=current_user.sub,
     )

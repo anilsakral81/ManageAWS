@@ -10,19 +10,22 @@ spec:
   selector:
     istio: ingressgateway # Uses your existing Istio ingress gateway
   servers:
+  # HTTP port - redirect to HTTPS
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
+    - "governance.mrtmcloud.com"
+    - "*"  # Keep wildcard for backward compatibility
+    # Uncomment to force HTTPS redirect
+    # tls:
+    #   httpsRedirect: true
+  # HTTPS port with passthrough (TLS terminated at NLB by ACM)
+  - port:
+      number: 443
+      name: https
+      protocol: HTTP  # HTTP because TLS is terminated at NLB
+    hosts:
+    - "governance.mrtmcloud.com"
     - "*"
-  # Add HTTPS if you have ACM certificate configured in ALB
-  # - port:
-  #     number: 443
-  #     name: https
-  #     protocol: HTTPS
-  #   tls:
-  #     mode: SIMPLE
-  #     credentialName: tenant-management-tls
-  #   hosts:
-  #   - "*"

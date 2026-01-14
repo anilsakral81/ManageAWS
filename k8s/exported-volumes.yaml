@@ -1,0 +1,2374 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"keycloak-postgres-pvc","namespace":"tenant-management"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}},"storageClassName":"ebs-sc-gp3"}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: ebs.csi.eks.amazonaws.com
+      volume.kubernetes.io/selected-node: i-09d2ff2a249557147
+      volume.kubernetes.io/storage-provisioner: ebs.csi.eks.amazonaws.com
+    creationTimestamp: "2026-01-03T13:27:17Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    name: keycloak-postgres-pvc
+    namespace: tenant-management
+    resourceVersion: "192591397"
+    uid: 2630a32a-cfed-417e-8bfe-3449e48ed0d5
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: ebs-sc-gp3
+    volumeMode: Filesystem
+    volumeName: pvc-2630a32a-cfed-417e-8bfe-3449e48ed0d5
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolumeClaim
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolumeClaim","metadata":{"annotations":{},"name":"postgres-pvc","namespace":"tenant-management"},"spec":{"accessModes":["ReadWriteOnce"],"resources":{"requests":{"storage":"5Gi"}},"storageClassName":"ebs-sc-gp3"}}
+      pv.kubernetes.io/bind-completed: "yes"
+      pv.kubernetes.io/bound-by-controller: "yes"
+      volume.beta.kubernetes.io/storage-provisioner: ebs.csi.eks.amazonaws.com
+      volume.kubernetes.io/selected-node: i-06b330cc4e5d13b59
+      volume.kubernetes.io/storage-provisioner: ebs.csi.eks.amazonaws.com
+    creationTimestamp: "2026-01-01T13:12:45Z"
+    finalizers:
+    - kubernetes.io/pvc-protection
+    name: postgres-pvc
+    namespace: tenant-management
+    resourceVersion: "190670768"
+    uid: 2fab2ffb-32bd-4f91-aad8-ca971139c48f
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    resources:
+      requests:
+        storage: 5Gi
+    storageClassName: ebs-sc-gp3
+    volumeMode: Filesystem
+    volumeName: pvc-2fab2ffb-32bd-4f91-aad8-ca971139c48f
+  status:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"type":"local"},"name":"aggregator-volumes-comviva-ioh"},"spec":{"accessModes":["ReadOnlyMany"],"capacity":{"storage":"1Gi"},"hostPath":{"path":"/nfsshare/containerfiles/comviva/ioh/"},"storageClassName":"manual"}}
+    creationTimestamp: "2025-11-14T07:42:37Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      type: local
+    name: aggregator-volumes-comviva-ioh
+    resourceVersion: "144549705"
+    uid: 59e1d006-ff4a-45ff-806a-77ab4cddc674
+  spec:
+    accessModes:
+    - ReadOnlyMany
+    capacity:
+      storage: 1Gi
+    hostPath:
+      path: /nfsshare/containerfiles/comviva/ioh/
+      type: ""
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: manual
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-14T07:42:37Z"
+    phase: Available
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"config-volumes-maix-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0b0a39b287b301060"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-12-05T10:51:27Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: config-volumes-maix-demo
+    resourceVersion: "164415033"
+    uid: e42209c6-309b-47ee-906b-ff6d128b59ec
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: config-claim-maix-demo
+      namespace: maix-demo
+      resourceVersion: "164415031"
+      uid: c4a358b9-c82d-43eb-ae4e-25d57c5e48f6
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0b0a39b287b301060
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-12-05T10:51:27Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"config-volumes-mrtm7-release"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0ac672de057ad58bc"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-28T08:06:48Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: config-volumes-mrtm7-release
+    resourceVersion: "6715782"
+    uid: 222689b9-786a-4bd6-b2ab-0f922ab9f1d2
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: config-claim-mrtm7-release
+      namespace: mrtm7-release
+      resourceVersion: "6715780"
+      uid: 585ec29b-b8c1-412c-86c5-610ca9cf6b98
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0ac672de057ad58bc
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-28T08:06:48Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"config-volumes-pm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-02d355f2b23604615"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:21:11Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: config-volumes-pm-comviva
+    resourceVersion: "184092"
+    uid: 8d086b9f-6cf3-4aa0-a21d-b0895c08b1e2
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: config-claim-pm-comviva
+      namespace: pm-comviva
+      resourceVersion: "184090"
+      uid: 0760c0a8-10ac-41fb-8d77-7aad4ada64d0
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-02d355f2b23604615
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:21:11Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"config-volumes-pm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-07ba8ed423803d425"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T14:11:06Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: config-volumes-pm-demo
+    resourceVersion: "203718"
+    uid: 79d3479d-a1fa-4f28-823a-a3e072e5ede8
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: config-claim-pm-demo
+      namespace: pm-demo
+      resourceVersion: "203716"
+      uid: a81592f5-bcae-4a06-a308-24d12b336efb
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-07ba8ed423803d425
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T14:11:06Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"config-volumes-pvg-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-004d2f710973a0c4b"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-21T12:24:08Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: config-volumes-pvg-demo
+    resourceVersion: "848161"
+    uid: a5c5c218-561c-41e0-a3d3-ec2bf99a21ad
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: config-claim-pvg-demo
+      namespace: pvg-demo
+      resourceVersion: "848159"
+      uid: b92bc00f-42f0-4df2-a28c-3b855695545a
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-004d2f710973a0c4b
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-21T12:24:08Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"config-volumes-rm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0a9e1d0480199dd4a"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T08:28:06Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: config-volumes-rm-comviva
+    resourceVersion: "76771"
+    uid: 5b25dc8e-f6ed-43ca-8543-55b6eeeab7d6
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: config-claim-rm-comviva
+      namespace: rm-comviva
+      resourceVersion: "76769"
+      uid: 5ab14e54-c116-4a49-8c63-dc98dcb72d51
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0a9e1d0480199dd4a
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T08:28:06Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"config-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0279d1a826b67e152"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T11:46:26Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: config-volumes-rm-demo
+    resourceVersion: "147338"
+    uid: 25e9d51a-4633-43f0-81bd-0d458d0e5f78
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: config-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "147336"
+      uid: b58de839-3e3b-4843-8015-405f754d913f
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0279d1a826b67e152
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T11:46:26Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"type":"local"},"name":"csms-volume-comviva-ioh"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"hostPath":{"path":"/nfsshare/containerfiles/comviva/ioh/dockerconfig/csms"},"storageClassName":"manual"}}
+    creationTimestamp: "2025-11-14T07:42:38Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      type: local
+    name: csms-volume-comviva-ioh
+    resourceVersion: "144549710"
+    uid: 7e17a7c5-3d8d-4b6b-86d6-cdaccf4322b7
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    hostPath:
+      path: /nfsshare/containerfiles/comviva/ioh/dockerconfig/csms
+      type: ""
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: manual
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-14T07:42:38Z"
+    phase: Available
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"customer-volumes-mrtm7-release"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-061de41a7622d78ff"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-28T08:17:02Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: customer-volumes-mrtm7-release
+    resourceVersion: "6722430"
+    uid: ca770254-3754-4a9e-a97f-39fb9a16998d
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: customer-claim-mrtm7-release
+      namespace: mrtm7-release
+      resourceVersion: "6722428"
+      uid: dd73899f-1938-473a-9aa2-d1aaef4fe063
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-061de41a7622d78ff
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-28T08:17:02Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"customer-volumes-pm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0722446e05d80aa3a"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:21:38Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: customer-volumes-pm-comviva
+    resourceVersion: "184262"
+    uid: 9459a7f2-fb31-4e4a-b6ec-82d994eedbbe
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: customer-claim-pm-comviva
+      namespace: pm-comviva
+      resourceVersion: "184260"
+      uid: 323d0054-e837-458e-a901-de85aa5c44aa
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0722446e05d80aa3a
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:21:38Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"customer-volumes-pm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0826065996e27574a"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:35:52Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: customer-volumes-pm-demo
+    resourceVersion: "189724"
+    uid: d8120ff1-9cb0-4000-9848-b9da76397ea7
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: customer-claim-pm-demo
+      namespace: pm-demo
+      resourceVersion: "189722"
+      uid: 4a173c29-5ba7-49f5-ad17-319a45ce2fc9
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0826065996e27574a
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:35:52Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"customer-volumes-pvg-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-085116e38654aad87"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-21T12:26:56Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: customer-volumes-pvg-demo
+    resourceVersion: "849745"
+    uid: 2c417f1e-e659-4c9b-830c-7a3d9b0beb57
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: customer-claim-pvg-demo
+      namespace: pvg-demo
+      resourceVersion: "849743"
+      uid: b6fad3c8-4ce8-4a3c-b46e-ec80a676a3c2
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-085116e38654aad87
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-21T12:26:56Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"customer-volumes-rm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-04138db2b8c7156eb"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T08:32:51Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: customer-volumes-rm-comviva
+    resourceVersion: "78371"
+    uid: 2f272e1f-e635-41e3-9da0-34e9b4b8b211
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: customer-claim-rm-comviva
+      namespace: rm-comviva
+      resourceVersion: "78369"
+      uid: 94f45396-e696-4308-8dac-8eafa1800779
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-04138db2b8c7156eb
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T08:32:51Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"customer-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0d8f476f2c1c7e2a8"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T11:45:37Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: customer-volumes-rm-demo
+    resourceVersion: "147039"
+    uid: 501833e7-01d2-47d1-9b6e-3981edd0d8bb
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: customer-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "147037"
+      uid: 4c50fcc8-5949-40b3-85df-4dc32369d86a
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0d8f476f2c1c7e2a8
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T11:45:37Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"type":"local"},"name":"db-volume-comviva-ioh"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"hostPath":{"path":"/nfsshare/containerfiles/comviva/ioh/dockerdbbackups/"},"storageClassName":"manual"}}
+    creationTimestamp: "2025-11-14T07:42:38Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      type: local
+    name: db-volume-comviva-ioh
+    resourceVersion: "144549717"
+    uid: c9c839c6-eea7-4934-8743-e41c195b0c1d
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    hostPath:
+      path: /nfsshare/containerfiles/comviva/ioh/dockerdbbackups/
+      type: ""
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: manual
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-14T07:42:38Z"
+    phase: Available
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"ered-volumes-mrtm7-release"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0f99e31e1437e9401"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-28T08:17:25Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: ered-volumes-mrtm7-release
+    resourceVersion: "6722724"
+    uid: 6967baf5-7e25-4e22-a386-723f1105c732
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: ered-claim-mrtm7-release
+      namespace: mrtm7-release
+      resourceVersion: "6722722"
+      uid: 391df63e-c2d8-4d1e-a380-dcf6ddbe2cc1
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0f99e31e1437e9401
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-28T08:17:25Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"ered-volumes-pm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0e4bc49bc97c157e2"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:22:08Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: ered-volumes-pm-comviva
+    resourceVersion: "184459"
+    uid: f88551c9-e81b-424a-8bd0-5f9c225d0722
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: ered-claim-pm-comviva
+      namespace: pm-comviva
+      resourceVersion: "184456"
+      uid: 045e54a5-1b71-4200-9745-34ac5b58459f
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0e4bc49bc97c157e2
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:22:08Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"ered-volumes-pm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-03cdf19edca44b475"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:29:45Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: ered-volumes-pm-demo
+    resourceVersion: "187364"
+    uid: 788733e9-80e8-4928-b617-b75246921766
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: ered-claim-pm-demo
+      namespace: pm-demo
+      resourceVersion: "187362"
+      uid: 15f51796-6ecd-453f-aba8-0c325c2161b3
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-03cdf19edca44b475
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:29:46Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"ered-volumes-pvg-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-06abc4b8fc691bb57"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-21T12:24:43Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: ered-volumes-pvg-demo
+    resourceVersion: "848501"
+    uid: bdd7fd6e-e0a0-4fec-9ffb-3a300f085526
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: ered-claim-pvg-demo
+      namespace: pvg-demo
+      resourceVersion: "848499"
+      uid: f7ef981b-039d-44e6-90ef-1479885a49cc
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-06abc4b8fc691bb57
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-21T12:24:43Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"ered-volumes-rm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-04b114426da35356d"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T08:31:14Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: ered-volumes-rm-comviva
+    resourceVersion: "77826"
+    uid: 55d4c9fa-fe83-4460-80eb-f939e57381ba
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: ered-claim-rm-comviva
+      namespace: rm-comviva
+      resourceVersion: "77824"
+      uid: d6c13585-000a-464d-af78-7bf2cea61706
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-04b114426da35356d
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T08:31:14Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"ered-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0824f7cce0d46eaaa"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T11:50:04Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: ered-volumes-rm-demo
+    resourceVersion: "148650"
+    uid: d84ba912-00d3-4911-9633-25e1f8400df0
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: ered-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "148648"
+      uid: a95dee52-1d92-435c-90ef-cc567229c3ad
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0824f7cce0d46eaaa
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T11:50:04Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"type":"local"},"name":"eventfilter-volumes-comviva-ioh"},"spec":{"accessModes":["ReadOnlyMany"],"capacity":{"storage":"1Gi"},"hostPath":{"path":"/nfsshare/containerfiles/comviva/ioh/eventfilterprocessor"},"storageClassName":"manual"}}
+    creationTimestamp: "2025-11-14T07:42:38Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      type: local
+    name: eventfilter-volumes-comviva-ioh
+    resourceVersion: "144549722"
+    uid: 1e60e6bd-deea-4fd5-a733-3b52e533b05d
+  spec:
+    accessModes:
+    - ReadOnlyMany
+    capacity:
+      storage: 1Gi
+    hostPath:
+      path: /nfsshare/containerfiles/comviva/ioh/eventfilterprocessor
+      type: ""
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: manual
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-14T07:42:38Z"
+    phase: Available
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"fileingestion-volumes-mrtm7-release"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-00965f9df21fc6edd"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-28T08:18:32Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: fileingestion-volumes-mrtm7-release
+    resourceVersion: "6723450"
+    uid: 65ce007b-f783-4185-a73a-c254a8d530f6
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: fileingestion-claim-mrtm7-release
+      namespace: mrtm7-release
+      resourceVersion: "6723448"
+      uid: e90b6c65-0811-4c0e-993d-c4f67749b3cf
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-00965f9df21fc6edd
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-28T08:18:32Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"fileingestion-volumes-pm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0a15ad3bc0d65343c"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:38:31Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: fileingestion-volumes-pm-comviva
+    resourceVersion: "190755"
+    uid: fa0c9865-7641-4a98-a278-e981f5fc2792
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: fileingestion-claim-pm-comviva
+      namespace: pm-comviva
+      resourceVersion: "190753"
+      uid: 6b5d70ec-23ea-40a2-a329-846da01e5a4e
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0a15ad3bc0d65343c
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:38:31Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"fileingestion-volumes-pm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-07638b65a0ae08802"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:28:04Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: fileingestion-volumes-pm-demo
+    resourceVersion: "186722"
+    uid: 2a02e746-ee5e-45d3-87af-c3901650373c
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: fileingestion-claim-pm-demo
+      namespace: pm-demo
+      resourceVersion: "186720"
+      uid: b9566f5f-9354-4e8b-954a-558ff5d6761c
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-07638b65a0ae08802
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:28:04Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"fileingestion-volumes-pvg-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0f0553f7217fbdb49"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-21T12:27:27Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: fileingestion-volumes-pvg-demo
+    resourceVersion: "850045"
+    uid: 9bca7590-bed2-45a8-b7fd-a0dc9644a925
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: fileingestion-claim-pvg-demo
+      namespace: pvg-demo
+      resourceVersion: "850043"
+      uid: 33898d68-f74c-491a-ad0d-5786b9188845
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0f0553f7217fbdb49
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-21T12:27:27Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"fileingestion-volumes-rm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-00782e84301b2f4c9"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T08:37:17Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: fileingestion-volumes-rm-comviva
+    resourceVersion: "79860"
+    uid: ca71cd63-4121-4655-97dd-d5e5a9bf49ee
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: fileingestion-claim-rm-comviva
+      namespace: rm-comviva
+      resourceVersion: "79857"
+      uid: ffef51a0-0d45-45e2-99e7-97f2285dd8d7
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-00782e84301b2f4c9
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T08:37:17Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"fileingestion-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-02a12c7e034a36071"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T11:52:47Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: fileingestion-volumes-rm-demo
+    resourceVersion: "149626"
+    uid: 987a8be7-9890-42bd-b45a-71c73e81dffe
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: fileingestion-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "149624"
+      uid: c4fad4f5-d53f-4ac0-921e-07b858e54861
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-02a12c7e034a36071
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T11:52:47Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"kafka-pv-0"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"10Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-064d4f80357891281"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-19T06:12:01Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: kafka-pv-0
+    resourceVersion: "148882793"
+    uid: 515edd90-33d4-4d08-b02a-d22e66b76d22
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: data-lms-kafka-controller-2
+      namespace: mrdemo
+      resourceVersion: "148882787"
+      uid: fc4e088d-eb35-4752-969d-09ef4295a183
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-064d4f80357891281
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-19T06:12:01Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"kafka-pv-1"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"10Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0f123b537e5b00627"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-19T06:12:01Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: kafka-pv-1
+    resourceVersion: "148882791"
+    uid: 6001651a-6b5e-4e85-b0ca-5b6997c1e5c3
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: data-lms-kafka-controller-1
+      namespace: mrdemo
+      resourceVersion: "148882784"
+      uid: 2faac6cc-75ca-4d59-a32e-a0aa95050590
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0f123b537e5b00627
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-19T06:12:01Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"kafka-pv-2"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"10Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0c71dd7aeb88d9d9a"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-19T06:12:01Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: kafka-pv-2
+    resourceVersion: "148882785"
+    uid: 368fd0c2-5bdc-4944-b25d-648c5656cbb6
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: data-lms-kafka-controller-0
+      namespace: mrdemo
+      resourceVersion: "148882782"
+      uid: 45d8ca1b-81bc-4d9b-856b-6791525a69f4
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0c71dd7aeb88d9d9a
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-19T06:12:01Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"kafka-volumes-mr5xdemo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0180bbcb6f8d69619"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-07-21T14:07:28Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: kafka-volumes-mr5xdemo
+    resourceVersion: "194340039"
+    uid: ed6f60e0-b17f-4a38-8e37-95676d2fdedf
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: kafka-claim-mr5xdemo
+      namespace: mr5xdemo
+      resourceVersion: "52330194"
+      uid: f6a0afd5-cecb-4480-a604-9e0588a3528a
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0180bbcb6f8d69619
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-05T14:43:48Z"
+    phase: Released
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"kafka-volumes-pm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0dfeefb8982692679"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-22T15:53:36Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: kafka-volumes-pm-commontools
+    resourceVersion: "1856581"
+    uid: dae7b26d-20f9-4aac-8ac5-8fde82f3d748
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: kafka-claim-pm-commontools
+      namespace: pm-commontools
+      resourceVersion: "1856578"
+      uid: 0d4d5c74-43ef-4eaf-a78a-b176c65de66b
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0dfeefb8982692679
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-22T15:53:36Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"kafka-volumes-rm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0cf33ec58b4282a7f"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-27T13:07:59Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: kafka-volumes-rm-commontools
+    resourceVersion: "5955329"
+    uid: 3c39a876-3057-4eb7-a662-eedc8850a6bf
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: kafka-claim-rm-commontools
+      namespace: rm-commontools
+      resourceVersion: "5955327"
+      uid: 4a4504f4-ae7a-4c2e-a86b-49fc7a39fe29
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0cf33ec58b4282a7f
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-27T13:07:59Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"log-volumes-mrtm7-release"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-03c2be43483fdc50d"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-28T08:18:07Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: log-volumes-mrtm7-release
+    resourceVersion: "6723177"
+    uid: 53243bb3-d382-4696-a376-989e36ff877e
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: log-claim-mrtm7-release
+      namespace: mrtm7-release
+      resourceVersion: "6723175"
+      uid: 8f8386e4-918e-4e3f-b9b8-2116711c6034
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-03c2be43483fdc50d
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-28T08:18:07Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"log-volumes-pm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0f7376b384f6c90b6"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T13:39:20Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: log-volumes-pm-comviva
+    resourceVersion: "191074"
+    uid: 03e7d2ea-3999-4577-8f47-9eb2e236da25
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: log-claim-pm-comviva
+      namespace: pm-comviva
+      resourceVersion: "191072"
+      uid: 6dfc8f11-c70c-411c-9224-804cdf0b4228
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0f7376b384f6c90b6
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T13:39:20Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"log-volumes-pm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-023016e4122d7fb16"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T14:11:43Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: log-volumes-pm-demo
+    resourceVersion: "203955"
+    uid: 91548bc9-d317-4758-a6c6-99f49928b06d
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: log-claim-pm-demo
+      namespace: pm-demo
+      resourceVersion: "203953"
+      uid: 6391fa56-dce1-411b-8271-84bcdc0df8e2
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-023016e4122d7fb16
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T14:11:43Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"log-volumes-pvg-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-00a01722c4b0deed1"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-21T12:25:07Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: log-volumes-pvg-demo
+    resourceVersion: "848733"
+    uid: 4e843652-4582-4097-8d3a-1a599fc63fa0
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: log-claim-pvg-demo
+      namespace: pvg-demo
+      resourceVersion: "848730"
+      uid: ae731dc1-747b-436a-b60f-ffc83f95dd46
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-00a01722c4b0deed1
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-21T12:25:07Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"log-volumes-rm-comviva"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0381d01ddf6729824"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T08:28:26Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: log-volumes-rm-comviva
+    resourceVersion: "76886"
+    uid: fd295156-0c8c-45a5-a67e-7e14764b06d1
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: log-claim-rm-comviva
+      namespace: rm-comviva
+      resourceVersion: "76884"
+      uid: 9b525013-b667-416a-b3b4-c0a500c042f8
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0381d01ddf6729824
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T08:28:26Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"log-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0021fb08c0e1f88a4"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T11:59:00Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: log-volumes-rm-demo
+    resourceVersion: "151872"
+    uid: 4a471b49-0be3-4f96-aeba-72889b0a9c5f
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: log-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "151870"
+      uid: 13b1ad95-0e5a-4290-92a5-b7d4727e9b64
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0021fb08c0e1f88a4
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T11:59:00Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"logs-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0ae8015972655d256"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-27T13:29:17Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: logs-volumes-rm-demo
+    resourceVersion: "5970378"
+    uid: 3ccff98f-b438-4a22-9dc7-3249b496b769
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: logs-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "5970376"
+      uid: d43a4e1d-64b5-42ba-b994-46a8be5d5df9
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0ae8015972655d256
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-27T13:29:17Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"mrportal-volumes-mr5xdemo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-09ac09d7575ad5a9c"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-07-30T09:50:47Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: mrportal-volumes-mr5xdemo
+    resourceVersion: "194340042"
+    uid: 0d5b9b9b-2c1c-47b7-95a3-891f1cc3d965
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: mrportal-claim-mr5xdemo
+      namespace: mr5xdemo
+      resourceVersion: "58953200"
+      uid: f6b824e2-e3e9-459f-8117-5ec2825c5bf5
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-09ac09d7575ad5a9c
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-05T14:43:48Z"
+    phase: Released
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"mysql-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0d1c6f012cb30f088"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-12-30T07:44:50Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: mysql-volumes-rm-demo
+    resourceVersion: "188426605"
+    uid: 25013ee0-5dc6-40e5-bd94-82e69f086926
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: mysql-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "188426601"
+      uid: f20ecdc8-c36c-41a0-89e7-00b24b0af3fe
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0d1c6f012cb30f088
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-12-30T07:44:50Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"operations-volumes-pm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-01ee0034eef3fad74"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-12-05T14:32:25Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: operations-volumes-pm-demo
+    resourceVersion: "164581559"
+    uid: 0ea0030f-1167-4818-8c1a-fe3f760fa918
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: operations-claim-pm-demo
+      namespace: pm-demo
+      resourceVersion: "164581557"
+      uid: 798d4a3b-542b-44fa-85d7-39931e3de45c
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-01ee0034eef3fad74
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-12-05T14:32:25Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"operations-volumes-rm-demo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0548297112de30770"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-28T13:45:37Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: operations-volumes-rm-demo
+    resourceVersion: "157620608"
+    uid: 2fe791db-fdae-4995-af42-2691af8e7cf5
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: operations-claim-rm-demo
+      namespace: rm-demo
+      resourceVersion: "157620606"
+      uid: 53b26e9d-441f-4b85-9dbe-895a001877b6
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0548297112de30770
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-28T13:45:37Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"postgres-volumes-new-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"20Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0206f20cbc2714fa8"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-22T10:20:49Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: postgres-volumes-new-commontools
+    resourceVersion: "192596366"
+    uid: d389ab8d-4e0d-4893-9f49-8917a6b3faae
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 20Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: postgres-claim-new-commontools
+      namespace: new-commontools
+      resourceVersion: "1648775"
+      uid: 17b0be6f-8658-4612-801d-248e6705f4f2
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0206f20cbc2714fa8
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-03T13:35:14Z"
+    phase: Released
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"postgres-volumes-pm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"20Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0a2bc9039379892fd"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-22T15:53:31Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: postgres-volumes-pm-commontools
+    resourceVersion: "1856544"
+    uid: 956ce4cd-6a39-45ce-a376-e2cb11de1270
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 20Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: postgres-claim-pm-commontools
+      namespace: pm-commontools
+      resourceVersion: "1856542"
+      uid: c275d00e-b8f4-4cc6-be61-2532665466b1
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0a2bc9039379892fd
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-22T15:53:31Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"postgres-volumes-pmcomviva-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"20Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0883f6738cf78eb61"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-22T16:09:43Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: postgres-volumes-pmcomviva-commontools
+    resourceVersion: "1865016"
+    uid: 021164ea-1164-401d-9532-0ae86797f398
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 20Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: postgres-claim-pmcomviva-commontools
+      namespace: pm-commontools
+      resourceVersion: "1865012"
+      uid: e17eeb02-8d74-4079-aa15-b8f072d5d443
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0883f6738cf78eb61
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-22T16:09:43Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"postgres-volumes-pmdemo-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"20Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-09b9ed7d621e0e693"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-22T15:53:47Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: postgres-volumes-pmdemo-commontools
+    resourceVersion: "1856782"
+    uid: 96e1bd1a-335e-430f-8e6c-f6f54f490671
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 20Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: postgres-claim-pmdemo-commontools
+      namespace: pm-commontools
+      resourceVersion: "1856692"
+      uid: cb3f8749-5d39-4201-b18e-e6f52e7b19b5
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-09b9ed7d621e0e693
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-22T15:53:57Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"postgres-volumes-pvg-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"20Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-018e74e15a3127e2a"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-21T12:15:09Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: postgres-volumes-pvg-commontools
+    resourceVersion: "843031"
+    uid: 0528ca2b-3b90-4a18-b401-caa41a407d60
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 20Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: postgres-claim-pvg-commontools
+      namespace: pvg-commontools
+      resourceVersion: "843029"
+      uid: 61ab259a-2785-41c3-b6ca-8e675aff496a
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-018e74e15a3127e2a
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-21T12:15:09Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"postgres-volumes-rm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"20Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-044a4a7edc3096024"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-20T15:47:43Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: postgres-volumes-rm-commontools
+    resourceVersion: "244168"
+    uid: 95189903-625a-4cd8-96c2-88216cfc2e0d
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 20Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: postgres-claim-rm-commontools
+      namespace: rm-commontools
+      resourceVersion: "244164"
+      uid: 1271b069-2eac-4d26-b5d1-67ad9b5ba608
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-044a4a7edc3096024
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-20T15:47:43Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      pv.kubernetes.io/provisioned-by: ebs.csi.eks.amazonaws.com
+      volume.kubernetes.io/provisioner-deletion-secret-name: ""
+      volume.kubernetes.io/provisioner-deletion-secret-namespace: ""
+    creationTimestamp: "2026-01-03T13:27:20Z"
+    finalizers:
+    - external-provisioner.volume.kubernetes.io/finalizer
+    - kubernetes.io/pv-protection
+    - external-attacher/ebs-csi-eks-amazonaws-com
+    name: pvc-2630a32a-cfed-417e-8bfe-3449e48ed0d5
+    resourceVersion: "192591410"
+    uid: d77f6e43-7520-4c6a-a977-d1960f4644b4
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: keycloak-postgres-pvc
+      namespace: tenant-management
+      resourceVersion: "192591366"
+      uid: 2630a32a-cfed-417e-8bfe-3449e48ed0d5
+    csi:
+      driver: ebs.csi.eks.amazonaws.com
+      fsType: ext4
+      volumeAttributes:
+        storage.kubernetes.io/csiProvisionerIdentity: 1766441225396-9868-ebs.csi.eks.amazonaws.com
+      volumeHandle: vol-0ee969e641504f925
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: eks.amazonaws.com/compute-type
+            operator: In
+            values:
+            - auto
+          - key: topology.kubernetes.io/zone
+            operator: In
+            values:
+            - ap-south-1a
+    persistentVolumeReclaimPolicy: Delete
+    storageClassName: ebs-sc-gp3
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-03T13:27:20Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      pv.kubernetes.io/provisioned-by: ebs.csi.eks.amazonaws.com
+      volume.kubernetes.io/provisioner-deletion-secret-name: ""
+      volume.kubernetes.io/provisioner-deletion-secret-namespace: ""
+    creationTimestamp: "2026-01-01T13:12:47Z"
+    finalizers:
+    - external-provisioner.volume.kubernetes.io/finalizer
+    - kubernetes.io/pv-protection
+    - external-attacher/ebs-csi-eks-amazonaws-com
+    name: pvc-2fab2ffb-32bd-4f91-aad8-ca971139c48f
+    resourceVersion: "190670778"
+    uid: 617d1de5-8c94-48e3-ba10-21fcbc98cd0f
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 5Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: postgres-pvc
+      namespace: tenant-management
+      resourceVersion: "190670724"
+      uid: 2fab2ffb-32bd-4f91-aad8-ca971139c48f
+    csi:
+      driver: ebs.csi.eks.amazonaws.com
+      fsType: ext4
+      volumeAttributes:
+        storage.kubernetes.io/csiProvisionerIdentity: 1766441225396-9868-ebs.csi.eks.amazonaws.com
+      volumeHandle: vol-0e274edc478d8d6f3
+    nodeAffinity:
+      required:
+        nodeSelectorTerms:
+        - matchExpressions:
+          - key: eks.amazonaws.com/compute-type
+            operator: In
+            values:
+            - auto
+          - key: topology.kubernetes.io/zone
+            operator: In
+            values:
+            - ap-south-1b
+    persistentVolumeReclaimPolicy: Delete
+    storageClassName: ebs-sc-gp3
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-01T13:12:47Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"app":"redis","role":"master"},"name":"redis-master-pv"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"8Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-06f5a4106385fecdf"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-19T10:48:32Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      app: redis
+      role: master
+    name: redis-master-pv
+    resourceVersion: "149075643"
+    uid: 0d26e4a3-cf4c-4cd5-93bc-142c3f459734
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 8Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: redis-data
+      namespace: mrdemo
+      resourceVersion: "149075639"
+      uid: 36a8fd2f-1acc-49d6-bf49-5a177327241e
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-06f5a4106385fecdf
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-19T10:48:32Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"app":"redis","replica-index":"0","role":"replica"},"name":"redis-replica-pv-0"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"10Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-05cc5504f19bc0e79"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-19T10:48:32Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      app: redis
+      replica-index: "0"
+      role: replica
+    name: redis-replica-pv-0
+    resourceVersion: "149075650"
+    uid: f4d1cd93-d965-4cf4-afec-e6728c0e0667
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: redis-data--replica-0
+      namespace: mrdemo
+      resourceVersion: "149075644"
+      uid: 75568b20-df62-4bf6-9523-5a942900649c
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-05cc5504f19bc0e79
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-19T10:48:32Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"app":"redis","replica-index":"1","role":"replica"},"name":"redis-replica-pv-1"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"10Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-074af9dcb4e495e2b"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-19T10:48:32Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      app: redis
+      replica-index: "1"
+      role: replica
+    name: redis-replica-pv-1
+    resourceVersion: "149075657"
+    uid: 5785eddf-f9d2-4f48-a711-34c330036ff2
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: redis-data--replica-1
+      namespace: mrdemo
+      resourceVersion: "149075651"
+      uid: 6ed1b299-4d5f-4d32-ad9e-5b03fddfb154
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-074af9dcb4e495e2b
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-19T10:48:32Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"labels":{"app":"redis","replica-index":"2","role":"replica"},"name":"redis-replica-pv-2"},"spec":{"accessModes":["ReadWriteOnce"],"capacity":{"storage":"10Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0673ec09bbce86665"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-19T10:48:32Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    labels:
+      app: redis
+      replica-index: "2"
+      role: replica
+    name: redis-replica-pv-2
+    resourceVersion: "149075663"
+    uid: 6f03f6e9-c4cc-4f6d-8769-8cf770d6ceea
+  spec:
+    accessModes:
+    - ReadWriteOnce
+    capacity:
+      storage: 10Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: redis-data--replica-2
+      namespace: mrdemo
+      resourceVersion: "149075659"
+      uid: 70818a05-2ba5-4fbb-8200-df9e13a6988a
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0673ec09bbce86665
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-19T10:48:32Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"scheduler-volumes-mr5xdemo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0a174b835b8727196"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-10T11:34:42Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: scheduler-volumes-mr5xdemo
+    resourceVersion: "194340047"
+    uid: 29873c9b-7322-4fc1-ae32-d966fd92adc3
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: scheduler-claim-mr5xdemo
+      namespace: mr5xdemo
+      resourceVersion: "141135998"
+      uid: 5d244312-abdf-4d86-9c0a-1ac49f36cfbe
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0a174b835b8727196
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-05T14:43:48Z"
+    phase: Released
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"scheduler-volumes-mrdemo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-06ec794aad60f195d"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-22T11:00:09Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: scheduler-volumes-mrdemo
+    resourceVersion: "151879023"
+    uid: 957f5090-4ffa-4f50-bdee-585cf4473eab
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: scheduler-claim-mrdemo
+      namespace: mrdemo
+      resourceVersion: "151878875"
+      uid: b7a6519a-8301-4582-92f5-2d2ba4c8e403
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-06ec794aad60f195d
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-22T11:00:22Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"schema-registry-volumes-pm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0a78a6df89fa4bea0"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-22T15:53:39Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: schema-registry-volumes-pm-commontools
+    resourceVersion: "1856622"
+    uid: 0d6e1fe2-6fa5-477f-ae2c-82c1b6806168
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: schema-registry-claim-pm-commontools
+      namespace: pm-commontools
+      resourceVersion: "1856620"
+      uid: fc02bec9-dbe6-47a8-9bef-2596f9039142
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0a78a6df89fa4bea0
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-22T15:53:39Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"schema-registry-volumes-rm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-077e32aa8a32c8498"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-27T13:10:29Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: schema-registry-volumes-rm-commontools
+    resourceVersion: "5956933"
+    uid: 2c6e8ad9-ab69-4656-b5c7-2833950609e4
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: schema-registry-claim-rm-commontools
+      namespace: rm-commontools
+      resourceVersion: "5956928"
+      uid: 49ea89db-2eb7-4068-9b73-51daa6f05c3b
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-077e32aa8a32c8498
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-27T13:10:30Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"segment-volumes-mr5xdemo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-00c0a21f7d5da0883"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-10T11:51:11Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: segment-volumes-mr5xdemo
+    resourceVersion: "194340049"
+    uid: 770dc85f-1676-4f13-ac27-07fd28595e23
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: segment-claim-mr5xdemo
+      namespace: mr5xdemo
+      resourceVersion: "141148198"
+      uid: 5fe9ba1b-a36e-46a9-9032-2a2993e7d7d5
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-00c0a21f7d5da0883
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-05T14:43:48Z"
+    phase: Released
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"segment-volumes-mrdemo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"1Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0b74603ecce3ccbed"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-11-22T11:05:11Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: segment-volumes-mrdemo
+    resourceVersion: "151882197"
+    uid: efbc6369-53df-406a-b30d-7f6539fa2e80
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 1Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: segment-claim-mrdemo
+      namespace: mrdemo
+      resourceVersion: "151882194"
+      uid: 4380272c-ce48-4239-ab8c-1030fbc672d5
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0b74603ecce3ccbed
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-11-22T11:05:11Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"zookeeper-volumes-mr5xdemo"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0180bbcb6f8d69619"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-07-21T14:01:29Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: zookeeper-volumes-mr5xdemo
+    resourceVersion: "194340050"
+    uid: a919ecbf-94ef-450e-a211-73b0ac18a6b1
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: zookeeper-claim-mr5xdemo
+      namespace: mr5xdemo
+      resourceVersion: "52327028"
+      uid: 2bb3994a-4ff8-4e8d-a93a-51968650966f
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0180bbcb6f8d69619
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2026-01-05T14:43:48Z"
+    phase: Released
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"zookeeper-volumes-pm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-04cf60342caf8c651"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-22T15:53:26Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: zookeeper-volumes-pm-commontools
+    resourceVersion: "1856486"
+    uid: 5ec7a95d-a619-46ec-99f5-0d3123b94790
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: zookeeper-claim-pm-commontools
+      namespace: pm-commontools
+      resourceVersion: "1856484"
+      uid: 3070a37d-cb8e-43c6-8893-bb0ba7fb1edf
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-04cf60342caf8c651
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-22T15:53:26Z"
+    phase: Bound
+- apiVersion: v1
+  kind: PersistentVolume
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"PersistentVolume","metadata":{"annotations":{},"name":"zookeeper-volumes-rm-commontools"},"spec":{"accessModes":["ReadWriteMany"],"capacity":{"storage":"3Gi"},"csi":{"driver":"efs.csi.aws.com","volumeHandle":"fs-04c0fa1f1844f1623::fsap-0b0c3cc9de58dafb0"},"persistentVolumeReclaimPolicy":"Retain","storageClassName":"efs-sc"}}
+      pv.kubernetes.io/bound-by-controller: "yes"
+    creationTimestamp: "2025-05-27T13:06:43Z"
+    finalizers:
+    - kubernetes.io/pv-protection
+    name: zookeeper-volumes-rm-commontools
+    resourceVersion: "5954551"
+    uid: 85e095b3-c7df-4f3c-bdd4-454c68dae52f
+  spec:
+    accessModes:
+    - ReadWriteMany
+    capacity:
+      storage: 3Gi
+    claimRef:
+      apiVersion: v1
+      kind: PersistentVolumeClaim
+      name: zookeeper-claim-rm-commontools
+      namespace: rm-commontools
+      resourceVersion: "5954549"
+      uid: 79949a63-ffd0-4170-bb6b-2bff9693f3a8
+    csi:
+      driver: efs.csi.aws.com
+      volumeHandle: fs-04c0fa1f1844f1623::fsap-0b0c3cc9de58dafb0
+    persistentVolumeReclaimPolicy: Retain
+    storageClassName: efs-sc
+    volumeMode: Filesystem
+  status:
+    lastPhaseTransitionTime: "2025-05-27T13:06:43Z"
+    phase: Bound
+kind: List
+metadata:
+  resourceVersion: ""

@@ -146,15 +146,6 @@ export interface StateHistoryRecord {
   reason: string | null
 }
 
-export interface TenantMetrics {
-  tenant_id: number
-  tenant_name: string
-  namespace: string
-  current_state: CurrentStateDuration
-  monthly_metrics: MonthlyMetrics | null
-  recent_history: StateHistoryRecord[]
-}
-
 export interface CurrentStateDuration {
   current_state: string
   duration_seconds: number

@@ -1,4 +1,5 @@
 import axios, { AxiosInstance, AxiosError } from 'axios'
+import { getKeycloakToken } from '../utils/tokenStore'
 
 // Use /tm prefix for production, localhost for development
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
@@ -18,8 +19,7 @@ class ApiClient {
     // Request interceptor to add auth token
     this.client.interceptors.request.use(
       (config) => {
-        // TODO: Get token from Keycloak
-        const token = localStorage.getItem('access_token')
+        const token = getKeycloakToken()
         if (token) {
           config.headers.Authorization = `Bearer ${token}`
         }

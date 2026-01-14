@@ -45,16 +45,21 @@ export default function Dashboard() {
     queryFn: () => auditService.list({ limit: 10 }),
   })
 
+  // Filter tenants with deployments only
+  const tenantsWithDeployments = tenants.filter(t => 
+    t.deployment_name && !t.deployment_name.includes('0 deployment') && t.deployment_name !== 'none'
+  )
+
   // Calculate stats
   const stats = {
-    totalTenants: tenants.length,
-    runningTenants: tenants.filter(t => t.status.toLowerCase() === 'running').length,
-    stoppedTenants: tenants.filter(t => t.status.toLowerCase() === 'stopped').length,
+    totalTenants: tenantsWithDeployments.length,
+    runningTenants: tenantsWithDeployments.filter(t => t.status.toLowerCase() === 'running').length,
+    stoppedTenants: tenantsWithDeployments.filter(t => t.status.toLowerCase() === 'stopped').length,
     scheduledActions: schedules.filter(s => s.enabled).length,
   }
 
   // Get active tenants (running ones)
-  const activeTenants = tenants.filter(t => t.status.toLowerCase() === 'running').slice(0, 4)
+  const activeTenants = tenantsWithDeployments.filter(t => t.status.toLowerCase() === 'running').slice(0, 4)
 
   // Format audit logs for recent activity
   const recentActivity = auditLogs.slice(0, 4).map(log => ({
@@ -232,7 +237,7 @@ export default function Dashboard() {
                     </Grid>
                   </CardContent>
                   <CardActions>
-                    <Button size="small" onClick={() => navigate('/tenants')}>View Details</Button>
+                    <Button size="small" onClick={() => navigate(`/tenants?namespace=${tenant.namespace}`)}>View Details</Button>
                   </CardActions>
                 </Card>
               ))

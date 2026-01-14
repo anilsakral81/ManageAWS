@@ -101,13 +101,16 @@ export default function AuditLogs() {
               onChange={(e) => setFilterAction(e.target.value)}
             >
               <MenuItem value="all">All Actions</MenuItem>
-              <MenuItem value="START">Start</MenuItem>
-              <MenuItem value="STOP">Stop</MenuItem>
-              <MenuItem value="CREATE_SCHEDULE">Create Schedule</MenuItem>
-              <MenuItem value="UPDATE_SCHEDULE">Update Schedule</MenuItem>
-              <MenuItem value="DELETE_SCHEDULE">Delete Schedule</MenuItem>
-              <MenuItem value="AUTO_START">Auto Start</MenuItem>
-              <MenuItem value="AUTO_STOP">Auto Stop</MenuItem>
+              <MenuItem value="tenant_start">Tenant Start</MenuItem>
+              <MenuItem value="tenant_stop">Tenant Stop</MenuItem>
+              <MenuItem value="tenant_scale">Tenant Scale</MenuItem>
+              <MenuItem value="tenant_create">Tenant Create</MenuItem>
+              <MenuItem value="tenant_update">Tenant Update</MenuItem>
+              <MenuItem value="tenant_delete">Tenant Delete</MenuItem>
+              <MenuItem value="schedule_create">Schedule Create</MenuItem>
+              <MenuItem value="schedule_update">Schedule Update</MenuItem>
+              <MenuItem value="schedule_delete">Schedule Delete</MenuItem>
+              <MenuItem value="schedule_execute">Schedule Execute</MenuItem>
             </Select>
           </FormControl>
           <FormControl size="small" sx={{ minWidth: 150 }}>
@@ -162,7 +165,7 @@ export default function AuditLogs() {
                     </TableCell>
                     <TableCell>
                       <Typography variant="body2" fontWeight="bold">
-                        {log.user_id}
+                        {log.user_name || log.user_id}
                       </Typography>
                     </TableCell>
                     <TableCell>

@@ -28,17 +28,18 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material'
-import { Add, Edit, Delete, Schedule as ScheduleIcon } from '@mui/icons-material'
+import { Add, Edit, Delete } from '@mui/icons-material'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { scheduleService } from '@/services/scheduleService'
 import { tenantService } from '@/services/tenantService'
 import { Schedule, ScheduleCreate } from '@/types'
+import CronBuilder from '@/components/CronBuilder'
 
 export default function Schedules() {
   const [openDialog, setOpenDialog] = useState(false)
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null)
   const [formData, setFormData] = useState<ScheduleCreate>({
-    tenant_id: 0,
+    namespace: '',
     action: 'start',
     cron_expression: '',
     description: '',
@@ -89,7 +90,7 @@ export default function Schedules() {
 
   const resetForm = () => {
     setFormData({
-      tenant_id: 0,
+      namespace: '',
       action: 'start',
       cron_expression: '',
       description: '',
@@ -105,7 +106,7 @@ export default function Schedules() {
   const handleEditSchedule = (schedule: Schedule) => {
     setEditingSchedule(schedule)
     setFormData({
-      tenant_id: schedule.tenant_id,
+      namespace: schedule.tenant_name || '',  // Use tenant_name as namespace
       action: schedule.action,
       cron_expression: schedule.cron_expression,
       description: schedule.description || '',
@@ -136,7 +137,7 @@ export default function Schedules() {
     }
   }
 
-  const isFormValid = formData.tenant_id > 0 && formData.cron_expression.trim() !== ''
+  const isFormValid = formData.namespace && formData.namespace.trim() !== '' && formData.cron_expression.trim() !== ''
 
   return (
     <Box>
@@ -158,15 +159,6 @@ export default function Schedules() {
           Action failed: {createMutation.error?.message || updateMutation.error?.message || deleteMutation.error?.message}
         </Alert>
       )}
-
-      {/* Info Card */}
-      <Paper sx={{ p: 2, mb: 3, bgcolor: 'info.light', color: 'info.contrastText' }}>
-        <Typography variant="body2">
-          <ScheduleIcon sx={{ verticalAlign: 'middle', mr: 1 }} />
-          Schedules use cron expressions. Example: "0 18 * * 1-5" means 6 PM on weekdays
-          (Mon-Fri).
-        </Typography>
-      </Paper>
 
       {/* Schedules Table */}
       <TableContainer component={Paper}>
@@ -269,12 +261,12 @@ export default function Schedules() {
               <InputLabel>Tenant</InputLabel>
               <Select 
                 label="Tenant" 
-                value={formData.tenant_id}
-                onChange={(e) => setFormData({ ...formData, tenant_id: Number(e.target.value) })}
+                value={formData.namespace}
+                onChange={(e) => setFormData({ ...formData, namespace: e.target.value })}
                 disabled={!!editingSchedule}
               >
                 {tenants.map((tenant) => (
-                  <MenuItem key={tenant.id} value={tenant.id}>
+                  <MenuItem key={tenant.id} value={tenant.namespace}>
                     {tenant.name}
                   </MenuItem>
                 ))}
@@ -293,13 +285,9 @@ export default function Schedules() {
               </Select>
             </FormControl>
 
-            <TextField
-              fullWidth
-              label="Cron Expression"
-              placeholder="0 18 * * 1-5"
-              helperText="Use cron format: minute hour day month weekday"
+            <CronBuilder
               value={formData.cron_expression}
-              onChange={(e) => setFormData({ ...formData, cron_expression: e.target.value })}
+              onChange={(value) => setFormData({ ...formData, cron_expression: value })}
             />
 
             <TextField

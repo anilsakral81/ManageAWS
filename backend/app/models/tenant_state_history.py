@@ -34,7 +34,7 @@ class TenantStateHistory(Base):
     new_replicas = Column(Integer, nullable=False)
     
     # Timestamp for when state changed
-    changed_at = Column(DateTime, default=datetime.utcnow, nullable=False, index=True)
+    changed_at = Column(DateTime(timezone=True), default=datetime.utcnow, nullable=False, index=True)
     changed_by = Column(String(255), nullable=True)  # User who triggered the change
     
     # Additional context

@@ -82,6 +82,14 @@ spec:
         port:
           number: 8000
   
+  # Redirect root path to /tm/
+  - match:
+    - uri:
+        exact: /
+    redirect:
+      uri: /tm/
+      redirectCode: 301
+  
   # Frontend - lowest priority (catches /tm and /tm/*)
   - match:
     - uri:

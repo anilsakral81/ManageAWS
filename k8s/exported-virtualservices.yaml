@@ -1,0 +1,197 @@
+apiVersion: v1
+items:
+- apiVersion: networking.istio.io/v1
+  kind: VirtualService
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"VirtualService","metadata":{"annotations":{},"name":"keycloak-vs","namespace":"tenant-management"},"spec":{"gateways":["tenant-management-gateway"],"hosts":["*"],"http":[{"headers":{"request":{"set":{"X-Forwarded-Port":"443","X-Forwarded-Proto":"https"}}},"match":[{"uri":{"prefix":"/realms/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"headers":{"request":{"set":{"X-Forwarded-Port":"443","X-Forwarded-Proto":"https"}}},"match":[{"uri":{"prefix":"/admin/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"headers":{"request":{"set":{"X-Forwarded-Port":"443","X-Forwarded-Proto":"https"}}},"match":[{"uri":{"prefix":"/js/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"headers":{"request":{"set":{"X-Forwarded-Port":"443","X-Forwarded-Proto":"https"}}},"match":[{"uri":{"prefix":"/resources/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"headers":{"request":{"set":{"X-Forwarded-Port":"443","X-Forwarded-Proto":"https"}}},"match":[{"uri":{"prefix":"/robots.txt"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"}]}}
+    creationTimestamp: "2026-01-03T13:37:25Z"
+    generation: 5
+    name: keycloak-vs
+    namespace: tenant-management
+    resourceVersion: "194428819"
+    uid: a6e444d0-0704-4b32-bc75-135ea7cff51a
+  spec:
+    gateways:
+    - tenant-management-gateway
+    hosts:
+    - '*'
+    http:
+    - headers:
+        request:
+          set:
+            X-Forwarded-Port: "443"
+            X-Forwarded-Proto: https
+      match:
+      - uri:
+          prefix: /realms/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - headers:
+        request:
+          set:
+            X-Forwarded-Port: "443"
+            X-Forwarded-Proto: https
+      match:
+      - uri:
+          prefix: /admin/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - headers:
+        request:
+          set:
+            X-Forwarded-Port: "443"
+            X-Forwarded-Proto: https
+      match:
+      - uri:
+          prefix: /js/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - headers:
+        request:
+          set:
+            X-Forwarded-Port: "443"
+            X-Forwarded-Proto: https
+      match:
+      - uri:
+          prefix: /resources/
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+    - headers:
+        request:
+          set:
+            X-Forwarded-Port: "443"
+            X-Forwarded-Proto: https
+      match:
+      - uri:
+          prefix: /robots.txt
+      route:
+      - destination:
+          host: keycloak
+          port:
+            number: 8080
+      timeout: 60s
+- apiVersion: networking.istio.io/v1
+  kind: VirtualService
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.istio.io/v1beta1","kind":"VirtualService","metadata":{"annotations":{},"name":"tenant-management-vs","namespace":"tenant-management"},"spec":{"gateways":["tenant-management-gateway"],"hosts":["*"],"http":[{"match":[{"uri":{"prefix":"/tm/api/v1"}}],"rewrite":{"uri":"/api/v1"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"exact":"/tm/health"}}],"rewrite":{"uri":"/health"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"prefix":"/tm/metrics"}}],"rewrite":{"uri":"/metrics"},"route":[{"destination":{"host":"backend-service","port":{"number":9090}}}]},{"match":[{"uri":{"prefix":"/tm/docs"}}],"rewrite":{"uri":"/docs"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"prefix":"/tm/redoc"}}],"rewrite":{"uri":"/redoc"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"exact":"/tm/openapi.json"}}],"rewrite":{"uri":"/openapi.json"},"route":[{"destination":{"host":"backend-service","port":{"number":8000}}}]},{"match":[{"uri":{"exact":"/"}}],"redirect":{"redirectCode":301,"uri":"/tm/"}},{"match":[{"uri":{"prefix":"/tm/"}}],"rewrite":{"uri":"/"},"route":[{"destination":{"host":"frontend-service","port":{"number":80}}}]},{"match":[{"uri":{"exact":"/tm"}}],"rewrite":{"uri":"/"},"route":[{"destination":{"host":"frontend-service","port":{"number":80}}}]}]}}
+    creationTimestamp: "2026-01-01T16:14:37Z"
+    generation: 6
+    name: tenant-management-vs
+    namespace: tenant-management
+    resourceVersion: "194321580"
+    uid: 106b1ca6-a31f-43c6-9330-d53d69b62f5f
+  spec:
+    gateways:
+    - tenant-management-gateway
+    hosts:
+    - '*'
+    http:
+    - match:
+      - uri:
+          prefix: /tm/api/v1
+      rewrite:
+        uri: /api/v1
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          exact: /tm/health
+      rewrite:
+        uri: /health
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          prefix: /tm/metrics
+      rewrite:
+        uri: /metrics
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 9090
+    - match:
+      - uri:
+          prefix: /tm/docs
+      rewrite:
+        uri: /docs
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          prefix: /tm/redoc
+      rewrite:
+        uri: /redoc
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          exact: /tm/openapi.json
+      rewrite:
+        uri: /openapi.json
+      route:
+      - destination:
+          host: backend-service
+          port:
+            number: 8000
+    - match:
+      - uri:
+          exact: /
+      redirect:
+        redirectCode: 301
+        uri: /tm/
+    - match:
+      - uri:
+          prefix: /tm/
+      rewrite:
+        uri: /
+      route:
+      - destination:
+          host: frontend-service
+          port:
+            number: 80
+    - match:
+      - uri:
+          exact: /tm
+      rewrite:
+        uri: /
+      route:
+      - destination:
+          host: frontend-service
+          port:
+            number: 80
+kind: List
+metadata:
+  resourceVersion: ""

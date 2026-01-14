@@ -1,0 +1,69 @@
+apiVersion: v1
+items:
+- apiVersion: networking.k8s.io/v1
+  kind: Ingress
+  metadata:
+    annotations:
+      alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig":
+        {"Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
+      alb.ingress.kubernetes.io/actions.use-annotation: |
+        {
+          "Type": "fixed-response",
+          "FixedResponseConfig": {
+            "StatusCode": "200",
+            "Headers": [
+              {"Key": "Cache-Control", "Value": "no-store,no-cache,private"},
+              {"Key": "Strict-Transport-Security", "Value": "max-age=31536000;preload"},
+              {"Key": "X-Frame-Options", "Value": "SAMEORIGIN"},
+              {"Key": "X-XSS-Protection", "Value": "1;mode=block"},
+              {"Key": "X-Content-Type-Options", "Value": "nosniff"},
+              {"Key": "Access-Control-Allow-Origin", "Value": "*"},
+              {"Key": "Server", "Value": "server"}
+            ]
+          }
+        }
+      alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-south-1:122610483530:certificate/511ea75e-7ccd-4388-885a-9a1583f69521
+      alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+      alb.ingress.kubernetes.io/load-balancer-attributes: load_balancing.cross_zone.enabled=true
+      alb.ingress.kubernetes.io/scheme: internet-facing
+      alb.ingress.kubernetes.io/ssl-policy: ELBSecurityPolicy-TLS-1-2-Ext-2018-06
+      alb.ingress.kubernetes.io/subnets: subnet-09dd63bc7bae7eaa8,subnet-01957481f585d60f6
+      alb.ingress.kubernetes.io/target-type: ip
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"networking.k8s.io/v1","kind":"Ingress","metadata":{"annotations":{"alb.ingress.kubernetes.io/actions.ssl-redirect":"{\"Type\": \"redirect\", \"RedirectConfig\": {\"Protocol\": \"HTTPS\", \"Port\": \"443\", \"StatusCode\": \"HTTP_301\"}}","alb.ingress.kubernetes.io/actions.use-annotation":"{\n  \"Type\": \"fixed-response\",\n  \"FixedResponseConfig\": {\n    \"StatusCode\": \"200\",\n    \"Headers\": [\n      {\"Key\": \"Cache-Control\", \"Value\": \"no-store,no-cache,private\"},\n      {\"Key\": \"Strict-Transport-Security\", \"Value\": \"max-age=31536000;preload\"},\n      {\"Key\": \"X-Frame-Options\", \"Value\": \"SAMEORIGIN\"},\n      {\"Key\": \"X-XSS-Protection\", \"Value\": \"1;mode=block\"},\n      {\"Key\": \"X-Content-Type-Options\", \"Value\": \"nosniff\"},\n      {\"Key\": \"Access-Control-Allow-Origin\", \"Value\": \"*\"},\n      {\"Key\": \"Server\", \"Value\": \"server\"}\n    ]\n  }\n}\n","alb.ingress.kubernetes.io/certificate-arn":"arn:aws:acm:ap-south-1:122610483530:certificate/511ea75e-7ccd-4388-885a-9a1583f69521","alb.ingress.kubernetes.io/listen-ports":"[{\"HTTP\": 80}, {\"HTTPS\": 443}]","alb.ingress.kubernetes.io/load-balancer-attributes":"load_balancing.cross_zone.enabled=true","alb.ingress.kubernetes.io/scheme":"internet-facing","alb.ingress.kubernetes.io/ssl-policy":"ELBSecurityPolicy-TLS-1-2-Ext-2018-06","alb.ingress.kubernetes.io/subnets":"subnet-09dd63bc7bae7eaa8,subnet-01957481f585d60f6","alb.ingress.kubernetes.io/target-type":"ip","kubernetes.io/ingress.class":"alb"},"name":"comviva-ingress","namespace":"istio-system"},"spec":{"rules":[{"http":{"paths":[{"backend":{"service":{"name":"istio-ingressgateway","port":{"number":80}}},"path":"/","pathType":"Prefix"}]}}],"tls":[{"hosts":["mrtm8.demo.pm.mrtmcloud.com","mrtm8.demo.rm.mrtmcloud.com","mrtm8.demo.pvg.mrtmcloud.com","mrtm8.comviva.rm.mrtmcloud.com","mrtm8.comviva.pm.mrtmcloud.com","mr5.demo.pm.mrtmcloud.com","igw.comviva.rm.mrtmcloud.com"]}]}}
+      kubernetes.io/ingress.class: alb
+    creationTimestamp: "2025-05-21T14:07:15Z"
+    finalizers:
+    - ingress.k8s.aws/resources
+    generation: 3
+    name: comviva-ingress
+    namespace: istio-system
+    resourceVersion: "78534589"
+    uid: ae197020-4f5d-4442-acbf-022436579444
+  spec:
+    rules:
+    - http:
+        paths:
+        - backend:
+            service:
+              name: istio-ingressgateway
+              port:
+                number: 80
+          path: /
+          pathType: Prefix
+    tls:
+    - hosts:
+      - mrtm8.demo.pm.mrtmcloud.com
+      - mrtm8.demo.rm.mrtmcloud.com
+      - mrtm8.demo.pvg.mrtmcloud.com
+      - mrtm8.comviva.rm.mrtmcloud.com
+      - mrtm8.comviva.pm.mrtmcloud.com
+      - mr5.demo.pm.mrtmcloud.com
+      - igw.comviva.rm.mrtmcloud.com
+  status:
+    loadBalancer:
+      ingress:
+      - hostname: k8s-istiosys-comvivai-673314c675-921931728.ap-south-1.elb.amazonaws.com
+kind: List
+metadata:
+  resourceVersion: ""

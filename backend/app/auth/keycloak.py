@@ -118,15 +118,16 @@ async def get_current_user(
     Raises:
         HTTPException: If authentication fails
     """
-    # Development mode bypass - if Keycloak URL is default/not configured OR debug mode
-    if settings.keycloak_url == "https://keycloak.example.com" or settings.debug:
-        logger.warning("Auth bypass enabled - using mock user for development")
+    # Development mode bypass - if Keycloak URL is default/not configured
+    # Note: Only use this in local development with proper configuration
+    if settings.keycloak_url == "https://keycloak.example.com":
+        logger.warning("Auth bypass enabled - using mock admin user for local development (Keycloak not configured)")
         return UserInfo(
             sub="dev-user-123",
             email="dev@example.com",
             preferred_username="developer",
             name="Development User",
-            roles=["admin", "tenant-admin"],
+            roles=["admin"],  # Only grant admin role in bypass mode
             groups=[],
             allowed_namespaces=["*"]  # Admin has access to all
         )
@@ -217,9 +218,9 @@ def check_permission(required_roles: list[str]):
 
 
 # Role-based dependencies
-require_admin = check_permission(["tenant-admin", "admin"])
-require_operator = check_permission(["tenant-admin", "tenant-operator", "admin"])
-require_viewer = check_permission(["tenant-admin", "tenant-operator", "tenant-viewer", "admin"])
+require_admin = check_permission(["admin"])
+require_operator = check_permission(["admin", "operator"])
+require_viewer = check_permission(["admin", "operator", "viewer"])
 
 
 async def get_user_allowed_namespaces(
@@ -234,16 +235,21 @@ async def get_user_allowed_namespaces(
         db: Database session
         
     Returns:
-        List[str]: List of allowed namespace names, or ["*"] for admins
+        List[str]: List of allowed namespace names, or ["*"] for admins/viewers
     """
     from sqlalchemy import select
     from app.models.user_namespace import UserNamespace
     
-    # Admins can access all namespaces
-    if "admin" in user.roles or "tenant-admin" in user.roles:
+    # Admin role: access all namespaces with full permissions
+    if "admin" in user.roles:
         return ["*"]
     
-    # Get user-specific namespace permissions
+    # Viewer role: can see all namespaces but read-only
+    if "viewer" in user.roles:
+        return ["*"]
+    
+    # Operator role: only see explicitly granted namespaces
+    # Get user-specific namespace permissions from database
     result = await db.execute(
         select(UserNamespace.namespace)
         .where(UserNamespace.user_id == user.sub)

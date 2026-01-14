@@ -1,0 +1,171 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"backend"},"name":"backend-service","namespace":"tenant-management"},"spec":{"ports":[{"name":"http","port":8000,"protocol":"TCP","targetPort":8000},{"name":"metrics","port":9090,"protocol":"TCP","targetPort":9090}],"selector":{"app":"backend"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-01-01T13:13:24Z"
+    labels:
+      app: backend
+    name: backend-service
+    namespace: tenant-management
+    resourceVersion: "190671273"
+    uid: 61d89ec9-b41d-4eaf-a026-7d02a87f19cb
+  spec:
+    clusterIP: 172.20.42.200
+    clusterIPs:
+    - 172.20.42.200
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8000
+      protocol: TCP
+      targetPort: 8000
+    - name: metrics
+      port: 9090
+      protocol: TCP
+      targetPort: 9090
+    selector:
+      app: backend
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"frontend"},"name":"frontend-service","namespace":"tenant-management"},"spec":{"ports":[{"name":"http","port":80,"protocol":"TCP","targetPort":80}],"selector":{"app":"frontend"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-01-01T13:13:26Z"
+    labels:
+      app: frontend
+    name: frontend-service
+    namespace: tenant-management
+    resourceVersion: "190671319"
+    uid: ff4dc314-cd6a-406c-8367-d72519e2edeb
+  spec:
+    clusterIP: 172.20.243.117
+    clusterIPs:
+    - 172.20.243.117
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 80
+      protocol: TCP
+      targetPort: 80
+    selector:
+      app: frontend
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"keycloak"},"name":"keycloak","namespace":"tenant-management"},"spec":{"ports":[{"name":"http","port":8080,"protocol":"TCP","targetPort":8080},{"name":"https","port":8443,"protocol":"TCP","targetPort":8443}],"selector":{"app":"keycloak"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-01-03T06:42:34Z"
+    labels:
+      app: keycloak
+    name: keycloak
+    namespace: tenant-management
+    resourceVersion: "192347624"
+    uid: 9ea7e54b-f992-4cb5-9a14-b76f619d5059
+  spec:
+    clusterIP: 172.20.54.1
+    clusterIPs:
+    - 172.20.54.1
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: http
+      port: 8080
+      protocol: TCP
+      targetPort: 8080
+    - name: https
+      port: 8443
+      protocol: TCP
+      targetPort: 8443
+    selector:
+      app: keycloak
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"name":"keycloak-postgres","namespace":"tenant-management"},"spec":{"ports":[{"name":"postgresql","port":5432,"protocol":"TCP","targetPort":5432}],"selector":{"app":"keycloak-postgres"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-01-03T06:53:35Z"
+    name: keycloak-postgres
+    namespace: tenant-management
+    resourceVersion: "192588331"
+    uid: fbc4fa5c-1c70-47d6-98b5-a6a8020fef46
+  spec:
+    clusterIP: 172.20.57.151
+    clusterIPs:
+    - 172.20.57.151
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: postgresql
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: keycloak-postgres
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+- apiVersion: v1
+  kind: Service
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"Service","metadata":{"annotations":{},"labels":{"app":"postgres"},"name":"postgres-service","namespace":"tenant-management"},"spec":{"ports":[{"name":"postgres","port":5432,"protocol":"TCP","targetPort":5432}],"selector":{"app":"postgres"},"type":"ClusterIP"}}
+    creationTimestamp: "2026-01-01T13:12:45Z"
+    labels:
+      app: postgres
+    name: postgres-service
+    namespace: tenant-management
+    resourceVersion: "190670733"
+    uid: 825f7c8c-4181-469d-81a8-1164d5387c14
+  spec:
+    clusterIP: 172.20.213.156
+    clusterIPs:
+    - 172.20.213.156
+    internalTrafficPolicy: Cluster
+    ipFamilies:
+    - IPv4
+    ipFamilyPolicy: SingleStack
+    ports:
+    - name: postgres
+      port: 5432
+      protocol: TCP
+      targetPort: 5432
+    selector:
+      app: postgres
+    sessionAffinity: None
+    type: ClusterIP
+  status:
+    loadBalancer: {}
+kind: List
+metadata:
+  resourceVersion: ""

@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Namespace","metadata":{"annotations":{},"labels":{"app":"tenant-management","environment":"local"},"name":"tenant-management"}}
+  creationTimestamp: "2026-01-01T13:01:13Z"
+  labels:
+    app: tenant-management
+    environment: local
+    istio-injection: disabled
+    kubernetes.io/metadata.name: tenant-management
+  name: tenant-management
+  resourceVersion: "192212850"
+  uid: 351a51f0-9df2-418e-990c-6b606325b1b2
+spec:
+  finalizers:
+  - kubernetes
+status:
+  phase: Active

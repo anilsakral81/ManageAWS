@@ -1,0 +1,988 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-01-05T22:04:28+05:30"
+    creationTimestamp: "2026-01-05T17:53:10Z"
+    generateName: backend-847c878b88-
+    labels:
+      app: backend
+      pod-template-hash: 847c878b88
+    name: backend-847c878b88-74rjh
+    namespace: tenant-management
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: backend-847c878b88
+      uid: 2b8d03f9-b5eb-4f52-b8a5-a46793af8e47
+    resourceVersion: "194464921"
+    uid: d2222090-aa0e-4b2d-8ae1-ba65029e9f2f
+  spec:
+    containers:
+    - env:
+      - name: APP_NAME
+        valueFrom:
+          configMapKeyRef:
+            key: APP_NAME
+            name: backend-config
+      - name: APP_ENV
+        valueFrom:
+          configMapKeyRef:
+            key: APP_ENV
+            name: backend-config
+      - name: DEBUG
+        valueFrom:
+          configMapKeyRef:
+            key: DEBUG
+            name: backend-config
+      - name: LOG_LEVEL
+        valueFrom:
+          configMapKeyRef:
+            key: LOG_LEVEL
+            name: backend-config
+      - name: API_PREFIX
+        valueFrom:
+          configMapKeyRef:
+            key: API_PREFIX
+            name: backend-config
+      - name: CORS_ORIGINS
+        valueFrom:
+          configMapKeyRef:
+            key: CORS_ORIGINS
+            name: backend-config
+      - name: IN_CLUSTER
+        valueFrom:
+          configMapKeyRef:
+            key: IN_CLUSTER
+            name: backend-config
+      - name: KEYCLOAK_URL
+        valueFrom:
+          configMapKeyRef:
+            key: KEYCLOAK_URL
+            name: backend-config
+      - name: KEYCLOAK_REALM
+        valueFrom:
+          configMapKeyRef:
+            key: KEYCLOAK_REALM
+            name: backend-config
+      - name: KEYCLOAK_CLIENT_ID
+        valueFrom:
+          configMapKeyRef:
+            key: KEYCLOAK_CLIENT_ID
+            name: backend-config
+      - name: DATABASE_URL
+        valueFrom:
+          secretKeyRef:
+            key: DATABASE_URL
+            name: backend-secret
+      - name: KEYCLOAK_CLIENT_SECRET
+        valueFrom:
+          secretKeyRef:
+            key: KEYCLOAK_CLIENT_SECRET
+            name: backend-secret
+      - name: KEYCLOAK_ADMIN_USERNAME
+        valueFrom:
+          secretKeyRef:
+            key: KEYCLOAK_ADMIN_USERNAME
+            name: backend-secret
+      - name: KEYCLOAK_ADMIN_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: KEYCLOAK_ADMIN_PASSWORD
+            name: backend-secret
+      image: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-backend:latest
+      imagePullPolicy: Always
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: backend
+      ports:
+      - containerPort: 8000
+        name: http
+        protocol: TCP
+      - containerPort: 9090
+        name: metrics
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 8000
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 3
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-w796h
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    initContainers:
+    - command:
+      - sh
+      - -c
+      - until nc -z postgres-service 5432; do echo waiting for postgres; sleep 2;
+        done;
+      image: busybox:1.36
+      imagePullPolicy: IfNotPresent
+      name: wait-for-postgres
+      resources: {}
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-w796h
+        readOnly: true
+    nodeName: i-002182998b0e312e7
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: tenant-manager
+    serviceAccountName: tenant-manager
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-w796h
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:17Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:17Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:34Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:34Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:10Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://f1104fbbd9fa648d089ae819789cd24b365524705aba79f6ebbafae24de95611
+      image: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-backend:latest
+      imageID: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-backend@sha256:31e80916f627b5e3ffdf9507f93a1797a61c11e6544a13ab56b01a3aa6c777ba
+      lastState: {}
+      name: backend
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-01-05T17:53:23Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-w796h
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.43.60.154
+    hostIPs:
+    - ip: 10.43.60.154
+    initContainerStatuses:
+    - containerID: containerd://497ffad08a20c514465d2c07d1b4c3ec4ee3464c3639750bca818723640c3a34
+      image: docker.io/library/busybox:1.36
+      imageID: docker.io/library/busybox@sha256:6b219909078e3fc93b81f83cb438bd7a5457984a01a478c76fe9777a8c67c39e
+      lastState: {}
+      name: wait-for-postgres
+      ready: true
+      restartCount: 0
+      started: false
+      state:
+        terminated:
+          containerID: containerd://497ffad08a20c514465d2c07d1b4c3ec4ee3464c3639750bca818723640c3a34
+          exitCode: 0
+          finishedAt: "2026-01-05T17:53:17Z"
+          reason: Completed
+          startedAt: "2026-01-05T17:53:17Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-w796h
+        readOnly: true
+        recursiveReadOnly: Disabled
+    phase: Running
+    podIP: 10.43.60.209
+    podIPs:
+    - ip: 10.43.60.209
+    qosClass: Burstable
+    startTime: "2026-01-05T17:53:10Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-01-06T09:20:06+05:30"
+    creationTimestamp: "2026-01-06T03:50:06Z"
+    generateName: frontend-bf49cf979-
+    labels:
+      app: frontend
+      pod-template-hash: bf49cf979
+    name: frontend-bf49cf979-x6zts
+    namespace: tenant-management
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: frontend-bf49cf979
+      uid: a80cf10b-3d0a-44be-b735-054fed3e0ea4
+    resourceVersion: "194831998"
+    uid: 360d2de6-8661-45af-8e85-592744857223
+  spec:
+    containers:
+    - envFrom:
+      - configMapRef:
+          name: frontend-config
+      image: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-frontend:latest
+      imagePullPolicy: Always
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 80
+          scheme: HTTP
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: frontend
+      ports:
+      - containerPort: 80
+        name: http
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health
+          port: 80
+          scheme: HTTP
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 200m
+          memory: 128Mi
+        requests:
+          cpu: 100m
+          memory: 64Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2n6mf
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: i-095f86adcc6663f85
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: kube-api-access-2n6mf
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-06T03:50:11Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-06T03:50:06Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-06T03:50:17Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-06T03:50:17Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-06T03:50:06Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://0db8ce6f4fbd02cede2eb3852b5752286c9141234f7749ce0c14de94e581e51f
+      image: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-frontend:latest
+      imageID: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-frontend@sha256:7d654b084dcc461cfd4dca4f88eda9b9839191270e69b2272f0d5dfa90d17949
+      lastState: {}
+      name: frontend
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-01-06T03:50:10Z"
+      volumeMounts:
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-2n6mf
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.43.61.186
+    hostIPs:
+    - ip: 10.43.61.186
+    phase: Running
+    podIP: 10.43.61.251
+    podIPs:
+    - ip: 10.43.61.251
+    qosClass: Burstable
+    startTime: "2026-01-06T03:50:06Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-01-05T23:10:06+05:30"
+    creationTimestamp: "2026-01-05T17:40:07Z"
+    generateName: keycloak-855f4f59df-
+    labels:
+      app: keycloak
+      pod-template-hash: 855f4f59df
+    name: keycloak-855f4f59df-sn9kv
+    namespace: tenant-management
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: keycloak-855f4f59df
+      uid: 35535738-d008-4ba8-b9e2-c42d0d0e621d
+    resourceVersion: "194456412"
+    uid: 37314fd0-9ff1-4b84-8b96-336af31bf759
+  spec:
+    containers:
+    - args:
+      - start
+      - --import-realm
+      env:
+      - name: KC_DB
+        value: postgres
+      - name: KC_DB_URL
+        value: jdbc:postgresql://keycloak-postgres:5432/keycloak
+      - name: KC_DB_USERNAME
+        valueFrom:
+          secretKeyRef:
+            key: KC_DB_USERNAME
+            name: keycloak-secrets
+      - name: KC_DB_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: KC_DB_PASSWORD
+            name: keycloak-secrets
+      - name: KEYCLOAK_ADMIN
+        valueFrom:
+          secretKeyRef:
+            key: KEYCLOAK_ADMIN
+            name: keycloak-secrets
+      - name: KEYCLOAK_ADMIN_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: KEYCLOAK_ADMIN_PASSWORD
+            name: keycloak-secrets
+      - name: KC_PROXY
+        value: edge
+      - name: KC_HOSTNAME
+        value: governance.mrtmcloud.com
+      - name: KC_HOSTNAME_STRICT
+        value: "false"
+      - name: KC_HTTP_ENABLED
+        value: "true"
+      - name: KC_HOSTNAME_STRICT_HTTPS
+        value: "false"
+      envFrom:
+      - configMapRef:
+          name: keycloak-config
+      image: quay.io/keycloak/keycloak:23.0
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/live
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 90
+        periodSeconds: 30
+        successThreshold: 1
+        timeoutSeconds: 5
+      name: keycloak
+      ports:
+      - containerPort: 8080
+        name: http
+        protocol: TCP
+      - containerPort: 8443
+        name: https
+        protocol: TCP
+      readinessProbe:
+        failureThreshold: 3
+        httpGet:
+          path: /health/ready
+          port: 8080
+          scheme: HTTP
+        initialDelaySeconds: 60
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 5
+      resources:
+        limits:
+          cpu: "1"
+          memory: 1Gi
+        requests:
+          cpu: 500m
+          memory: 512Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /opt/keycloak/data/import
+        name: realm-config
+        readOnly: true
+      - mountPath: /opt/keycloak/themes/cvs-light/login/theme.properties
+        name: cvs-theme
+        readOnly: true
+        subPath: theme.properties
+      - mountPath: /opt/keycloak/themes/cvs-light/login/resources/css/cvs-custom.css
+        name: cvs-theme
+        readOnly: true
+        subPath: cvs-custom.css
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-qnfff
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: i-09d2ff2a249557147
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - configMap:
+        defaultMode: 420
+        name: keycloak-realm-import
+      name: realm-config
+    - configMap:
+        defaultMode: 420
+        name: keycloak-cvs-theme
+      name: cvs-theme
+    - name: kube-api-access-qnfff
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:40:12Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:40:07Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:41:13Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:41:13Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:40:07Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://d25e3b4c5bc6452ecbdb015ad0b0c13f8055fa6bfef04014d05c77bf0da99469
+      image: quay.io/keycloak/keycloak:23.0
+      imageID: quay.io/keycloak/keycloak@sha256:14e99d6f5dd0516a5bdc82537b732cb85469ecdb15ad7fe5f11ff67521544db8
+      lastState: {}
+      name: keycloak
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-01-05T17:40:11Z"
+      volumeMounts:
+      - mountPath: /opt/keycloak/data/import
+        name: realm-config
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /opt/keycloak/themes/cvs-light/login/theme.properties
+        name: cvs-theme
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /opt/keycloak/themes/cvs-light/login/resources/css/cvs-custom.css
+        name: cvs-theme
+        readOnly: true
+        recursiveReadOnly: Disabled
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-qnfff
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.43.60.145
+    hostIPs:
+    - ip: 10.43.60.145
+    phase: Running
+    podIP: 10.43.60.179
+    podIPs:
+    - ip: 10.43.60.179
+    qosClass: Burstable
+    startTime: "2026-01-05T17:40:07Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    creationTimestamp: "2026-01-03T13:27:18Z"
+    generateName: keycloak-postgres-
+    labels:
+      app: keycloak-postgres
+      apps.kubernetes.io/pod-index: "0"
+      controller-revision-hash: keycloak-postgres-699647d54d
+      statefulset.kubernetes.io/pod-name: keycloak-postgres-0
+    name: keycloak-postgres-0
+    namespace: tenant-management
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: StatefulSet
+      name: keycloak-postgres
+      uid: 3fafcae1-25c6-4e73-9bf5-638683300d6b
+    resourceVersion: "192591775"
+    uid: 21dd6e1c-8e15-47a3-b8f5-7ca92cdf2b2d
+  spec:
+    containers:
+    - envFrom:
+      - configMapRef:
+          name: postgres-config
+      - secretRef:
+          name: postgres-secrets
+      image: postgres:15-alpine
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        exec:
+          command:
+          - pg_isready
+          - -U
+          - keycloak
+        failureThreshold: 3
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: keycloak-postgres
+      ports:
+      - containerPort: 5432
+        name: postgresql
+        protocol: TCP
+      readinessProbe:
+        exec:
+          command:
+          - pg_isready
+          - -U
+          - keycloak
+        failureThreshold: 3
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: postgres-storage
+        subPath: postgres
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dlt5n
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    hostname: keycloak-postgres-0
+    nodeName: i-09d2ff2a249557147
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    subdomain: keycloak-postgres
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: postgres-storage
+      persistentVolumeClaim:
+        claimName: keycloak-postgres-pvc
+    - name: kube-api-access-dlt5n
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-03T13:27:44Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-03T13:27:21Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-03T13:27:50Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-03T13:27:50Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-03T13:27:21Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://640a842f9ec957179bc9fb9fbd1b13fae58d7906fd9621e9d5232e9aa09f4eea
+      image: docker.io/library/postgres:15-alpine
+      imageID: docker.io/library/postgres@sha256:b3968e348b48f1198cc6de6611d055dbad91cd561b7990c406c3fc28d7095b21
+      lastState: {}
+      name: keycloak-postgres
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-01-03T13:27:43Z"
+      volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: postgres-storage
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-dlt5n
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.43.60.145
+    hostIPs:
+    - ip: 10.43.60.145
+    phase: Running
+    podIP: 10.43.60.160
+    podIPs:
+    - ip: 10.43.60.160
+    qosClass: Burstable
+    startTime: "2026-01-03T13:27:21Z"
+- apiVersion: v1
+  kind: Pod
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/restartedAt: "2026-01-01T21:44:43+05:30"
+    creationTimestamp: "2026-01-05T17:52:35Z"
+    generateName: postgres-86b5ccb5bd-
+    labels:
+      app: postgres
+      pod-template-hash: 86b5ccb5bd
+    name: postgres-86b5ccb5bd-7zw6t
+    namespace: tenant-management
+    ownerReferences:
+    - apiVersion: apps/v1
+      blockOwnerDeletion: true
+      controller: true
+      kind: ReplicaSet
+      name: postgres-86b5ccb5bd
+      uid: 16f39418-1371-4436-9b62-c7e6c04cad34
+    resourceVersion: "194464538"
+    uid: b8620abd-82e8-43c3-a7f8-b7f9b933c425
+  spec:
+    containers:
+    - env:
+      - name: POSTGRES_USER
+        valueFrom:
+          secretKeyRef:
+            key: POSTGRES_USER
+            name: postgres-secret
+      - name: POSTGRES_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            key: POSTGRES_PASSWORD
+            name: postgres-secret
+      - name: POSTGRES_DB
+        valueFrom:
+          secretKeyRef:
+            key: POSTGRES_DB
+            name: postgres-secret
+      - name: PGDATA
+        value: /var/lib/postgresql/data/pgdata
+      image: postgres:16-alpine
+      imagePullPolicy: IfNotPresent
+      livenessProbe:
+        exec:
+          command:
+          - pg_isready
+          - -U
+          - postgres
+        failureThreshold: 3
+        initialDelaySeconds: 30
+        periodSeconds: 10
+        successThreshold: 1
+        timeoutSeconds: 1
+      name: postgres
+      ports:
+      - containerPort: 5432
+        name: postgres
+        protocol: TCP
+      readinessProbe:
+        exec:
+          command:
+          - pg_isready
+          - -U
+          - postgres
+        failureThreshold: 3
+        initialDelaySeconds: 5
+        periodSeconds: 5
+        successThreshold: 1
+        timeoutSeconds: 1
+      resources:
+        limits:
+          cpu: 500m
+          memory: 512Mi
+        requests:
+          cpu: 250m
+          memory: 256Mi
+      terminationMessagePath: /dev/termination-log
+      terminationMessagePolicy: File
+      volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: postgres-storage
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-5mgsx
+        readOnly: true
+    dnsPolicy: ClusterFirst
+    enableServiceLinks: true
+    nodeName: i-018d747e61682d0d6
+    preemptionPolicy: PreemptLowerPriority
+    priority: 0
+    restartPolicy: Always
+    schedulerName: default-scheduler
+    securityContext: {}
+    serviceAccount: default
+    serviceAccountName: default
+    terminationGracePeriodSeconds: 30
+    tolerations:
+    - effect: NoExecute
+      key: node.kubernetes.io/not-ready
+      operator: Exists
+      tolerationSeconds: 300
+    - effect: NoExecute
+      key: node.kubernetes.io/unreachable
+      operator: Exists
+      tolerationSeconds: 300
+    volumes:
+    - name: postgres-storage
+      persistentVolumeClaim:
+        claimName: postgres-pvc
+    - name: kube-api-access-5mgsx
+      projected:
+        defaultMode: 420
+        sources:
+        - serviceAccountToken:
+            expirationSeconds: 3607
+            path: token
+        - configMap:
+            items:
+            - key: ca.crt
+              path: ca.crt
+            name: kube-root-ca.crt
+        - downwardAPI:
+            items:
+            - fieldRef:
+                apiVersion: v1
+                fieldPath: metadata.namespace
+              path: namespace
+  status:
+    conditions:
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:01Z"
+      status: "True"
+      type: PodReadyToStartContainers
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:52:35Z"
+      status: "True"
+      type: Initialized
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:07Z"
+      status: "True"
+      type: Ready
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:53:07Z"
+      status: "True"
+      type: ContainersReady
+    - lastProbeTime: null
+      lastTransitionTime: "2026-01-05T17:52:35Z"
+      status: "True"
+      type: PodScheduled
+    containerStatuses:
+    - containerID: containerd://7beddc9f17eaed5223ababc223b31104e181e57aa7b83c9200e50f73cce3731f
+      image: docker.io/library/postgres:16-alpine
+      imageID: docker.io/library/postgres@sha256:23e88eb049fd5d54894d70100df61d38a49ed97909263f79d4ff4c30a5d5fca2
+      lastState: {}
+      name: postgres
+      ready: true
+      restartCount: 0
+      started: true
+      state:
+        running:
+          startedAt: "2026-01-05T17:53:01Z"
+      volumeMounts:
+      - mountPath: /var/lib/postgresql/data
+        name: postgres-storage
+      - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+        name: kube-api-access-5mgsx
+        readOnly: true
+        recursiveReadOnly: Disabled
+    hostIP: 10.43.61.239
+    hostIPs:
+    - ip: 10.43.61.239
+    phase: Running
+    podIP: 10.43.61.19
+    podIPs:
+    - ip: 10.43.61.19
+    qosClass: Burstable
+    startTime: "2026-01-05T17:52:35Z"
+kind: List
+metadata:
+  resourceVersion: ""

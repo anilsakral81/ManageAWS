@@ -13,12 +13,3 @@ spec:
       protocol: HTTP
     hosts:
     - "*"
-  - port:
-      number: 443
-      name: https
-      protocol: HTTPS
-    tls:
-      mode: SIMPLE
-      credentialName: tenant-management-tls # Certificate from AWS Certificate Manager via ALB
-    hosts:
-    - "*"

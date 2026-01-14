@@ -1,0 +1,24 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    creationTimestamp: "2026-01-01T13:01:13Z"
+    name: default
+    namespace: tenant-management
+    resourceVersion: "190662449"
+    uid: 059cfa20-f09a-43a9-8aab-ab910542d4ee
+- apiVersion: v1
+  kind: ServiceAccount
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","kind":"ServiceAccount","metadata":{"annotations":{},"name":"tenant-manager","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-01T13:13:23Z"
+    name: tenant-manager
+    namespace: tenant-management
+    resourceVersion: "190671232"
+    uid: 3a96f40f-f506-456b-b822-c6c0140ec642
+kind: List
+metadata:
+  resourceVersion: ""

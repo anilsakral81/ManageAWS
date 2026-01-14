@@ -1,0 +1,604 @@
+apiVersion: v1
+items:
+- apiVersion: v1
+  data:
+    API_PORT: "8000"
+    API_PREFIX: /api/v1
+    APP_ENV: production
+    APP_NAME: Kubernetes Tenant Management Portal
+    CORS_ORIGINS: http://localhost:3000,http://localhost:8080,http://governance.mrtmcloud.com,https://governance.mrtmcloud.com,https://*
+    DEBUG: "false"
+    DEFAULT_START_SCHEDULE: 0 8 * * 1-5
+    DEFAULT_STOP_SCHEDULE: 0 18 * * 1-5
+    ENABLE_METRICS: "true"
+    IN_CLUSTER: "true"
+    JWT_ALGORITHM: RS256
+    JWT_AUDIENCE: tenant-manager-backend
+    KEYCLOAK_ADMIN_PASSWORD: admin123
+    KEYCLOAK_ADMIN_USERNAME: admin
+    KEYCLOAK_CLIENT_ID: tenant-manager-backend
+    KEYCLOAK_REALM: tenant-management
+    KEYCLOAK_URL: http://keycloak:8080
+    LOG_LEVEL: INFO
+    METRICS_PORT: "9090"
+    SCHEDULER_ENABLED: "true"
+    SCHEDULER_TIMEZONE: UTC
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"API_PORT":"8000","API_PREFIX":"/api/v1","APP_ENV":"production","APP_NAME":"Kubernetes Tenant Management Portal","CORS_ORIGINS":"http://localhost:3000,http://localhost:8080,http://governance.mrtmcloud.com,https://governance.mrtmcloud.com,https://*","DEBUG":"false","DEFAULT_START_SCHEDULE":"0 8 * * 1-5","DEFAULT_STOP_SCHEDULE":"0 18 * * 1-5","ENABLE_METRICS":"true","IN_CLUSTER":"true","JWT_ALGORITHM":"RS256","JWT_AUDIENCE":"tenant-manager-backend","KEYCLOAK_ADMIN_PASSWORD":"admin123","KEYCLOAK_ADMIN_USERNAME":"admin","KEYCLOAK_CLIENT_ID":"tenant-manager-backend","KEYCLOAK_REALM":"tenant-management","KEYCLOAK_URL":"http://keycloak:8080","LOG_LEVEL":"INFO","METRICS_PORT":"9090","SCHEDULER_ENABLED":"true","SCHEDULER_TIMEZONE":"UTC"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"backend-config","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-01T13:01:15Z"
+    name: backend-config
+    namespace: tenant-management
+    resourceVersion: "194316492"
+    uid: 71b4ec87-7895-4e0b-943e-530358306221
+- apiVersion: v1
+  data:
+    VITE_API_BASE_URL: /tm
+    VITE_BASE_PATH: /tm
+    VITE_KEYCLOAK_CLIENT_ID: tenant-manager-frontend
+    VITE_KEYCLOAK_REALM: tenant-management
+    VITE_KEYCLOAK_URL: http://governance.mrtmcloud.com
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"VITE_API_BASE_URL":"/tm","VITE_BASE_PATH":"/tm","VITE_KEYCLOAK_CLIENT_ID":"tenant-manager-frontend","VITE_KEYCLOAK_REALM":"tenant-management","VITE_KEYCLOAK_URL":"http://governance.mrtmcloud.com"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"frontend-config","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-01T13:01:15Z"
+    name: frontend-config
+    namespace: tenant-management
+    resourceVersion: "194316494"
+    uid: 3fc2dadb-adbc-4d1f-b1b7-8d8b9c54ae4f
+- apiVersion: v1
+  data:
+    root-cert.pem: |
+      -----BEGIN CERTIFICATE-----
+      MIIC/DCCAeSgAwIBAgIQaNGXZ23MlerxJas5LN/C3TANBgkqhkiG9w0BAQsFADAY
+      MRYwFAYDVQQKEw1jbHVzdGVyLmxvY2FsMB4XDTI1MDUyMTA4MjgxOVoXDTM1MDUx
+      OTA4MjgxOVowGDEWMBQGA1UEChMNY2x1c3Rlci5sb2NhbDCCASIwDQYJKoZIhvcN
+      AQEBBQADggEPADCCAQoCggEBAL4HG/WoULk03z/xFDlvveQtdkyH9gJUUiNan/F6
+      ICJm5KVVbq8O2JpxnVR+dPb829M0u+QOnNyn5hsAXWRZKW6ehhiYNq3OdsbLBpaL
+      Kmv256pD3BI+JLbXNB7Z8U0z9EOXMZnnB+EpKwrtDPYDy4qkUStlt17SoPVSmvnT
+      YNSP8HuyTekjS1nGDhdcr0w6AiuP1kuTxcD3qCqfrV2yrgrp9FsxOW9R5E4JdsBQ
+      iyOcMIG2GLwsEqwq+I8b8OIxIvpIDBV5DfGlr3fSoaIpsMz0bWe7/GxOPUJOn3eM
+      ChzmWIwo6vX8ZgxE1WAxAPSjjpWtA5UilaD2/D+CvzvDvZECAwEAAaNCMEAwDgYD
+      VR0PAQH/BAQDAgIEMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFF185EqczjNT
+      m7wTpZbzki5jRXLnMA0GCSqGSIb3DQEBCwUAA4IBAQCgDAma2q5TAaLR/2dHjNcX
+      0SuM2u+HUzWplXVkno/ZyoIsZ5K5fimhI2dKSlMBk2Q4Awduex4ZOYmh+5N5HbBM
+      W0BHivBh7JckMOOY83IiVPzaImNyh3lRHNbFhaOPeZtAFOHwGiyB9WvNX31eia00
+      4zHxUSbGAQOtmssoR6bQkKCS9demmbMjNHdu4I0lgMBp44ZUAvITgrFQHjkQqR0F
+      wntjW4mztpsVGk9xwvkD7G7yIijuwH0pS9/BshFME4kViNXsCh1qUHxmPO0thqyo
+      o4VWf4DFD9+gPW/1JIe4mT2BOdkUqnsjYe061AUQCw+Df1eMshn6IjIutzbs2Nxk
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    creationTimestamp: "2026-01-01T13:01:13Z"
+    labels:
+      istio.io/config: "true"
+    name: istio-ca-root-cert
+    namespace: tenant-management
+    resourceVersion: "190662447"
+    uid: 71371858-d9f0-4cd0-a3ef-6b3351efd61d
+- apiVersion: v1
+  data:
+    KC_HEALTH_ENABLED: "true"
+    KC_HOSTNAME: governance.mrtmcloud.com
+    KC_HOSTNAME_STRICT: "true"
+    KC_HOSTNAME_STRICT_HTTPS: "false"
+    KC_HTTP_ENABLED: "true"
+    KC_LOG_LEVEL: INFO
+    KC_METRICS_ENABLED: "true"
+    KC_PROXY: edge
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"KC_HEALTH_ENABLED":"true","KC_HOSTNAME":"governance.mrtmcloud.com","KC_HOSTNAME_STRICT":"true","KC_HOSTNAME_STRICT_HTTPS":"false","KC_HTTP_ENABLED":"true","KC_LOG_LEVEL":"INFO","KC_METRICS_ENABLED":"true","KC_PROXY":"edge"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"keycloak-config","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-03T06:42:30Z"
+    name: keycloak-config
+    namespace: tenant-management
+    resourceVersion: "194329341"
+    uid: 55e0b1a6-c1ec-4f31-a61f-8a0b0c9fd8be
+- apiVersion: v1
+  data:
+    cvs-custom.css: "/* CVS Light Theme - Custom Styles */\n\n/* Completely hide and
+      replace Keycloak branding */\n.login-pf-page-header {\n    background-image:
+      none !important;\n    background: transparent !important;\n    margin-bottom:
+      0px !important;\n    padding: 20px 0 !important;\n}\n\n/* Hide all Keycloak
+      logo elements */\n#kc-logo, #kc-logo-wrapper img, .kc-logo, .login-pf-page-header
+      img {\n    display: none !important;\n    visibility: hidden !important;\n    width:
+      0 !important;\n    height: 0 !important;\n    opacity: 0 !important;\n}\n\n/*
+      Replace with CVS SaaS APPS text */\n#kc-logo-wrapper {\n    background: none
+      !important;\n    text-align: center !important;\n    margin-bottom: 25px !important;\n
+      \   padding: 30px 0 15px 0 !important;\n}\n\n#kc-logo-wrapper::before {\n    content:
+      'CVS SaaS APPS' !important;\n    display: block !important;\n    font-size:
+      42px !important;\n    font-weight: 700 !important;\n    color: #1976d2 !important;\n
+      \   letter-spacing: 4px !important;\n    text-align: center !important;\n    font-family:
+      'Roboto', 'Helvetica', 'Arial', sans-serif !important;\n    margin-bottom: 15px
+      !important;\n}\n\n/* Light background for the entire page */\nbody {\n    background:
+      linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%) !important;\n    font-family:
+      'Roboto', 'Helvetica', 'Arial', sans-serif;\n}\n\n/* Card/Container styling
+      with light background */\n.login-pf body {\n    background: linear-gradient(135deg,
+      #f5f7fa 0%, #e8eef5 100%) !important;\n}\n\n#kc-container {\n    background-color:
+      transparent !important;\n}\n\n#kc-container-wrapper {\n    background-color:
+      transparent !important;\n}\n\n/* Login form card - white background with subtle
+      shadow */\n.card-pf {\n    background-color: #ffffff !important;\n    border-radius:
+      12px !important;\n    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;\n
+      \   border: 1px solid #e0e0e0 !important;\n    padding: 40px !important;\n}\n\n#kc-form-wrapper
+      {\n    background-color: #ffffff !important;\n}\n\n/* Header/Logo area styling
+      */\n#kc-header {\n    color: #1976d2 !important;\n    padding-bottom: 30px;\n}\n\n#kc-header-wrapper
+      {\n    font-size: 28px !important;\n    font-weight: 600 !important;\n    color:
+      #1976d2 !important;\n    text-align: center !important;\n}\n\n.kc-logo-text
+      {\n    text-align: center;\n    margin-bottom: 20px;\n}\n\n.kc-logo-text span
+      {\n    display: block;\n    line-height: 1.4;\n}\n\n/* Form elements styling
+      */\n.form-group {\n    margin-bottom: 24px !important;\n}\n\n.form-control {\n
+      \   background-color: #f8f9fa !important;\n    border: 2px solid #e0e0e0 !important;\n
+      \   border-radius: 8px !important;\n    padding: 12px 16px !important;\n    font-size:
+      15px !important;\n    transition: all 0.3s ease !important;\n}\n\n.form-control:focus
+      {\n    background-color: #ffffff !important;\n    border-color: #1976d2 !important;\n
+      \   box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1) !important;\n    outline:
+      none !important;\n}\n\n/* Label styling */\nlabel {\n    color: #424242 !important;\n
+      \   font-weight: 500 !important;\n    font-size: 14px !important;\n    margin-bottom:
+      8px !important;\n}\n\n/* Primary button - CVS blue */\n.btn-primary,\n#kc-login
+      {\n    background-color: #1976d2 !important;\n    border-color: #1976d2 !important;\n
+      \   color: #ffffff !important;\n    border-radius: 8px !important;\n    padding:
+      12px 24px !important;\n    font-size: 16px !important;\n    font-weight: 500
+      !important;\n    text-transform: none !important;\n    transition: all 0.3s
+      ease !important;\n    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2) !important;\n}\n\n.btn-primary:hover,\n#kc-login:hover
+      {\n    background-color: #1565c0 !important;\n    border-color: #1565c0 !important;\n
+      \   box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3) !important;\n    transform:
+      translateY(-1px) !important;\n}\n\n.btn-primary:active,\n#kc-login:active {\n
+      \   background-color: #0d47a1 !important;\n    transform: translateY(0) !important;\n}\n\n/*
+      Secondary/link buttons */\n.btn-default,\n.btn-link {\n    color: #1976d2 !important;\n
+      \   background-color: transparent !important;\n    border: 2px solid #e0e0e0
+      !important;\n    border-radius: 8px !important;\n    transition: all 0.3s ease
+      !important;\n}\n\n.btn-default:hover,\n.btn-link:hover {\n    background-color:
+      #f5f7fa !important;\n    border-color: #1976d2 !important;\n    text-decoration:
+      none !important;\n}\n\n/* Alert messages */\n.alert {\n    border-radius: 8px
+      !important;\n    border: none !important;\n    padding: 16px !important;\n    margin-bottom:
+      20px !important;\n}\n\n.alert-error {\n    background-color: #ffebee !important;\n
+      \   color: #c62828 !important;\n}\n\n.alert-warning {\n    background-color:
+      #fff3e0 !important;\n    color: #ef6c00 !important;\n}\n\n.alert-success {\n
+      \   background-color: #e8f5e9 !important;\n    color: #2e7d32 !important;\n}\n\n.alert-info
+      {\n    background-color: #e3f2fd !important;\n    color: #1565c0 !important;\n}\n\n/*
+      Links */\na {\n    color: #1976d2 !important;\n    text-decoration: none !important;\n
+      \   transition: color 0.2s ease !important;\n}\n\na:hover {\n    color: #1565c0
+      !important;\n    text-decoration: underline !important;\n}\n\n/* Checkbox and
+      radio buttons */\n.checkbox label,\n.radio label {\n    color: #424242 !important;\n
+      \   font-weight: 400 !important;\n}\n\ninput[type=\"checkbox\"],\ninput[type=\"radio\"]
+      {\n    accent-color: #1976d2 !important;\n}\n\n/* Info text */\n#kc-info {\n
+      \   background-color: transparent !important;\n    color: #666666 !important;\n}\n\n#kc-info-wrapper
+      {\n    font-size: 14px !important;\n    color: #666666 !important;\n}\n\n/*
+      Remember me checkbox */\n.checkbox {\n    margin-top: 16px !important;\n    margin-bottom:
+      16px !important;\n}\n\n/* Forgot password link */\n#kc-form-options {\n    margin-top:
+      16px !important;\n}\n\n#kc-form-options span {\n    color: #666666 !important;\n
+      \   font-size: 14px !important;\n}\n\n/* Registration link */\n#kc-registration
+      {\n    margin-top: 24px !important;\n    text-align: center !important;\n    color:
+      #666666 !important;\n}\n\n#kc-registration span {\n    margin-right: 8px !important;\n}\n\n/*
+      Social providers */\n#kc-social-providers {\n    margin-top: 24px !important;\n
+      \   padding-top: 24px !important;\n    border-top: 1px solid #e0e0e0 !important;\n}\n\n#kc-social-providers
+      ul {\n    list-style: none !important;\n    padding: 0 !important;\n}\n\n#kc-social-providers
+      li {\n    margin-bottom: 12px !important;\n}\n\n#kc-social-providers button
+      {\n    width: 100% !important;\n    background-color: #ffffff !important;\n
+      \   border: 2px solid #e0e0e0 !important;\n    color: #424242 !important;\n
+      \   border-radius: 8px !important;\n    padding: 12px !important;\n    transition:
+      all 0.3s ease !important;\n}\n\n#kc-social-providers button:hover {\n    background-color:
+      #f5f7fa !important;\n    border-color: #1976d2 !important;\n}\n\n/* Feedback
+      area */\n#kc-feedback {\n    margin-bottom: 20px !important;\n}\n\n/* Locale
+      selector */\n#kc-locale {\n    position: absolute !important;\n    top: 20px
+      !important;\n    right: 20px !important;\n}\n\n#kc-locale-dropdown {\n    background-color:
+      #ffffff !important;\n    border: 1px solid #e0e0e0 !important;\n    border-radius:
+      6px !important;\n    padding: 8px 12px !important;\n    color: #424242 !important;\n}\n\n/*
+      Content area */\n#kc-content {\n    margin-top: 20px !important;\n}\n\n/* Footer
+      info */\n#kc-info-message {\n    color: #666666 !important;\n    font-size:
+      13px !important;\n}\n\n/* Terms and conditions */\n#kc-terms-text {\n    background-color:
+      #f8f9fa !important;\n    border: 1px solid #e0e0e0 !important;\n    border-radius:
+      8px !important;\n    padding: 16px !important;\n    margin-bottom: 20px !important;\n
+      \   max-height: 200px !important;\n    overflow-y: auto !important;\n}\n\n/*
+      Responsive adjustments */\n@media (max-width: 768px) {\n    .card-pf {\n        padding:
+      24px !important;\n        margin: 16px !important;\n    }\n    \n    #kc-header-wrapper
+      {\n        font-size: 24px !important;\n    }\n}\n\n/* Loading spinner */\n.kc-spinner
+      {\n    border-color: #1976d2 !important;\n}\n\n/* Required field indicator */\n.required
+      {\n    color: #d32f2f !important;\n}\n\n/* Improve form layout */\n#kc-form
+      {\n    margin-top: 20px !important;\n}\n\n#kc-form-buttons {\n    margin-top:
+      32px !important;\n}\n\n/* Username/email input icon support */\n.input-group-addon
+      {\n    background-color: #f8f9fa !important;\n    border: 2px solid #e0e0e0
+      !important;\n    border-right: none !important;\n    color: #666666 !important;\n}\n\n.input-group
+      .form-control:first-child {\n    border-left: none !important;\n}\n"
+    theme.properties: |
+      parent=keycloak
+      import=common/keycloak
+
+      # Custom styles for CVS branding
+      styles=css/login.css css/cvs-custom.css
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"cvs-custom.css":"/* CVS Light Theme - Custom Styles */\n\n/* Completely hide and replace Keycloak branding */\n.login-pf-page-header {\n    background-image: none !important;\n    background: transparent !important;\n    margin-bottom: 0px !important;\n    padding: 20px 0 !important;\n}\n\n/* Hide all Keycloak logo elements */\n#kc-logo, #kc-logo-wrapper img, .kc-logo, .login-pf-page-header img {\n    display: none !important;\n    visibility: hidden !important;\n    width: 0 !important;\n    height: 0 !important;\n    opacity: 0 !important;\n}\n\n/* Replace with CVS SaaS APPS text */\n#kc-logo-wrapper {\n    background: none !important;\n    text-align: center !important;\n    margin-bottom: 25px !important;\n    padding: 30px 0 15px 0 !important;\n}\n\n#kc-logo-wrapper::before {\n    content: 'CVS SaaS APPS' !important;\n    display: block !important;\n    font-size: 42px !important;\n    font-weight: 700 !important;\n    color: #1976d2 !important;\n    letter-spacing: 4px !important;\n    text-align: center !important;\n    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif !important;\n    margin-bottom: 15px !important;\n}\n\n/* Light background for the entire page */\nbody {\n    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%) !important;\n    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;\n}\n\n/* Card/Container styling with light background */\n.login-pf body {\n    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%) !important;\n}\n\n#kc-container {\n    background-color: transparent !important;\n}\n\n#kc-container-wrapper {\n    background-color: transparent !important;\n}\n\n/* Login form card - white background with subtle shadow */\n.card-pf {\n    background-color: #ffffff !important;\n    border-radius: 12px !important;\n    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;\n    border: 1px solid #e0e0e0 !important;\n    padding: 40px !important;\n}\n\n#kc-form-wrapper {\n    background-color: #ffffff !important;\n}\n\n/* Header/Logo area styling */\n#kc-header {\n    color: #1976d2 !important;\n    padding-bottom: 30px;\n}\n\n#kc-header-wrapper {\n    font-size: 28px !important;\n    font-weight: 600 !important;\n    color: #1976d2 !important;\n    text-align: center !important;\n}\n\n.kc-logo-text {\n    text-align: center;\n    margin-bottom: 20px;\n}\n\n.kc-logo-text span {\n    display: block;\n    line-height: 1.4;\n}\n\n/* Form elements styling */\n.form-group {\n    margin-bottom: 24px !important;\n}\n\n.form-control {\n    background-color: #f8f9fa !important;\n    border: 2px solid #e0e0e0 !important;\n    border-radius: 8px !important;\n    padding: 12px 16px !important;\n    font-size: 15px !important;\n    transition: all 0.3s ease !important;\n}\n\n.form-control:focus {\n    background-color: #ffffff !important;\n    border-color: #1976d2 !important;\n    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1) !important;\n    outline: none !important;\n}\n\n/* Label styling */\nlabel {\n    color: #424242 !important;\n    font-weight: 500 !important;\n    font-size: 14px !important;\n    margin-bottom: 8px !important;\n}\n\n/* Primary button - CVS blue */\n.btn-primary,\n#kc-login {\n    background-color: #1976d2 !important;\n    border-color: #1976d2 !important;\n    color: #ffffff !important;\n    border-radius: 8px !important;\n    padding: 12px 24px !important;\n    font-size: 16px !important;\n    font-weight: 500 !important;\n    text-transform: none !important;\n    transition: all 0.3s ease !important;\n    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2) !important;\n}\n\n.btn-primary:hover,\n#kc-login:hover {\n    background-color: #1565c0 !important;\n    border-color: #1565c0 !important;\n    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3) !important;\n    transform: translateY(-1px) !important;\n}\n\n.btn-primary:active,\n#kc-login:active {\n    background-color: #0d47a1 !important;\n    transform: translateY(0) !important;\n}\n\n/* Secondary/link buttons */\n.btn-default,\n.btn-link {\n    color: #1976d2 !important;\n    background-color: transparent !important;\n    border: 2px solid #e0e0e0 !important;\n    border-radius: 8px !important;\n    transition: all 0.3s ease !important;\n}\n\n.btn-default:hover,\n.btn-link:hover {\n    background-color: #f5f7fa !important;\n    border-color: #1976d2 !important;\n    text-decoration: none !important;\n}\n\n/* Alert messages */\n.alert {\n    border-radius: 8px !important;\n    border: none !important;\n    padding: 16px !important;\n    margin-bottom: 20px !important;\n}\n\n.alert-error {\n    background-color: #ffebee !important;\n    color: #c62828 !important;\n}\n\n.alert-warning {\n    background-color: #fff3e0 !important;\n    color: #ef6c00 !important;\n}\n\n.alert-success {\n    background-color: #e8f5e9 !important;\n    color: #2e7d32 !important;\n}\n\n.alert-info {\n    background-color: #e3f2fd !important;\n    color: #1565c0 !important;\n}\n\n/* Links */\na {\n    color: #1976d2 !important;\n    text-decoration: none !important;\n    transition: color 0.2s ease !important;\n}\n\na:hover {\n    color: #1565c0 !important;\n    text-decoration: underline !important;\n}\n\n/* Checkbox and radio buttons */\n.checkbox label,\n.radio label {\n    color: #424242 !important;\n    font-weight: 400 !important;\n}\n\ninput[type=\"checkbox\"],\ninput[type=\"radio\"] {\n    accent-color: #1976d2 !important;\n}\n\n/* Info text */\n#kc-info {\n    background-color: transparent !important;\n    color: #666666 !important;\n}\n\n#kc-info-wrapper {\n    font-size: 14px !important;\n    color: #666666 !important;\n}\n\n/* Remember me checkbox */\n.checkbox {\n    margin-top: 16px !important;\n    margin-bottom: 16px !important;\n}\n\n/* Forgot password link */\n#kc-form-options {\n    margin-top: 16px !important;\n}\n\n#kc-form-options span {\n    color: #666666 !important;\n    font-size: 14px !important;\n}\n\n/* Registration link */\n#kc-registration {\n    margin-top: 24px !important;\n    text-align: center !important;\n    color: #666666 !important;\n}\n\n#kc-registration span {\n    margin-right: 8px !important;\n}\n\n/* Social providers */\n#kc-social-providers {\n    margin-top: 24px !important;\n    padding-top: 24px !important;\n    border-top: 1px solid #e0e0e0 !important;\n}\n\n#kc-social-providers ul {\n    list-style: none !important;\n    padding: 0 !important;\n}\n\n#kc-social-providers li {\n    margin-bottom: 12px !important;\n}\n\n#kc-social-providers button {\n    width: 100% !important;\n    background-color: #ffffff !important;\n    border: 2px solid #e0e0e0 !important;\n    color: #424242 !important;\n    border-radius: 8px !important;\n    padding: 12px !important;\n    transition: all 0.3s ease !important;\n}\n\n#kc-social-providers button:hover {\n    background-color: #f5f7fa !important;\n    border-color: #1976d2 !important;\n}\n\n/* Feedback area */\n#kc-feedback {\n    margin-bottom: 20px !important;\n}\n\n/* Locale selector */\n#kc-locale {\n    position: absolute !important;\n    top: 20px !important;\n    right: 20px !important;\n}\n\n#kc-locale-dropdown {\n    background-color: #ffffff !important;\n    border: 1px solid #e0e0e0 !important;\n    border-radius: 6px !important;\n    padding: 8px 12px !important;\n    color: #424242 !important;\n}\n\n/* Content area */\n#kc-content {\n    margin-top: 20px !important;\n}\n\n/* Footer info */\n#kc-info-message {\n    color: #666666 !important;\n    font-size: 13px !important;\n}\n\n/* Terms and conditions */\n#kc-terms-text {\n    background-color: #f8f9fa !important;\n    border: 1px solid #e0e0e0 !important;\n    border-radius: 8px !important;\n    padding: 16px !important;\n    margin-bottom: 20px !important;\n    max-height: 200px !important;\n    overflow-y: auto !important;\n}\n\n/* Responsive adjustments */\n@media (max-width: 768px) {\n    .card-pf {\n        padding: 24px !important;\n        margin: 16px !important;\n    }\n    \n    #kc-header-wrapper {\n        font-size: 24px !important;\n    }\n}\n\n/* Loading spinner */\n.kc-spinner {\n    border-color: #1976d2 !important;\n}\n\n/* Required field indicator */\n.required {\n    color: #d32f2f !important;\n}\n\n/* Improve form layout */\n#kc-form {\n    margin-top: 20px !important;\n}\n\n#kc-form-buttons {\n    margin-top: 32px !important;\n}\n\n/* Username/email input icon support */\n.input-group-addon {\n    background-color: #f8f9fa !important;\n    border: 2px solid #e0e0e0 !important;\n    border-right: none !important;\n    color: #666666 !important;\n}\n\n.input-group .form-control:first-child {\n    border-left: none !important;\n}\n","theme.properties":"parent=keycloak\nimport=common/keycloak\n\n# Custom styles for CVS branding\nstyles=css/login.css css/cvs-custom.css\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"keycloak-cvs-theme","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-03T15:44:11Z"
+    name: keycloak-cvs-theme
+    namespace: tenant-management
+    resourceVersion: "192692006"
+    uid: d664aed0-3c98-4eec-bda8-9841b766e81e
+- apiVersion: v1
+  data:
+    template.ftl: |
+      <#import "template.ftl" as layout>
+      <!DOCTYPE html>
+      <html>
+      <head>
+          <meta charset="utf-8">
+      </head>
+      <body>
+          <div id="kc-logo-wrapper" style="text-align: center; padding: 30px 0 20px 0;">
+              <div style="font-size: 40px; font-weight: 700; color: #1976d2; letter-spacing: 4px; margin-bottom: 15px; font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;">
+                  CVS SaaS APPS
+              </div>
+          </div>
+      </body>
+      </html>
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"template.ftl":"\u003c#import \"template.ftl\" as layout\u003e\n\u003c!DOCTYPE html\u003e\n\u003chtml\u003e\n\u003chead\u003e\n    \u003cmeta charset=\"utf-8\"\u003e\n\u003c/head\u003e\n\u003cbody\u003e\n    \u003cdiv id=\"kc-logo-wrapper\" style=\"text-align: center; padding: 30px 0 20px 0;\"\u003e\n        \u003cdiv style=\"font-size: 40px; font-weight: 700; color: #1976d2; letter-spacing: 4px; margin-bottom: 15px; font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;\"\u003e\n            CVS SaaS APPS\n        \u003c/div\u003e\n    \u003c/div\u003e\n\u003c/body\u003e\n\u003c/html\u003e\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"keycloak-cvs-theme-templates","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-03T16:12:25Z"
+    name: keycloak-cvs-theme-templates
+    namespace: tenant-management
+    resourceVersion: "192691695"
+    uid: 7515b0f1-cc6f-4c31-b8e6-037861a7f766
+- apiVersion: v1
+  data:
+    tenant-management-realm.json: |
+      {
+        "realm": "tenant-management",
+        "enabled": true,
+        "displayName": "Tenant Management System for CVS SaaS Apps",
+        "displayNameHtml": "<style>#kc-logo-wrapper, .login-pf-page-header{display:none;}</style><div style='text-align:center;padding:50px 0 30px 0;'><div style='font-size:28px;font-weight:600;color:#1976d2;margin-bottom:12px;'>Tenant Management System</div><div style='font-size:20px;font-weight:400;color:#666;'>for CVS SaaS Apps</div></div>",
+        "sslRequired": "external",
+        "registrationAllowed": false,
+        "loginWithEmailAllowed": true,
+        "duplicateEmailsAllowed": false,
+        "resetPasswordAllowed": true,
+        "editUsernameAllowed": false,
+        "bruteForceProtected": true,
+        "accessTokenLifespan": 3600,
+        "ssoSessionIdleTimeout": 86400,
+        "ssoSessionMaxLifespan": 864000,
+        "offlineSessionIdleTimeout": 2592000,
+        "loginTheme": "cvs-light",
+        "accountTheme": "keycloak",
+        "adminTheme": "keycloak",
+        "emailTheme": "keycloak",
+        "internationalizationEnabled": false,
+        "attributes": {
+          "_browser_header.contentSecurityPolicy": "frame-src 'self'; frame-ancestors 'self'; object-src 'none';",
+          "_browser_header.xContentTypeOptions": "nosniff",
+          "_browser_header.xRobotsTag": "none",
+          "_browser_header.xFrameOptions": "SAMEORIGIN",
+          "_browser_header.xXSSProtection": "1; mode=block",
+          "_browser_header.strictTransportSecurity": "max-age=31536000; includeSubDomains"
+        },
+        "roles": {
+          "realm": [
+            {
+              "name": "admin",
+              "description": "Administrator - full access to all features and tenants",
+              "composite": false
+            },
+            {
+              "name": "operator",
+              "description": "Operator - can manage assigned tenants (start/stop/schedule)",
+              "composite": false
+            },
+            {
+              "name": "viewer",
+              "description": "Viewer - read-only access to view all information",
+              "composite": false
+            }
+          ]
+        },
+        "clients": [
+          {
+            "clientId": "tenant-manager-backend",
+            "name": "Tenant Manager Backend API",
+            "description": "Backend API service",
+            "enabled": true,
+            "protocol": "openid-connect",
+            "publicClient": false,
+            "bearerOnly": false,
+            "serviceAccountsEnabled": true,
+            "authorizationServicesEnabled": true,
+            "directAccessGrantsEnabled": true,
+            "standardFlowEnabled": true,
+            "implicitFlowEnabled": false,
+            "secret": "backend-client-secret-change-in-production",
+            "redirectUris": ["*"],
+            "webOrigins": ["*"],
+            "attributes": {
+              "access.token.lifespan": "3600"
+            }
+          },
+          {
+            "clientId": "tenant-manager-frontend",
+            "name": "Tenant Manager Frontend",
+            "description": "Frontend web application",
+            "enabled": true,
+            "protocol": "openid-connect",
+            "publicClient": true,
+            "bearerOnly": false,
+            "standardFlowEnabled": true,
+            "implicitFlowEnabled": false,
+            "directAccessGrantsEnabled": true,
+            "redirectUris": [
+              "http://localhost:5173/*",
+              "http://localhost:3000/*",
+              "http://k8s-istiosys-istioing-a033e299eb-2401607831df82f9.elb.ap-south-1.amazonaws.com/*",
+              "http://*",
+              "https://*"
+            ],
+            "webOrigins": [
+              "http://localhost:5173",
+              "http://localhost:3000",
+              "http://k8s-istiosys-istioing-a033e299eb-2401607831df82f9.elb.ap-south-1.amazonaws.com",
+              "*"
+            ],
+            "attributes": {
+              "pkce.code.challenge.method": "S256",
+              "post.logout.redirect.uris": "+"
+            }
+          }
+        ],
+        "users": [
+          {
+            "username": "admin",
+            "enabled": true,
+            "emailVerified": true,
+            "firstName": "Admin",
+            "lastName": "User",
+            "email": "admin@tenant-manager.local",
+            "credentials": [
+              {
+                "type": "password",
+                "value": "admin123",
+                "temporary": false
+              }
+            ],
+            "realmRoles": ["admin"],
+            "clientRoles": {
+              "realm-management": ["realm-admin"]
+            }
+          },
+          {
+            "username": "operator",
+            "enabled": true,
+            "emailVerified": true,
+            "firstName": "Operator",
+            "lastName": "User",
+            "email": "operator@tenant-manager.local",
+            "credentials": [
+              {
+                "type": "password",
+                "value": "operator123",
+                "temporary": false
+              }
+            ],
+            "realmRoles": ["operator"]
+          },
+          {
+            "username": "viewer",
+            "enabled": true,
+            "emailVerified": true,
+            "firstName": "Viewer",
+            "lastName": "User",
+            "email": "viewer@tenant-manager.local",
+            "credentials": [
+              {
+                "type": "password",
+                "value": "viewer123",
+                "temporary": false
+              }
+            ],
+            "realmRoles": ["viewer"]
+          }
+        ],
+        "clientScopes": [
+          {
+            "name": "roles",
+            "protocol": "openid-connect",
+            "attributes": {
+              "include.in.token.scope": "true",
+              "display.on.consent.screen": "true"
+            },
+            "protocolMappers": [
+              {
+                "name": "realm roles",
+                "protocol": "openid-connect",
+                "protocolMapper": "oidc-usermodel-realm-role-mapper",
+                "consentRequired": false,
+                "config": {
+                  "multivalued": "true",
+                  "userinfo.token.claim": "true",
+                  "id.token.claim": "true",
+                  "access.token.claim": "true",
+                  "claim.name": "realm_access.roles",
+                  "jsonType.label": "String"
+                }
+              }
+            ]
+          },
+          {
+            "name": "email",
+            "description": "OpenID Connect built-in scope: email",
+            "protocol": "openid-connect",
+            "attributes": {
+              "include.in.token.scope": "true",
+              "display.on.consent.screen": "true",
+              "consent.screen.text": "${emailScopeConsentText}"
+            },
+            "protocolMappers": [
+              {
+                "name": "email",
+                "protocol": "openid-connect",
+                "protocolMapper": "oidc-usermodel-property-mapper",
+                "consentRequired": false,
+                "config": {
+                  "userinfo.token.claim": "true",
+                  "user.attribute": "email",
+                  "id.token.claim": "true",
+                  "access.token.claim": "true",
+                  "claim.name": "email",
+                  "jsonType.label": "String"
+                }
+              },
+              {
+                "name": "email verified",
+                "protocol": "openid-connect",
+                "protocolMapper": "oidc-usermodel-property-mapper",
+                "consentRequired": false,
+                "config": {
+                  "userinfo.token.claim": "true",
+                  "user.attribute": "emailVerified",
+                  "id.token.claim": "true",
+                  "access.token.claim": "true",
+                  "claim.name": "email_verified",
+                  "jsonType.label": "boolean"
+                }
+              }
+            ]
+          },
+          {
+            "name": "profile",
+            "description": "OpenID Connect built-in scope: profile",
+            "protocol": "openid-connect",
+            "attributes": {
+              "include.in.token.scope": "true",
+              "display.on.consent.screen": "true",
+              "consent.screen.text": "${profileScopeConsentText}"
+            },
+            "protocolMappers": [
+              {
+                "name": "username",
+                "protocol": "openid-connect",
+                "protocolMapper": "oidc-usermodel-property-mapper",
+                "consentRequired": false,
+                "config": {
+                  "userinfo.token.claim": "true",
+                  "user.attribute": "username",
+                  "id.token.claim": "true",
+                  "access.token.claim": "true",
+                  "claim.name": "preferred_username",
+                  "jsonType.label": "String"
+                }
+              },
+              {
+                "name": "full name",
+                "protocol": "openid-connect",
+                "protocolMapper": "oidc-full-name-mapper",
+                "consentRequired": false,
+                "config": {
+                  "userinfo.token.claim": "true",
+                  "id.token.claim": "true",
+                  "access.token.claim": "true"
+                }
+              },
+              {
+                "name": "given name",
+                "protocol": "openid-connect",
+                "protocolMapper": "oidc-usermodel-property-mapper",
+                "consentRequired": false,
+                "config": {
+                  "userinfo.token.claim": "true",
+                  "user.attribute": "firstName",
+                  "id.token.claim": "true",
+                  "access.token.claim": "true",
+                  "claim.name": "given_name",
+                  "jsonType.label": "String"
+                }
+              },
+              {
+                "name": "family name",
+                "protocol": "openid-connect",
+                "protocolMapper": "oidc-usermodel-property-mapper",
+                "consentRequired": false,
+                "config": {
+                  "userinfo.token.claim": "true",
+                  "user.attribute": "lastName",
+                  "id.token.claim": "true",
+                  "access.token.claim": "true",
+                  "claim.name": "family_name",
+                  "jsonType.label": "String"
+                }
+              }
+            ]
+          }
+        ],
+        "defaultDefaultClientScopes": [
+          "roles",
+          "email",
+          "profile"
+        ]
+      }
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"tenant-management-realm.json":"{\n  \"realm\": \"tenant-management\",\n  \"enabled\": true,\n  \"displayName\": \"Tenant Management System for CVS SaaS Apps\",\n  \"displayNameHtml\": \"\u003cstyle\u003e#kc-logo-wrapper, .login-pf-page-header{display:none;}\u003c/style\u003e\u003cdiv style='text-align:center;padding:50px 0 30px 0;'\u003e\u003cdiv style='font-size:28px;font-weight:600;color:#1976d2;margin-bottom:12px;'\u003eTenant Management System\u003c/div\u003e\u003cdiv style='font-size:20px;font-weight:400;color:#666;'\u003efor CVS SaaS Apps\u003c/div\u003e\u003c/div\u003e\",\n  \"sslRequired\": \"external\",\n  \"registrationAllowed\": false,\n  \"loginWithEmailAllowed\": true,\n  \"duplicateEmailsAllowed\": false,\n  \"resetPasswordAllowed\": true,\n  \"editUsernameAllowed\": false,\n  \"bruteForceProtected\": true,\n  \"accessTokenLifespan\": 3600,\n  \"ssoSessionIdleTimeout\": 86400,\n  \"ssoSessionMaxLifespan\": 864000,\n  \"offlineSessionIdleTimeout\": 2592000,\n  \"loginTheme\": \"cvs-light\",\n  \"accountTheme\": \"keycloak\",\n  \"adminTheme\": \"keycloak\",\n  \"emailTheme\": \"keycloak\",\n  \"internationalizationEnabled\": false,\n  \"attributes\": {\n    \"_browser_header.contentSecurityPolicy\": \"frame-src 'self'; frame-ancestors 'self'; object-src 'none';\",\n    \"_browser_header.xContentTypeOptions\": \"nosniff\",\n    \"_browser_header.xRobotsTag\": \"none\",\n    \"_browser_header.xFrameOptions\": \"SAMEORIGIN\",\n    \"_browser_header.xXSSProtection\": \"1; mode=block\",\n    \"_browser_header.strictTransportSecurity\": \"max-age=31536000; includeSubDomains\"\n  },\n  \"roles\": {\n    \"realm\": [\n      {\n        \"name\": \"admin\",\n        \"description\": \"Administrator - full access to all features and tenants\",\n        \"composite\": false\n      },\n      {\n        \"name\": \"operator\",\n        \"description\": \"Operator - can manage assigned tenants (start/stop/schedule)\",\n        \"composite\": false\n      },\n      {\n        \"name\": \"viewer\",\n        \"description\": \"Viewer - read-only access to view all information\",\n        \"composite\": false\n      }\n    ]\n  },\n  \"clients\": [\n    {\n      \"clientId\": \"tenant-manager-backend\",\n      \"name\": \"Tenant Manager Backend API\",\n      \"description\": \"Backend API service\",\n      \"enabled\": true,\n      \"protocol\": \"openid-connect\",\n      \"publicClient\": false,\n      \"bearerOnly\": false,\n      \"serviceAccountsEnabled\": true,\n      \"authorizationServicesEnabled\": true,\n      \"directAccessGrantsEnabled\": true,\n      \"standardFlowEnabled\": true,\n      \"implicitFlowEnabled\": false,\n      \"secret\": \"backend-client-secret-change-in-production\",\n      \"redirectUris\": [\"*\"],\n      \"webOrigins\": [\"*\"],\n      \"attributes\": {\n        \"access.token.lifespan\": \"3600\"\n      }\n    },\n    {\n      \"clientId\": \"tenant-manager-frontend\",\n      \"name\": \"Tenant Manager Frontend\",\n      \"description\": \"Frontend web application\",\n      \"enabled\": true,\n      \"protocol\": \"openid-connect\",\n      \"publicClient\": true,\n      \"bearerOnly\": false,\n      \"standardFlowEnabled\": true,\n      \"implicitFlowEnabled\": false,\n      \"directAccessGrantsEnabled\": true,\n      \"redirectUris\": [\n        \"http://localhost:5173/*\",\n        \"http://localhost:3000/*\",\n        \"http://k8s-istiosys-istioing-a033e299eb-2401607831df82f9.elb.ap-south-1.amazonaws.com/*\",\n        \"http://*\",\n        \"https://*\"\n      ],\n      \"webOrigins\": [\n        \"http://localhost:5173\",\n        \"http://localhost:3000\",\n        \"http://k8s-istiosys-istioing-a033e299eb-2401607831df82f9.elb.ap-south-1.amazonaws.com\",\n        \"*\"\n      ],\n      \"attributes\": {\n        \"pkce.code.challenge.method\": \"S256\",\n        \"post.logout.redirect.uris\": \"+\"\n      }\n    }\n  ],\n  \"users\": [\n    {\n      \"username\": \"admin\",\n      \"enabled\": true,\n      \"emailVerified\": true,\n      \"firstName\": \"Admin\",\n      \"lastName\": \"User\",\n      \"email\": \"admin@tenant-manager.local\",\n      \"credentials\": [\n        {\n          \"type\": \"password\",\n          \"value\": \"admin123\",\n          \"temporary\": false\n        }\n      ],\n      \"realmRoles\": [\"admin\"],\n      \"clientRoles\": {\n        \"realm-management\": [\"realm-admin\"]\n      }\n    },\n    {\n      \"username\": \"operator\",\n      \"enabled\": true,\n      \"emailVerified\": true,\n      \"firstName\": \"Operator\",\n      \"lastName\": \"User\",\n      \"email\": \"operator@tenant-manager.local\",\n      \"credentials\": [\n        {\n          \"type\": \"password\",\n          \"value\": \"operator123\",\n          \"temporary\": false\n        }\n      ],\n      \"realmRoles\": [\"operator\"]\n    },\n    {\n      \"username\": \"viewer\",\n      \"enabled\": true,\n      \"emailVerified\": true,\n      \"firstName\": \"Viewer\",\n      \"lastName\": \"User\",\n      \"email\": \"viewer@tenant-manager.local\",\n      \"credentials\": [\n        {\n          \"type\": \"password\",\n          \"value\": \"viewer123\",\n          \"temporary\": false\n        }\n      ],\n      \"realmRoles\": [\"viewer\"]\n    }\n  ],\n  \"clientScopes\": [\n    {\n      \"name\": \"roles\",\n      \"protocol\": \"openid-connect\",\n      \"attributes\": {\n        \"include.in.token.scope\": \"true\",\n        \"display.on.consent.screen\": \"true\"\n      },\n      \"protocolMappers\": [\n        {\n          \"name\": \"realm roles\",\n          \"protocol\": \"openid-connect\",\n          \"protocolMapper\": \"oidc-usermodel-realm-role-mapper\",\n          \"consentRequired\": false,\n          \"config\": {\n            \"multivalued\": \"true\",\n            \"userinfo.token.claim\": \"true\",\n            \"id.token.claim\": \"true\",\n            \"access.token.claim\": \"true\",\n            \"claim.name\": \"realm_access.roles\",\n            \"jsonType.label\": \"String\"\n          }\n        }\n      ]\n    },\n    {\n      \"name\": \"email\",\n      \"description\": \"OpenID Connect built-in scope: email\",\n      \"protocol\": \"openid-connect\",\n      \"attributes\": {\n        \"include.in.token.scope\": \"true\",\n        \"display.on.consent.screen\": \"true\",\n        \"consent.screen.text\": \"${emailScopeConsentText}\"\n      },\n      \"protocolMappers\": [\n        {\n          \"name\": \"email\",\n          \"protocol\": \"openid-connect\",\n          \"protocolMapper\": \"oidc-usermodel-property-mapper\",\n          \"consentRequired\": false,\n          \"config\": {\n            \"userinfo.token.claim\": \"true\",\n            \"user.attribute\": \"email\",\n            \"id.token.claim\": \"true\",\n            \"access.token.claim\": \"true\",\n            \"claim.name\": \"email\",\n            \"jsonType.label\": \"String\"\n          }\n        },\n        {\n          \"name\": \"email verified\",\n          \"protocol\": \"openid-connect\",\n          \"protocolMapper\": \"oidc-usermodel-property-mapper\",\n          \"consentRequired\": false,\n          \"config\": {\n            \"userinfo.token.claim\": \"true\",\n            \"user.attribute\": \"emailVerified\",\n            \"id.token.claim\": \"true\",\n            \"access.token.claim\": \"true\",\n            \"claim.name\": \"email_verified\",\n            \"jsonType.label\": \"boolean\"\n          }\n        }\n      ]\n    },\n    {\n      \"name\": \"profile\",\n      \"description\": \"OpenID Connect built-in scope: profile\",\n      \"protocol\": \"openid-connect\",\n      \"attributes\": {\n        \"include.in.token.scope\": \"true\",\n        \"display.on.consent.screen\": \"true\",\n        \"consent.screen.text\": \"${profileScopeConsentText}\"\n      },\n      \"protocolMappers\": [\n        {\n          \"name\": \"username\",\n          \"protocol\": \"openid-connect\",\n          \"protocolMapper\": \"oidc-usermodel-property-mapper\",\n          \"consentRequired\": false,\n          \"config\": {\n            \"userinfo.token.claim\": \"true\",\n            \"user.attribute\": \"username\",\n            \"id.token.claim\": \"true\",\n            \"access.token.claim\": \"true\",\n            \"claim.name\": \"preferred_username\",\n            \"jsonType.label\": \"String\"\n          }\n        },\n        {\n          \"name\": \"full name\",\n          \"protocol\": \"openid-connect\",\n          \"protocolMapper\": \"oidc-full-name-mapper\",\n          \"consentRequired\": false,\n          \"config\": {\n            \"userinfo.token.claim\": \"true\",\n            \"id.token.claim\": \"true\",\n            \"access.token.claim\": \"true\"\n          }\n        },\n        {\n          \"name\": \"given name\",\n          \"protocol\": \"openid-connect\",\n          \"protocolMapper\": \"oidc-usermodel-property-mapper\",\n          \"consentRequired\": false,\n          \"config\": {\n            \"userinfo.token.claim\": \"true\",\n            \"user.attribute\": \"firstName\",\n            \"id.token.claim\": \"true\",\n            \"access.token.claim\": \"true\",\n            \"claim.name\": \"given_name\",\n            \"jsonType.label\": \"String\"\n          }\n        },\n        {\n          \"name\": \"family name\",\n          \"protocol\": \"openid-connect\",\n          \"protocolMapper\": \"oidc-usermodel-property-mapper\",\n          \"consentRequired\": false,\n          \"config\": {\n            \"userinfo.token.claim\": \"true\",\n            \"user.attribute\": \"lastName\",\n            \"id.token.claim\": \"true\",\n            \"access.token.claim\": \"true\",\n            \"claim.name\": \"family_name\",\n            \"jsonType.label\": \"String\"\n          }\n        }\n      ]\n    }\n  ],\n  \"defaultDefaultClientScopes\": [\n    \"roles\",\n    \"email\",\n    \"profile\"\n  ]\n}\n"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"keycloak-realm-import","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-03T06:42:30Z"
+    name: keycloak-realm-import
+    namespace: tenant-management
+    resourceVersion: "193481210"
+    uid: b30e12b9-f621-423c-8296-071c65a4c4cb
+- apiVersion: v1
+  data:
+    ca.crt: |
+      -----BEGIN CERTIFICATE-----
+      MIIDBTCCAe2gAwIBAgIIA1lPelMR+E0wDQYJKoZIhvcNAQELBQAwFTETMBEGA1UE
+      AxMKa3ViZXJuZXRlczAeFw0yNTA1MjAwNDI3MTZaFw0zNTA1MTgwNDMyMTZaMBUx
+      EzARBgNVBAMTCmt1YmVybmV0ZXMwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+      AoIBAQDkgzB/+/2oHshVdLuWAJmKPWw1KAkyLasUxG8SY4SM0XKb/+OY4pdKuo8s
+      j4UEwyHbEcmaYZzGomRrtxL8Ri/rPRXHSHAshl8r4mJDQIkeYS3eY8u6DwQ7aLSA
+      hzGrnDnQfphNfCF9cfQjtDhO3ThuJDWqfWE/fYS6sN4Uei6EtItNLDajuJdtG2Ij
+      OTSUlcoGbzh+uxiUmg130YzpltOL1zZzGLYgjhkzjJN6BCyl7R8xWSRU3c7afzqq
+      xM0Oe1NAzmVRRewA9qqdmuIFjZO4n5CFVFfD2wG1myyn7NcVsGIL+6xwmJMwhTQA
+      99Zdp7AeXG+YezVKg8cpN6g3x/pdAgMBAAGjWTBXMA4GA1UdDwEB/wQEAwICpDAP
+      BgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQP4W4mTDIk94qb628cpdnfFmh3AzAV
+      BgNVHREEDjAMggprdWJlcm5ldGVzMA0GCSqGSIb3DQEBCwUAA4IBAQATeQc0HsMP
+      FYnFUpictVUhOnk7pHlkf+Bh0Qf1xxynC9xkzSPwHTeNXfvwXV6dK2P07B2mqFZv
+      R8D8oGA5J0VDj6ZZl+h4oL3fQhIZ7vY4GFoSnqe3aNhO6ATdzHHfOeWDr1haa/g0
+      16+U64NZS+q3hP4Gd0hRVv9P5x+SBz6SZdbvU6h/j0pXFBFRdmZf3KRUMglp0N2/
+      MyWMNx0hCCYq5qFRH0AaEI6TP38J9aNLhx+2vVvnBc44jqoehvdpfJZq5ktBczUx
+      djnakn12bBwIz4WG0UWWhUTURyfrviLg1flmjxBXZfIZIfTPMi5dntEfhEATyF2o
+      5omvrvGP0Xtv
+      -----END CERTIFICATE-----
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubernetes.io/description: Contains a CA bundle that can be used to verify the
+        kube-apiserver when using internal endpoints such as the internal service
+        IP or kubernetes.default.svc. No other usage is guaranteed across distributions
+        of Kubernetes clusters.
+    creationTimestamp: "2026-01-01T13:01:13Z"
+    name: kube-root-ca.crt
+    namespace: tenant-management
+    resourceVersion: "190662450"
+    uid: 04d38a74-f5f6-45d7-b0b0-9cdfb2045342
+- apiVersion: v1
+  data:
+    POSTGRES_DB: keycloak
+    POSTGRES_USER: keycloak
+  kind: ConfigMap
+  metadata:
+    annotations:
+      kubectl.kubernetes.io/last-applied-configuration: |
+        {"apiVersion":"v1","data":{"POSTGRES_DB":"keycloak","POSTGRES_USER":"keycloak"},"kind":"ConfigMap","metadata":{"annotations":{},"name":"postgres-config","namespace":"tenant-management"}}
+    creationTimestamp: "2026-01-03T06:42:31Z"
+    name: postgres-config
+    namespace: tenant-management
+    resourceVersion: "192347565"
+    uid: cb4077c7-027c-47c1-92d9-385e9c4fd3dc
+kind: List
+metadata:
+  resourceVersion: ""

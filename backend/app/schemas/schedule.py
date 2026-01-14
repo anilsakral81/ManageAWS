@@ -26,7 +26,15 @@ class ScheduleBase(BaseModel):
 
 class ScheduleCreate(ScheduleBase):
     """Schema for creating a new schedule"""
-    tenant_id: int = Field(..., gt=0, description="Tenant ID")
+    tenant_id: Optional[int] = Field(None, gt=0, description="Tenant ID (deprecated, use namespace)")
+    namespace: Optional[str] = Field(None, min_length=1, max_length=255, description="Tenant namespace name")
+    
+    @field_validator("namespace")
+    @classmethod
+    def validate_namespace_or_tenant_id(cls, v: Optional[str], values) -> Optional[str]:
+        """Ensure either namespace or tenant_id is provided"""
+        # This will be validated in the service layer
+        return v
 
 
 class ScheduleUpdate(BaseModel):
@@ -53,6 +61,7 @@ class ScheduleResponse(ScheduleBase):
 
     id: int
     tenant_id: int
+    tenant_name: Optional[str] = None
     last_run_at: Optional[datetime]
     next_run_at: Optional[datetime]
     last_run_status: Optional[str]

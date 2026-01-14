@@ -1,0 +1,337 @@
+/* CVS Light Theme - Custom Styles */
+
+/* Light background for the entire page */
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%) !important;
+    font-family: 'Roboto', 'Helvetica', 'Arial', sans-serif;
+}
+
+/* Card/Container styling with light background */
+.login-pf body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #e8eef5 100%) !important;
+}
+
+#kc-container {
+    background-color: transparent !important;
+}
+
+#kc-container-wrapper {
+    background-color: transparent !important;
+}
+
+/* Login form card - white background with subtle shadow */
+.card-pf {
+    background-color: #ffffff !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08) !important;
+    border: 1px solid #e0e0e0 !important;
+    padding: 40px !important;
+}
+
+#kc-form-wrapper {
+    background-color: #ffffff !important;
+}
+
+/* Header/Logo area styling */
+#kc-header {
+    color: #1976d2 !important;
+    padding-bottom: 30px;
+}
+
+#kc-header-wrapper {
+    font-size: 28px !important;
+    font-weight: 600 !important;
+    color: #1976d2 !important;
+    text-align: center !important;
+}
+
+.kc-logo-text {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.kc-logo-text span {
+    display: block;
+    line-height: 1.4;
+}
+
+/* Form elements styling */
+.form-group {
+    margin-bottom: 24px !important;
+}
+
+.form-control {
+    background-color: #f8f9fa !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    padding: 12px 16px !important;
+    font-size: 15px !important;
+    transition: all 0.3s ease !important;
+}
+
+.form-control:focus {
+    background-color: #ffffff !important;
+    border-color: #1976d2 !important;
+    box-shadow: 0 0 0 3px rgba(25, 118, 210, 0.1) !important;
+    outline: none !important;
+}
+
+/* Label styling */
+label {
+    color: #424242 !important;
+    font-weight: 500 !important;
+    font-size: 14px !important;
+    margin-bottom: 8px !important;
+}
+
+/* Primary button - CVS blue */
+.btn-primary,
+#kc-login {
+    background-color: #1976d2 !important;
+    border-color: #1976d2 !important;
+    color: #ffffff !important;
+    border-radius: 8px !important;
+    padding: 12px 24px !important;
+    font-size: 16px !important;
+    font-weight: 500 !important;
+    text-transform: none !important;
+    transition: all 0.3s ease !important;
+    box-shadow: 0 2px 8px rgba(25, 118, 210, 0.2) !important;
+}
+
+.btn-primary:hover,
+#kc-login:hover {
+    background-color: #1565c0 !important;
+    border-color: #1565c0 !important;
+    box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3) !important;
+    transform: translateY(-1px) !important;
+}
+
+.btn-primary:active,
+#kc-login:active {
+    background-color: #0d47a1 !important;
+    transform: translateY(0) !important;
+}
+
+/* Secondary/link buttons */
+.btn-default,
+.btn-link {
+    color: #1976d2 !important;
+    background-color: transparent !important;
+    border: 2px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    transition: all 0.3s ease !important;
+}
+
+.btn-default:hover,
+.btn-link:hover {
+    background-color: #f5f7fa !important;
+    border-color: #1976d2 !important;
+    text-decoration: none !important;
+}
+
+/* Alert messages */
+.alert {
+    border-radius: 8px !important;
+    border: none !important;
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+}
+
+.alert-error {
+    background-color: #ffebee !important;
+    color: #c62828 !important;
+}
+
+.alert-warning {
+    background-color: #fff3e0 !important;
+    color: #ef6c00 !important;
+}
+
+.alert-success {
+    background-color: #e8f5e9 !important;
+    color: #2e7d32 !important;
+}
+
+.alert-info {
+    background-color: #e3f2fd !important;
+    color: #1565c0 !important;
+}
+
+/* Links */
+a {
+    color: #1976d2 !important;
+    text-decoration: none !important;
+    transition: color 0.2s ease !important;
+}
+
+a:hover {
+    color: #1565c0 !important;
+    text-decoration: underline !important;
+}
+
+/* Checkbox and radio buttons */
+.checkbox label,
+.radio label {
+    color: #424242 !important;
+    font-weight: 400 !important;
+}
+
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: #1976d2 !important;
+}
+
+/* Info text */
+#kc-info {
+    background-color: transparent !important;
+    color: #666666 !important;
+}
+
+#kc-info-wrapper {
+    font-size: 14px !important;
+    color: #666666 !important;
+}
+
+/* Remember me checkbox */
+.checkbox {
+    margin-top: 16px !important;
+    margin-bottom: 16px !important;
+}
+
+/* Forgot password link */
+#kc-form-options {
+    margin-top: 16px !important;
+}
+
+#kc-form-options span {
+    color: #666666 !important;
+    font-size: 14px !important;
+}
+
+/* Registration link */
+#kc-registration {
+    margin-top: 24px !important;
+    text-align: center !important;
+    color: #666666 !important;
+}
+
+#kc-registration span {
+    margin-right: 8px !important;
+}
+
+/* Social providers */
+#kc-social-providers {
+    margin-top: 24px !important;
+    padding-top: 24px !important;
+    border-top: 1px solid #e0e0e0 !important;
+}
+
+#kc-social-providers ul {
+    list-style: none !important;
+    padding: 0 !important;
+}
+
+#kc-social-providers li {
+    margin-bottom: 12px !important;
+}
+
+#kc-social-providers button {
+    width: 100% !important;
+    background-color: #ffffff !important;
+    border: 2px solid #e0e0e0 !important;
+    color: #424242 !important;
+    border-radius: 8px !important;
+    padding: 12px !important;
+    transition: all 0.3s ease !important;
+}
+
+#kc-social-providers button:hover {
+    background-color: #f5f7fa !important;
+    border-color: #1976d2 !important;
+}
+
+/* Feedback area */
+#kc-feedback {
+    margin-bottom: 20px !important;
+}
+
+/* Locale selector */
+#kc-locale {
+    position: absolute !important;
+    top: 20px !important;
+    right: 20px !important;
+}
+
+#kc-locale-dropdown {
+    background-color: #ffffff !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 6px !important;
+    padding: 8px 12px !important;
+    color: #424242 !important;
+}
+
+/* Content area */
+#kc-content {
+    margin-top: 20px !important;
+}
+
+/* Footer info */
+#kc-info-message {
+    color: #666666 !important;
+    font-size: 13px !important;
+}
+
+/* Terms and conditions */
+#kc-terms-text {
+    background-color: #f8f9fa !important;
+    border: 1px solid #e0e0e0 !important;
+    border-radius: 8px !important;
+    padding: 16px !important;
+    margin-bottom: 20px !important;
+    max-height: 200px !important;
+    overflow-y: auto !important;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .card-pf {
+        padding: 24px !important;
+        margin: 16px !important;
+    }
+    
+    #kc-header-wrapper {
+        font-size: 24px !important;
+    }
+}
+
+/* Loading spinner */
+.kc-spinner {
+    border-color: #1976d2 !important;
+}
+
+/* Required field indicator */
+.required {
+    color: #d32f2f !important;
+}
+
+/* Improve form layout */
+#kc-form {
+    margin-top: 20px !important;
+}
+
+#kc-form-buttons {
+    margin-top: 32px !important;
+}
+
+/* Username/email input icon support */
+.input-group-addon {
+    background-color: #f8f9fa !important;
+    border: 2px solid #e0e0e0 !important;
+    border-right: none !important;
+    color: #666666 !important;
+}
+
+.input-group .form-control:first-child {
+    border-left: none !important;
+}

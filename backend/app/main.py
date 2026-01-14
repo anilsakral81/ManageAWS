@@ -28,21 +28,33 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     await init_db()
     logger.info("Database initialized")
     
-    # TODO: Initialize scheduler
-    # TODO: Initialize Kubernetes client
+    # Initialize scheduler
+    from app.services.scheduler import SchedulerManager, set_scheduler
+    from app.database import AsyncSessionLocal
+    
+    scheduler = SchedulerManager(AsyncSessionLocal)
+    set_scheduler(scheduler)
+    scheduler.start()
+    logger.info("Scheduler initialized and started")
+    
+    # Load existing schedules from database
+    await scheduler.load_schedules()
+    logger.info("Existing schedules loaded")
     
     yield
     
     # Shutdown
     logger.info("Shutting down %s", settings.app_name)
+    scheduler.shutdown()
+    logger.info("Scheduler shut down")
     await close_db()
     logger.info("Database connections closed")
 
 
 # Create FastAPI application
 app = FastAPI(
-    title=settings.app_name,
-    description="Web-based GUI for managing AWS EKS-based SaaS tenants",
+    title="Tenant Management System for CVS SaaS Apps",
+    description="Web-based GUI for managing AWS EKS-based SaaS tenants for CVS applications",
     version="1.0.0",
     docs_url="/docs" if settings.debug else None,
     redoc_url="/redoc" if settings.debug else None,

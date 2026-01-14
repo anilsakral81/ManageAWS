@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import {
   Box,
   Drawer,
@@ -15,6 +15,8 @@ import {
   Avatar,
   Menu,
   MenuItem,
+  Stack,
+  Chip,
 } from '@mui/material'
 import {
   Menu as MenuIcon,
@@ -27,6 +29,7 @@ import {
   People as PeopleIcon,
 } from '@mui/icons-material'
 import { useNavigate, useLocation } from 'react-router-dom'
+import { useKeycloak } from '../contexts/KeycloakContext'
 
 const drawerWidth = 240
 
@@ -48,6 +51,101 @@ export default function Layout({ children }: LayoutProps) {
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const navigate = useNavigate()
   const location = useLocation()
+  const { logout, user, keycloak, authenticated } = useKeycloak()
+  
+  // Debug logging
+  useEffect(() => {
+    console.log('=== Layout User Debug ===')
+    console.log('Authenticated:', authenticated)
+    console.log('User object:', user)
+    console.log('Keycloak tokenParsed:', keycloak?.tokenParsed)
+    console.log('=====================')
+  }, [user, keycloak, authenticated])
+  
+  // Get user display name
+  const getUserDisplay = () => {
+    // Debug: show what we have
+    console.log('=== getUserDisplay Debug ===')
+    console.log('authenticated:', authenticated)
+    console.log('keycloak:', keycloak)
+    console.log('keycloak?.tokenParsed:', keycloak?.tokenParsed)
+    console.log('user:', user)
+    
+    // Try keycloak token directly first (most reliable)
+    if (keycloak?.tokenParsed) {
+      const token = keycloak.tokenParsed as any
+      console.log('Token contents:', { email: token.email, preferred_username: token.preferred_username, name: token.name })
+      if (token.email) {
+        console.log('Returning email:', token.email)
+        return token.email
+      }
+      if (token.preferred_username) {
+        console.log('Returning preferred_username:', token.preferred_username)
+        return token.preferred_username
+      }
+      if (token.name) {
+        console.log('Returning name:', token.name)
+        return token.name
+      }
+    }
+    
+    // Fallback to user state
+    if (user?.email) {
+      console.log('Returning user.email:', user.email)
+      return user.email
+    }
+    if (user?.username) {
+      console.log('Returning user.username:', user.username)
+      return user.username
+    }
+    if (user?.name) {
+      console.log('Returning user.name:', user.name)
+      return user.name
+    }
+    
+    console.log('No user info found anywhere, returning fallback')
+    // Show if authenticated at least
+    return authenticated ? 'Authenticated User' : 'User'
+  }
+
+  // Get user full name from token
+  const getUserName = (): string | null => {
+    if (keycloak?.tokenParsed) {
+      const token = keycloak.tokenParsed as any
+      // Try full name first
+      if (token.name) {
+        return token.name
+      }
+      // Construct from given_name and family_name
+      if (token.given_name || token.family_name) {
+        return [token.given_name, token.family_name].filter(Boolean).join(' ')
+      }
+    }
+    return null
+  }
+
+  // Get user ID from token
+  const getUserId = (): string | null => {
+    if (keycloak?.tokenParsed) {
+      const token = keycloak.tokenParsed as any
+      return token.sub || null
+    }
+    return null
+  }
+
+  // Get user roles from token
+  const getUserRoles = (): string[] => {
+    if (keycloak?.tokenParsed) {
+      const token = keycloak.tokenParsed as any
+      if (token.realm_access?.roles) {
+        // Filter to only show our custom roles
+        return token.realm_access.roles.filter((role: string) => 
+          ['admin', 'operator', 'viewer'].includes(role)
+        )
+      }
+    }
+    return []
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen)
@@ -67,8 +165,7 @@ export default function Layout({ children }: LayoutProps) {
   }
 
   const handleLogout = () => {
-    // TODO: Implement Keycloak logout
-    console.log('Logout clicked')
+    logout()
     handleProfileMenuClose()
   }
 
@@ -116,7 +213,7 @@ export default function Layout({ children }: LayoutProps) {
             <MenuIcon />
           </IconButton>
           <Typography variant="h6" noWrap component="div" sx={{ flexGrow: 1 }}>
-            AWS Tenant Management Portal
+            Tenant Management System for CVS SaaS Apps
           </Typography>
           <IconButton
             size="large"
@@ -145,9 +242,42 @@ export default function Layout({ children }: LayoutProps) {
             }}
             open={Boolean(anchorEl)}
             onClose={handleProfileMenuClose}
+            PaperProps={{
+              sx: { minWidth: 280 }
+            }}
           >
             <MenuItem disabled>
-              <Typography variant="body2">admin@example.com</Typography>
+              <Stack spacing={1} sx={{ width: '100%' }}>
+                {getUserName() && (
+                  <Typography variant="body2" fontWeight="bold">
+                    {getUserName()}
+                  </Typography>
+                )}
+                <Typography variant="body2" color="text.secondary">
+                  {getUserDisplay()}
+                </Typography>
+                {getUserId() && (
+                  <Typography variant="caption" color="text.secondary" fontFamily="monospace">
+                    ID: {getUserId()}
+                  </Typography>
+                )}
+                {getUserRoles().length > 0 && (
+                  <Stack direction="row" spacing={0.5} flexWrap="wrap" gap={0.5}>
+                    {getUserRoles().map((role) => (
+                      <Chip
+                        key={role}
+                        label={role}
+                        size="small"
+                        color={
+                          role === 'admin' ? 'error' : 
+                          role === 'operator' ? 'primary' : 
+                          'default'
+                        }
+                      />
+                    ))}
+                  </Stack>
+                )}
+              </Stack>
             </MenuItem>
             <Divider />
             <MenuItem onClick={() => { navigate('/settings'); handleProfileMenuClose(); }}>

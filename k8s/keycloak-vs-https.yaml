@@ -1,0 +1,90 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: keycloak-vs
+  namespace: tenant-management
+spec:
+  gateways:
+  - tenant-management-gateway
+  hosts:
+  - '*'
+  http:
+  # Keycloak realms - add X-Forwarded-Proto header for HTTPS
+  - match:
+    - uri:
+        prefix: /realms/
+    headers:
+      request:
+        set:
+          X-Forwarded-Proto: https
+          X-Forwarded-Port: "443"
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  
+  # Keycloak admin - add X-Forwarded-Proto header for HTTPS
+  - match:
+    - uri:
+        prefix: /admin/
+    headers:
+      request:
+        set:
+          X-Forwarded-Proto: https
+          X-Forwarded-Port: "443"
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  
+  # Keycloak JavaScript libraries
+  - match:
+    - uri:
+        prefix: /js/
+    headers:
+      request:
+        set:
+          X-Forwarded-Proto: https
+          X-Forwarded-Port: "443"
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  
+  # Keycloak resources (themes, etc.)
+  - match:
+    - uri:
+        prefix: /resources/
+    headers:
+      request:
+        set:
+          X-Forwarded-Proto: https
+          X-Forwarded-Port: "443"
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  
+  # Robots.txt
+  - match:
+    - uri:
+        prefix: /robots.txt
+    headers:
+      request:
+        set:
+          X-Forwarded-Proto: https
+          X-Forwarded-Port: "443"
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s

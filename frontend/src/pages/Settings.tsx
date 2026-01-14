@@ -16,16 +16,40 @@ import {
   Stack,
   Alert,
 } from '@mui/material'
-import { Save } from '@mui/icons-material'
+import { Save, VpnKey } from '@mui/icons-material'
+import { useMutation } from '@tanstack/react-query'
+import { userService, type PasswordReset } from '@/services/userService'
 
 export default function Settings() {
   const [saved, setSaved] = useState(false)
+  const [passwordData, setPasswordData] = useState<PasswordReset>({
+    password: '',
+    temporary: false,
+  })
+  const [confirmPassword, setConfirmPassword] = useState('')
+
+  // Reset own password mutation
+  const resetPasswordMutation = useMutation({
+    mutationFn: (password: PasswordReset) => userService.resetOwnPassword(password),
+    onSuccess: () => {
+      setPasswordData({ password: '', temporary: false })
+      setConfirmPassword('')
+      setSaved(true)
+      setTimeout(() => setSaved(false), 3000)
+    },
+  })
 
   const handleSave = () => {
     console.log('Settings saved')
     setSaved(true)
     setTimeout(() => setSaved(false), 3000)
     // TODO: Call API to save settings
+  }
+
+  const handleResetPassword = () => {
+    if (passwordData.password === confirmPassword && passwordData.password.length >= 8) {
+      resetPasswordMutation.mutate(passwordData)
+    }
   }
 
   return (
@@ -40,7 +64,72 @@ export default function Settings() {
         </Alert>
       )}
 
+      {resetPasswordMutation.isSuccess && (
+        <Alert severity="success" sx={{ mb: 3 }}>
+          Password changed successfully!
+        </Alert>
+      )}
+
+      {resetPasswordMutation.isError && (
+        <Alert severity="error" sx={{ mb: 3 }}>
+          Failed to change password: {resetPasswordMutation.error instanceof Error ? resetPasswordMutation.error.message : 'Unknown error'}
+        </Alert>
+      )}
+
       <Grid container spacing={3}>
+        {/* Security Settings - Password Change */}
+        <Grid item xs={12} lg={6}>
+          <Paper sx={{ p: 3 }}>
+            <Typography variant="h6" gutterBottom>
+              Security Settings
+            </Typography>
+            <Divider sx={{ mb: 3 }} />
+
+            <Stack spacing={3}>
+              <Typography variant="subtitle2" color="text.secondary">
+                Change Password
+              </Typography>
+              
+              <TextField
+                fullWidth
+                type="password"
+                label="New Password"
+                value={passwordData.password}
+                onChange={(e) => setPasswordData({ ...passwordData, password: e.target.value })}
+                helperText="Minimum 8 characters"
+              />
+
+              <TextField
+                fullWidth
+                type="password"
+                label="Confirm Password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                error={confirmPassword.length > 0 && passwordData.password !== confirmPassword}
+                helperText={
+                  confirmPassword.length > 0 && passwordData.password !== confirmPassword
+                    ? "Passwords don't match"
+                    : ""
+                }
+              />
+
+              <Button
+                variant="contained"
+                startIcon={<VpnKey />}
+                onClick={handleResetPassword}
+                disabled={
+                  !passwordData.password ||
+                  passwordData.password.length < 8 ||
+                  passwordData.password !== confirmPassword ||
+                  resetPasswordMutation.isPending
+                }
+              >
+                {resetPasswordMutation.isPending ? 'Changing Password...' : 'Change Password'}
+              </Button>
+            </Stack>
+          </Paper>
+        </Grid>
+
         {/* General Settings */}
         <Grid item xs={12} lg={6}>
           <Paper sx={{ p: 3 }}>

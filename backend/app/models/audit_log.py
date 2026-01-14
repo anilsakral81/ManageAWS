@@ -32,7 +32,7 @@ class AuditLog(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     tenant_id = Column(Integer, ForeignKey("tenants.id", ondelete="SET NULL"), nullable=True)
-    action = Column(SQLEnum(AuditAction), nullable=False, index=True)
+    action = Column(SQLEnum(AuditAction, values_callable=lambda x: [e.value for e in x]), nullable=False, index=True)
     user_id = Column(String(255), nullable=False, index=True)  # Keycloak user ID or email
     user_name = Column(String(255), nullable=True)
     

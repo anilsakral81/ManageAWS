@@ -1,0 +1,80 @@
+---
+# VirtualService to route Keycloak requests
+# Keycloak 23.x uses root paths like /realms/, /admin/, /js/, /resources/
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  name: keycloak-vs
+  namespace: tenant-management
+spec:
+  hosts:
+  - "*"
+  gateways:
+  - tenant-management-gateway  # Use the existing tenant-management gateway
+  http:
+  # Route Keycloak-specific paths
+  - match:
+    - uri:
+        prefix: /realms/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /admin/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /js/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /resources/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /robots.txt
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+    
+---
+# DestinationRule for Keycloak traffic management
+apiVersion: networking.istio.io/v1beta1
+kind: DestinationRule
+metadata:
+  name: keycloak
+  namespace: tenant-management
+spec:
+  host: keycloak
+  trafficPolicy:
+    connectionPool:
+      tcp:
+        maxConnections: 100
+      http:
+        http1MaxPendingRequests: 50
+        http2MaxRequests: 100
+        maxRequestsPerConnection: 2
+    loadBalancer:
+      simple: ROUND_ROBIN

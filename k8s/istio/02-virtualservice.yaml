@@ -17,7 +17,7 @@ spec:
       uri: /api/v1
     route:
     - destination:
-        host: backend
+        host: backend-service
         port:
           number: 8000
   # Health check endpoint for backend
@@ -28,7 +28,7 @@ spec:
       uri: /health
     route:
     - destination:
-        host: backend
+        host: backend-service
         port:
           number: 8000
   # Metrics endpoint for backend
@@ -39,7 +39,7 @@ spec:
       uri: /metrics
     route:
     - destination:
-        host: backend
+        host: backend-service
         port:
           number: 9090
   # Frontend static files and SPA routing
@@ -50,7 +50,7 @@ spec:
       uri: /
     route:
     - destination:
-        host: frontend
+        host: frontend-service
         port:
           number: 80
   # Handle exact /tm path
@@ -61,6 +61,6 @@ spec:
       uri: /
     route:
     - destination:
-        host: frontend
+        host: frontend-service
         port:
           number: 80

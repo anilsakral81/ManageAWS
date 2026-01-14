@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import select
 
 from app.models.audit_log import AuditLog
+from app.models.tenant import Tenant
 from app.schemas.audit_log import AuditLogResponse
 
 logger = logging.getLogger(__name__)
@@ -46,7 +47,25 @@ class AuditService:
         query = query.order_by(AuditLog.created_at.desc())
         result = await self.db.execute(query.offset(skip).limit(limit))
         logs = result.scalars().all()
-        return [AuditLogResponse.model_validate(log) for log in logs]
+        
+        # Get tenant names for all logs
+        tenant_ids = {log.tenant_id for log in logs if log.tenant_id}
+        tenant_names = {}
+        if tenant_ids:
+            tenant_result = await self.db.execute(
+                select(Tenant.id, Tenant.name).where(Tenant.id.in_(tenant_ids))
+            )
+            tenant_names = {tid: tname for tid, tname in tenant_result.all()}
+        
+        # Convert to response objects
+        responses = []
+        for log in logs:
+            response = AuditLogResponse.from_audit_log(log)
+            if log.tenant_id and log.tenant_id in tenant_names:
+                response.tenant_name = tenant_names[log.tenant_id]
+            responses.append(response)
+        
+        return responses
     
     async def get_audit_log(self, log_id: int, user_id: str) -> AuditLogResponse:
         """Get audit log by ID"""
@@ -57,4 +76,16 @@ class AuditService:
         if not log:
             from fastapi import HTTPException, status
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND)
-        return AuditLogResponse.model_validate(log)
+        
+        response = AuditLogResponse.from_audit_log(log)
+        
+        # Get tenant name if tenant_id exists
+        if log.tenant_id:
+            tenant_result = await self.db.execute(
+                select(Tenant.name).where(Tenant.id == log.tenant_id)
+            )
+            tenant_name = tenant_result.scalar_one_or_none()
+            if tenant_name:
+                response.tenant_name = tenant_name
+        
+        return response

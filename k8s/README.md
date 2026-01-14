@@ -1,5 +1,20 @@
 # Kubernetes Deployment Guide
 
+## 🔒 HTTPS Status
+
+✅ **HTTPS is enabled and working!**
+
+Access: https://governance.mrtmcloud.com/tm/
+
+For HTTPS setup and configuration details, see:
+- **[HTTPS_STATUS.md](HTTPS_STATUS.md)** - Current status and implementation summary
+- **[HTTPS_QUICKSTART.md](HTTPS_QUICKSTART.md)** - 5-minute quick setup guide
+- **[HTTPS_SETUP.md](HTTPS_SETUP.md)** - Comprehensive setup documentation
+
+Quick verify: `./verify-https.sh`
+
+---
+
 ## Prerequisites
 
 1. **Kubernetes Cluster**: You need a running Kubernetes cluster. Choose one:

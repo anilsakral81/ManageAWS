@@ -1,0 +1,63 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"networking.istio.io/v1beta1","kind":"VirtualService","metadata":{"annotations":{},"name":"keycloak-vs","namespace":"tenant-management"},"spec":{"gateways":["tenant-management-gateway"],"hosts":["*"],"http":[{"match":[{"uri":{"prefix":"/realms/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/admin/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/js/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/resources/"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"},{"match":[{"uri":{"prefix":"/robots.txt"}}],"route":[{"destination":{"host":"keycloak","port":{"number":8080}}}],"timeout":"60s"}]}}
+  creationTimestamp: "2026-01-03T13:37:25Z"
+  generation: 4
+  name: keycloak-vs
+  namespace: tenant-management
+  resourceVersion: "192607521"
+  uid: a6e444d0-0704-4b32-bc75-135ea7cff51a
+spec:
+  gateways:
+  - tenant-management-gateway
+  hosts:
+  - '*'
+  http:
+  - match:
+    - uri:
+        prefix: /realms/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /admin/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /js/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /resources/
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s
+  - match:
+    - uri:
+        prefix: /robots.txt
+    route:
+    - destination:
+        host: keycloak
+        port:
+          number: 8080
+    timeout: 60s

@@ -24,8 +24,8 @@ spec:
         command: ['sh', '-c', 'until nc -z postgres-service 5432; do echo waiting for postgres; sleep 2; done;']
       containers:
       - name: backend
-        image: tenant-management-backend:latest
-        imagePullPolicy: Never  # For local development
+        image: 122610483530.dkr.ecr.ap-south-1.amazonaws.com/tenant-management-backend:latest
+        imagePullPolicy: Always
         ports:
         - containerPort: 8000
           name: http
@@ -68,6 +68,22 @@ spec:
             configMapKeyRef:
               name: backend-config
               key: IN_CLUSTER
+        # Keycloak Configuration
+        - name: KEYCLOAK_URL
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: KEYCLOAK_URL
+        - name: KEYCLOAK_REALM
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: KEYCLOAK_REALM
+        - name: KEYCLOAK_CLIENT_ID
+          valueFrom:
+            configMapKeyRef:
+              name: backend-config
+              key: KEYCLOAK_CLIENT_ID
         # From Secret
         - name: DATABASE_URL
           valueFrom:
@@ -79,6 +95,16 @@ spec:
             secretKeyRef:
               name: backend-secret
               key: KEYCLOAK_CLIENT_SECRET
+        - name: KEYCLOAK_ADMIN_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: backend-secret
+              key: KEYCLOAK_ADMIN_USERNAME
+        - name: KEYCLOAK_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: backend-secret
+              key: KEYCLOAK_ADMIN_PASSWORD
         resources:
           requests:
             memory: "256Mi"
