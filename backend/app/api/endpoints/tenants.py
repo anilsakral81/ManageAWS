@@ -23,6 +23,7 @@ from app.schemas.metrics import (
 from app.schemas.user import UserInfo
 from app.services.tenant_service import TenantService
 from app.services.metrics_service import MetricsService
+from app.utils.request import get_client_ip
 
 router = APIRouter()
 
@@ -114,7 +115,7 @@ async def start_tenant(
     return await service.start_tenant(
         namespace=namespace,
         user=current_user,
-        ip_address=request.client.host if request.client else None,
+        ip_address=get_client_ip(request),
     )
 
 
@@ -141,7 +142,7 @@ async def stop_tenant(
     return await service.stop_tenant(
         namespace=namespace,
         user=current_user,
-        ip_address=request.client.host if request.client else None,
+        ip_address=get_client_ip(request),
     )
 
 

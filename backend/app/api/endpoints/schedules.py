@@ -13,6 +13,7 @@ from app.schemas.schedule import (
     ScheduleResponse,
 )
 from app.services.schedule_service import ScheduleService
+from app.utils.request import get_client_ip
 
 router = APIRouter()
 
@@ -70,7 +71,7 @@ async def create_schedule(
     return await service.create_schedule(
         schedule=schedule,
         user_id=current_user.sub,
-        ip_address=request.client.host if request.client else None,
+        ip_address=get_client_ip(request),
     )
 
 
@@ -131,7 +132,7 @@ async def update_schedule(
         schedule_id=schedule_id,
         schedule_update=schedule_update,
         user_id=current_user.sub,
-        ip_address=request.client.host if request.client else None,
+        ip_address=get_client_ip(request),
     )
 
 
@@ -155,5 +156,5 @@ async def delete_schedule(
     await service.delete_schedule(
         schedule_id=schedule_id,
         user_id=current_user.sub,
-        ip_address=request.client.host if request.client else None,
+        ip_address=get_client_ip(request),
     )
