@@ -28,13 +28,30 @@ interface CronPreset {
   description: string
 }
 
-const PRESETS: CronPreset[] = [
-  { label: 'Every day at 6 PM', cron: '0 18 * * *', description: 'Daily at 6:00 PM' },
-  { label: 'Every day at 8 AM', cron: '0 8 * * *', description: 'Daily at 8:00 AM' },
-  { label: 'Every day at 10 PM', cron: '0 22 * * *', description: 'Daily at 10:00 PM' },
-  { label: 'Weekdays at 6 PM', cron: '0 18 * * 1-5', description: 'Monday-Friday at 6:00 PM' },
-  { label: 'Weekdays at 8 AM', cron: '0 8 * * 1-5', description: 'Monday-Friday at 8:00 AM' },
-  { label: 'Weekend at 10 AM', cron: '0 10 * * 0,6', description: 'Saturday-Sunday at 10:00 AM' },
+// Helper function to convert local time to UTC cron
+const getUTCCron = (localHour: number, localMinute: number, days: string): string => {
+  const now = new Date()
+  const localDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), localHour, localMinute)
+  const utcHour = localDate.getUTCHours()
+  const utcMinute = localDate.getUTCMinutes()
+  return `${utcMinute} ${utcHour} * * ${days}`
+}
+
+// Helper to get local time display
+const getLocalTimeDisplay = (hour: number): string => {
+  const hour12 = hour % 12 || 12
+  const amPm = hour >= 12 ? 'PM' : 'AM'
+  return `${hour12}:00 ${amPm}`
+}
+
+// Generate presets with local time
+const getPresets = (): CronPreset[] => [
+  { label: `Every day at ${getLocalTimeDisplay(18)}`, cron: getUTCCron(18, 0, '*'), description: `Daily at ${getLocalTimeDisplay(18)}` },
+  { label: `Every day at ${getLocalTimeDisplay(8)}`, cron: getUTCCron(8, 0, '*'), description: `Daily at ${getLocalTimeDisplay(8)}` },
+  { label: `Every day at ${getLocalTimeDisplay(22)}`, cron: getUTCCron(22, 0, '*'), description: `Daily at ${getLocalTimeDisplay(22)}` },
+  { label: `Weekdays at ${getLocalTimeDisplay(18)}`, cron: getUTCCron(18, 0, '1-5'), description: `Monday-Friday at ${getLocalTimeDisplay(18)}` },
+  { label: `Weekdays at ${getLocalTimeDisplay(8)}`, cron: getUTCCron(8, 0, '1-5'), description: `Monday-Friday at ${getLocalTimeDisplay(8)}` },
+  { label: `Weekend at ${getLocalTimeDisplay(10)}`, cron: getUTCCron(10, 0, '0,6'), description: `Saturday-Sunday at ${getLocalTimeDisplay(10)}` },
   { label: 'Every 6 hours', cron: '0 */6 * * *', description: 'Every 6 hours' },
   { label: 'Every 12 hours', cron: '0 */12 * * *', description: 'Every 12 hours' },
 ]
@@ -52,6 +69,7 @@ const DAYS_OF_WEEK = [
 export default function CronBuilder({ value, onChange, error }: CronBuilderProps) {
   const [mode, setMode] = useState<'preset' | 'simple' | 'advanced'>('preset')
   const [selectedPreset, setSelectedPreset] = useState('')
+  const PRESETS = getPresets()
   
   // Simple mode state (in local time)
   const [hour, setHour] = useState('18')
@@ -64,7 +82,8 @@ export default function CronBuilder({ value, onChange, error }: CronBuilderProps
   useEffect(() => {
     // Initialize based on current value
     if (value) {
-      const preset = PRESETS.find(p => p.cron === value)
+      const presets = getPresets()
+      const preset = presets.find(p => p.cron === value)
       if (preset) {
         setMode('preset')
         setSelectedPreset(value)
@@ -139,10 +158,23 @@ export default function CronBuilder({ value, onChange, error }: CronBuilderProps
       timeStr = `at ${localHour12}:${localMinute.toString().padStart(2, '0')} ${localAmPm} ${tzAbbr} (${utcHour12}:${utcMinute.toString().padStart(2, '0')} ${utcAmPm} UTC)`
     }
     
+    // Get day description with day names
     let dayStr = 'every day'
-    if (day === '1-5') dayStr = 'on weekdays (Mon-Fri)'
-    else if (day === '0,6') dayStr = 'on weekends (Sat-Sun)'
-    else if (day !== '*') dayStr = `on selected days`
+    if (day === '1-5') {
+      dayStr = 'on weekdays (Mon-Fri)'
+    } else if (day === '0,6') {
+      dayStr = 'on weekends (Sat-Sun)'
+    } else if (day === '1,2,3,4,5') {
+      dayStr = 'on weekdays (Mon-Fri)'
+    } else if (day !== '*') {
+      const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+      const selectedDays = day.split(',').map(d => dayNames[parseInt(d)]).filter(Boolean)
+      if (selectedDays.length > 0) {
+        dayStr = `on ${selectedDays.join(', ')}`
+      } else {
+        dayStr = 'on selected days'
+      }
+    }
     
     return `Runs ${timeStr} ${dayStr}`
   }

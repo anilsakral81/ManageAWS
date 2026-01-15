@@ -438,10 +438,10 @@ export default function Schedules() {
                 const tenantName = tenant?.name || formData.namespace
                 const action = formData.action === 'start' ? 'Start' : 'Stop'
                 
-                // Get local time from cron
+                // Get local time and timezone from cron
                 const parts = value.split(' ')
                 if (parts.length >= 5) {
-                  const [min, hr] = parts
+                  const [min, hr, , , day] = parts
                   const utcHour = parseInt(hr)
                   const utcMinute = parseInt(min)
                   
@@ -452,8 +452,24 @@ export default function Schedules() {
                   const localHour12 = localHour % 12 || 12
                   const amPm = localHour >= 12 ? 'PM' : 'AM'
                   
-                  const timeStr = `${localHour12}:${localMinute.toString().padStart(2, '0')} ${amPm}`
-                  const description = `${action} ${tenantName} at ${timeStr}`
+                  const tzAbbr = new Date().toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop()
+                  const timeStr = `${localHour12}:${localMinute.toString().padStart(2, '0')} ${amPm} ${tzAbbr}`
+                  
+                  // Get days description
+                  let daysStr = ''
+                  if (day === '1-5' || day === '1,2,3,4,5') {
+                    daysStr = ' on weekdays'
+                  } else if (day === '0,6') {
+                    daysStr = ' on weekends'
+                  } else if (day !== '*') {
+                    const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+                    const selectedDays = day.split(',').map(d => dayNames[parseInt(d)]).filter(Boolean)
+                    if (selectedDays.length > 0 && selectedDays.length < 7) {
+                      daysStr = ` on ${selectedDays.join(', ')}`
+                    }
+                  }
+                  
+                  const description = `${action} ${tenantName} at ${timeStr}${daysStr}`
                   
                   setFormData({ ...formData, cron_expression: value, description })
                 } else {
