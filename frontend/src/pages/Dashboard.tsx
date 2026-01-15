@@ -10,6 +10,7 @@ import {
   Chip,
   CircularProgress,
   Alert,
+  Stack,
 } from '@mui/material'
 import {
   TrendingUp,
@@ -221,17 +222,23 @@ export default function Dashboard() {
                       </Grid>
                       {tenant.virtualservices && tenant.virtualservices.length > 0 && (
                         <Grid item xs={12} sm={6}>
-                          <Typography variant="body2" color="textSecondary">
-                            Host:{' '}
-                            <a
-                              href={`http://${tenant.virtualservices[0].host}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              style={{ color: '#1976d2', textDecoration: 'none' }}
-                            >
-                              {tenant.virtualservices[0].host}
-                            </a>
+                          <Typography variant="body2" color="textSecondary" gutterBottom>
+                            {tenant.virtualservices.length === 1 ? 'Host:' : 'Hosts:'}
                           </Typography>
+                          <Stack spacing={0.5}>
+                            {tenant.virtualservices.map((vs, index) => (
+                              <Typography key={index} variant="body2">
+                                <a
+                                  href={`http://${vs.host}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  style={{ color: '#1976d2', textDecoration: 'none' }}
+                                >
+                                  {vs.host}
+                                </a>
+                              </Typography>
+                            ))}
+                          </Stack>
                         </Grid>
                       )}
                     </Grid>

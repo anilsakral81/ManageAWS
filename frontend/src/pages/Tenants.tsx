@@ -319,14 +319,19 @@ export default function Tenants() {
                   </TableCell>
                   <TableCell>
                     {tenant.virtualservices && tenant.virtualservices.length > 0 ? (
-                      <a
-                        href={`http://${tenant.virtualservices[0].host}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        style={{ textDecoration: 'none', color: '#1976d2' }}
-                      >
-                        {tenant.virtualservices[0].host}
-                      </a>
+                      <Stack spacing={0.5}>
+                        {tenant.virtualservices.map((vs, index) => (
+                          <a
+                            key={index}
+                            href={`http://${vs.host}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ textDecoration: 'none', color: '#1976d2', display: 'block' }}
+                          >
+                            {vs.host}
+                          </a>
+                        ))}
+                      </Stack>
                     ) : (
                       <Typography variant="body2" color="textSecondary">N/A</Typography>
                     )}
