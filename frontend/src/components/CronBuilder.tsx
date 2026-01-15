@@ -107,11 +107,30 @@ export default function CronBuilder({ value, onChange, error }: CronBuilderProps
     
     const [min, hr, , , day] = parts
     
-    let timeStr = `at ${hr.padStart(2, '0')}:${min.padStart(2, '0')}`
+    let timeStr = ''
     
     if (hr.includes('*/')) {
       const interval = hr.split('*/')[1]
       timeStr = `every ${interval} hours`
+    } else {
+      // Convert UTC time to local time
+      const utcHour = parseInt(hr)
+      const utcMinute = parseInt(min)
+      
+      const now = new Date()
+      const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), utcHour, utcMinute))
+      
+      const localHour = utcDate.getHours()
+      const localMinute = utcDate.getMinutes()
+      const localHour12 = localHour % 12 || 12
+      const localAmPm = localHour >= 12 ? 'PM' : 'AM'
+      
+      const utcHour12 = utcHour % 12 || 12
+      const utcAmPm = utcHour >= 12 ? 'PM' : 'AM'
+      
+      const tzAbbr = new Date().toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop()
+      
+      timeStr = `at ${localHour12}:${localMinute.toString().padStart(2, '0')} ${localAmPm} ${tzAbbr} (${utcHour12}:${utcMinute.toString().padStart(2, '0')} ${utcAmPm} UTC)`
     }
     
     let dayStr = 'every day'
@@ -169,18 +188,27 @@ export default function CronBuilder({ value, onChange, error }: CronBuilderProps
         {mode === 'simple' && (
           <Stack spacing={2}>
             <Stack direction="row" spacing={2}>
-              <FormControl size="small" sx={{ minWidth: 100 }}>
-                <InputLabel>Hour</InputLabel>
+              <FormControl size="small" sx={{ minWidth: 180 }}>
+                <InputLabel>Hour (UTC)</InputLabel>
                 <Select
                   value={hour}
-                  label="Hour"
+                  label="Hour (UTC)"
                   onChange={(e) => setHour(e.target.value)}
                 >
-                  {Array.from({ length: 24 }, (_, i) => (
-                    <MenuItem key={i} value={i.toString()}>
-                      {i.toString().padStart(2, '0')}:00
-                    </MenuItem>
-                  ))}
+                  {Array.from({ length: 24 }, (_, i) => {
+                    // Calculate local time equivalent
+                    const now = new Date()
+                    const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), i, 0))
+                    const localHour = utcDate.getHours()
+                    const localHour12 = localHour % 12 || 12
+                    const amPm = localHour >= 12 ? 'PM' : 'AM'
+                    
+                    return (
+                      <MenuItem key={i} value={i.toString()}>
+                        {i.toString().padStart(2, '0')}:00 UTC ({localHour12}:00 {amPm})
+                      </MenuItem>
+                    )
+                  })}
                 </Select>
               </FormControl>
               
