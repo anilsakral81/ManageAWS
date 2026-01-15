@@ -97,26 +97,26 @@ function getNextRunTime(cronExpression: string): string {
           continue
         }
         
-        // Format in local timezone
-        const localTime = scheduledTime.toLocaleString(undefined, {
+        // Format date
+        const dateStr = scheduledTime.toLocaleDateString(undefined, {
           month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true
+          day: 'numeric'
         })
         
-        // Format in UTC
-        const utcTime = scheduledTime.toLocaleString('en-US', {
-          month: 'short',
-          day: 'numeric',
-          hour: '2-digit',
-          minute: '2-digit',
-          hour12: true,
-          timeZone: 'UTC'
-        })
+        // Format local time in 24-hour format
+        const localHour = scheduledTime.getHours()
+        const localMinute = scheduledTime.getMinutes()
+        const localTimeStr = `${localHour.toString().padStart(2, '0')}:${localMinute.toString().padStart(2, '0')}`
         
-        return `${localTime} (${utcTime} UTC)`
+        // Format UTC time
+        const utcHour = scheduledTime.getUTCHours()
+        const utcMinute = scheduledTime.getUTCMinutes()
+        const utcTimeStr = `${utcHour.toString().padStart(2, '0')}:${utcMinute.toString().padStart(2, '0')}`
+        
+        // Get timezone abbreviation
+        const tzAbbr = scheduledTime.toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop()
+        
+        return `${dateStr}, ${localTimeStr} ${tzAbbr} (${utcTimeStr} UTC)`
       }
     }
     
