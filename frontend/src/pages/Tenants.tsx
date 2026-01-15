@@ -365,7 +365,7 @@ export default function Tenants() {
                         </IconButton>
                       </Tooltip>
                       <Tooltip title="Manage Schedule">
-                        <IconButton size="small" onClick={() => navigate('/schedules')}>
+                        <IconButton size="small" onClick={() => navigate(`/schedules?tenant_id=${tenant.id}`)}>
                           <ScheduleIcon />
                         </IconButton>
                       </Tooltip>

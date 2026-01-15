@@ -57,6 +57,9 @@ class AuditService:
             )
             tenant_names = {tid: tname for tid, tname in tenant_result.all()}
         
+        # Fetch user names from Keycloak for logs missing user_name
+        await self._backfill_user_names(logs)
+        
         # Convert to response objects
         responses = []
         for log in logs:
@@ -66,6 +69,67 @@ class AuditService:
             responses.append(response)
         
         return responses
+    
+    async def _backfill_user_names(self, logs: List[AuditLog]) -> None:
+        """Fetch user names from Keycloak for logs missing user_name"""
+        import httpx
+        from app.config import settings
+        
+        # Find logs that need user names
+        logs_needing_names = [log for log in logs if not log.user_name and log.user_id and log.user_id != "scheduler"]
+        
+        if not logs_needing_names:
+            return
+        
+        try:
+            async with httpx.AsyncClient() as client:
+                # Get admin token
+                token_response = await client.post(
+                    f"{settings.keycloak_url}/realms/master/protocol/openid-connect/token",
+                    data={
+                        "username": settings.keycloak_admin_username,
+                        "password": settings.keycloak_admin_password,
+                        "grant_type": "password",
+                        "client_id": "admin-cli",
+                    },
+                )
+                
+                if token_response.status_code != 200:
+                    logger.warning("Failed to get Keycloak admin token for user name backfill")
+                    return
+                
+                access_token = token_response.json()["access_token"]
+                
+                # Fetch user names for each unique user_id
+                user_ids_to_fetch = {log.user_id for log in logs_needing_names}
+                user_names_cache = {}
+                
+                for user_id in user_ids_to_fetch:
+                    try:
+                        user_response = await client.get(
+                            f"{settings.keycloak_url}/admin/realms/{settings.keycloak_realm}/users/{user_id}",
+                            headers={"Authorization": f"Bearer {access_token}"},
+                        )
+                        
+                        if user_response.status_code == 200:
+                            user_data = user_response.json()
+                            first_name = user_data.get("firstName", "")
+                            last_name = user_data.get("lastName", "")
+                            user_name = f"{first_name} {last_name}".strip() or user_data.get("email", user_data.get("username", ""))
+                            user_names_cache[user_id] = user_name
+                        else:
+                            logger.debug(f"User {user_id} not found in Keycloak")
+                    except Exception as e:
+                        logger.debug(f"Error fetching user {user_id}: {e}")
+                        continue
+                
+                # Update logs with fetched names
+                for log in logs_needing_names:
+                    if log.user_id in user_names_cache:
+                        log.user_name = user_names_cache[log.user_id]
+                        
+        except Exception as e:
+            logger.warning(f"Error backfilling user names: {e}")
     
     async def get_audit_log(self, log_id: int, user_id: str) -> AuditLogResponse:
         """Get audit log by ID"""

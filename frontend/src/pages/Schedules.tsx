@@ -28,14 +28,16 @@ import {
   CircularProgress,
   Alert,
 } from '@mui/material'
-import { Add, Edit, Delete } from '@mui/icons-material'
+import { Add, Edit, Delete, Clear } from '@mui/icons-material'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
+import { useSearchParams } from 'react-router-dom'
 import { scheduleService } from '@/services/scheduleService'
 import { tenantService } from '@/services/tenantService'
 import { Schedule, ScheduleCreate } from '@/types'
 import CronBuilder from '@/components/CronBuilder'
 
 export default function Schedules() {
+  const [searchParams, setSearchParams] = useSearchParams()
   const [openDialog, setOpenDialog] = useState(false)
   const [editingSchedule, setEditingSchedule] = useState<Schedule | null>(null)
   const [formData, setFormData] = useState<ScheduleCreate>({
@@ -48,10 +50,14 @@ export default function Schedules() {
   })
   const queryClient = useQueryClient()
 
-  // Fetch schedules
+  // Get tenant_id from URL params
+  const tenantIdParam = searchParams.get('tenant_id')
+  const filterTenantId = tenantIdParam ? parseInt(tenantIdParam, 10) : undefined
+
+  // Fetch schedules (filtered by tenant if specified)
   const { data: schedules = [], isLoading, error } = useQuery({
-    queryKey: ['schedules'],
-    queryFn: () => scheduleService.list(),
+    queryKey: ['schedules', filterTenantId],
+    queryFn: () => scheduleService.list(filterTenantId),
   })
 
   // Fetch tenants for dropdown
@@ -59,6 +65,9 @@ export default function Schedules() {
     queryKey: ['tenants'],
     queryFn: () => tenantService.list(),
   })
+
+  // Get the filtered tenant name for display
+  const filteredTenant = filterTenantId ? tenants.find(t => t.id === filterTenantId) : null
 
   // Create schedule mutation
   const createMutation = useMutation({
@@ -90,8 +99,10 @@ export default function Schedules() {
   })
 
   const resetForm = () => {
+    // Pre-fill tenant namespace if filtered by tenant
+    const defaultNamespace = filteredTenant ? filteredTenant.namespace : ''
     setFormData({
-      namespace: '',
+      namespace: defaultNamespace,
       action: 'start',
       cron_expression: '',
       timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
@@ -143,10 +154,25 @@ export default function Schedules() {
 
   const isFormValid = formData.namespace && formData.namespace.trim() !== '' && formData.cron_expression.trim() !== ''
 
+  const clearTenantFilter = () => {
+    setSearchParams({})
+  }
+
   return (
     <Box>
       <Box display="flex" justifyContent="space-between" alignItems="center" mb={3}>
-        <Typography variant="h4">Schedules</Typography>
+        <Box display="flex" alignItems="center" gap={2}>
+          <Typography variant="h4">Schedules</Typography>
+          {filteredTenant && (
+            <Chip
+              label={`Filtered: ${filteredTenant.name}`}
+              onDelete={clearTenantFilter}
+              deleteIcon={<Clear />}
+              color="primary"
+              size="small"
+            />
+          )}
+        </Box>
         <Button variant="contained" startIcon={<Add />} onClick={handleAddSchedule}>
           Add Schedule
         </Button>
