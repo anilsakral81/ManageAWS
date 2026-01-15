@@ -98,13 +98,25 @@ function getNextRunTime(cronExpression: string): string {
         }
         
         // Format in local timezone
-        return scheduledTime.toLocaleString(undefined, {
+        const localTime = scheduledTime.toLocaleString(undefined, {
           month: 'short',
           day: 'numeric',
           hour: '2-digit',
           minute: '2-digit',
           hour12: true
         })
+        
+        // Format in UTC
+        const utcTime = scheduledTime.toLocaleString('en-US', {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true,
+          timeZone: 'UTC'
+        })
+        
+        return `${localTime} (${utcTime} UTC)`
       }
     }
     
