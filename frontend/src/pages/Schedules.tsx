@@ -36,6 +36,84 @@ import { tenantService } from '@/services/tenantService'
 import { Schedule, ScheduleCreate } from '@/types'
 import CronBuilder from '@/components/CronBuilder'
 
+// Helper function to get human-readable time from cron expression
+function getCronTimeDescription(cronExpression: string): string {
+  const parts = cronExpression.split(' ')
+  if (parts.length < 5) return 'Invalid cron'
+  
+  const [minute, hour] = parts
+  
+  // Convert to local timezone
+  const utcHour = parseInt(hour)
+  const utcMinute = parseInt(minute)
+  
+  // Create a UTC date and convert to local
+  const now = new Date()
+  const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), utcHour, utcMinute))
+  
+  const localHour = utcDate.getHours()
+  const localMinute = utcDate.getMinutes()
+  
+  const timeStr = `${localHour.toString().padStart(2, '0')}:${localMinute.toString().padStart(2, '0')}`
+  const utcTimeStr = `${utcHour.toString().padStart(2, '0')}:${utcMinute.toString().padStart(2, '0')}`
+  
+  // Get timezone abbreviation
+  const tzAbbr = new Date().toLocaleTimeString('en-US', { timeZoneName: 'short' }).split(' ').pop()
+  
+  return `${timeStr} ${tzAbbr} (${utcTimeStr} UTC)`
+}
+
+// Helper function to calculate next run time
+function getNextRunTime(cronExpression: string): string {
+  try {
+    const parts = cronExpression.split(' ')
+    if (parts.length < 5) return 'N/A'
+    
+    const [minute, hour, , , dayOfWeek] = parts
+    
+    const now = new Date()
+    
+    // Parse day of week (1-5 = Mon-Fri in cron)
+    const allowedDays = dayOfWeek.split(',').map(d => parseInt(d) % 7) // Convert to 0-6 where 0=Sunday
+    
+    // Find next occurrence
+    for (let daysAhead = 0; daysAhead < 7; daysAhead++) {
+      const checkDate = new Date(now)
+      checkDate.setDate(checkDate.getDate() + daysAhead)
+      const checkDay = checkDate.getDay()
+      
+      if (allowedDays.includes(checkDay)) {
+        // Set to the scheduled time in UTC
+        const scheduledTime = new Date(Date.UTC(
+          checkDate.getUTCFullYear(),
+          checkDate.getUTCMonth(),
+          checkDate.getUTCDate(),
+          parseInt(hour),
+          parseInt(minute)
+        ))
+        
+        // If it's today but the time has passed, skip to next occurrence
+        if (daysAhead === 0 && scheduledTime <= now) {
+          continue
+        }
+        
+        // Format in local timezone
+        return scheduledTime.toLocaleString(undefined, {
+          month: 'short',
+          day: 'numeric',
+          hour: '2-digit',
+          minute: '2-digit',
+          hour12: true
+        })
+      }
+    }
+    
+    return 'N/A'
+  } catch (error) {
+    return 'N/A'
+  }
+}
+
 export default function Schedules() {
   const [searchParams, setSearchParams] = useSearchParams()
   const [openDialog, setOpenDialog] = useState(false)
@@ -232,13 +310,11 @@ export default function Schedules() {
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" fontFamily="monospace">
-                      {schedule.cron_expression} (UTC)
+                      {schedule.cron_expression}
                     </Typography>
-                    {schedule.timezone && schedule.timezone !== 'UTC' && (
-                      <Typography variant="caption" color="textSecondary" display="block">
-                        Your timezone: {schedule.timezone}
-                      </Typography>
-                    )}
+                    <Typography variant="caption" color="textSecondary" display="block">
+                      {getCronTimeDescription(schedule.cron_expression)}
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <Typography variant="body2" color="textSecondary">
@@ -246,7 +322,18 @@ export default function Schedules() {
                     </Typography>
                   </TableCell>
                   <TableCell>
-                    <Typography variant="body2">{schedule.next_run || 'N/A'}</Typography>
+                    <Typography variant="body2">
+                      {schedule.next_run 
+                        ? new Date(schedule.next_run).toLocaleString(undefined, {
+                            month: 'short',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                            hour12: true
+                          })
+                        : getNextRunTime(schedule.cron_expression)
+                      }
+                    </Typography>
                   </TableCell>
                   <TableCell>
                     <Chip
