@@ -53,7 +53,7 @@ export default function CronBuilder({ value, onChange, error }: CronBuilderProps
   const [mode, setMode] = useState<'preset' | 'simple' | 'advanced'>('preset')
   const [selectedPreset, setSelectedPreset] = useState('')
   
-  // Simple mode state
+  // Simple mode state (in local time)
   const [hour, setHour] = useState('18')
   const [minute, setMinute] = useState('0')
   const [selectedDays, setSelectedDays] = useState<string[]>(['1', '2', '3', '4', '5'])
@@ -80,12 +80,18 @@ export default function CronBuilder({ value, onChange, error }: CronBuilderProps
   }
 
   const handleSimpleModeUpdate = () => {
-    // Build cron from simple inputs
+    // Convert local time to UTC
+    const now = new Date()
+    const localDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), parseInt(hour), parseInt(minute))
+    const utcHour = localDate.getUTCHours()
+    const utcMinute = localDate.getUTCMinutes()
+    
+    // Build cron from simple inputs in UTC
     const daysPart = selectedDays.length === 7 
       ? '*' 
       : selectedDays.sort().join(',')
     
-    const cron = `${minute} ${hour} * * ${daysPart}`
+    const cron = `${utcMinute} ${utcHour} * * ${daysPart}`
     onChange(cron)
   }
 
@@ -188,24 +194,19 @@ export default function CronBuilder({ value, onChange, error }: CronBuilderProps
         {mode === 'simple' && (
           <Stack spacing={2}>
             <Stack direction="row" spacing={2}>
-              <FormControl size="small" sx={{ minWidth: 180 }}>
-                <InputLabel>Hour (UTC)</InputLabel>
+              <FormControl size="small" sx={{ minWidth: 120 }}>
+                <InputLabel>Hour</InputLabel>
                 <Select
                   value={hour}
-                  label="Hour (UTC)"
+                  label="Hour"
                   onChange={(e) => setHour(e.target.value)}
                 >
                   {Array.from({ length: 24 }, (_, i) => {
-                    // Calculate local time equivalent
-                    const now = new Date()
-                    const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), i, 0))
-                    const localHour = utcDate.getHours()
-                    const localHour12 = localHour % 12 || 12
-                    const amPm = localHour >= 12 ? 'PM' : 'AM'
-                    
+                    const hour12 = i % 12 || 12
+                    const amPm = i >= 12 ? 'PM' : 'AM'
                     return (
                       <MenuItem key={i} value={i.toString()}>
-                        {i.toString().padStart(2, '0')}:00 UTC ({localHour12}:00 {amPm})
+                        {hour12}:00 {amPm}
                       </MenuItem>
                     )
                   })}

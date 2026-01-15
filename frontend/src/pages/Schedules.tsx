@@ -412,7 +412,18 @@ export default function Schedules() {
               <Select 
                 label="Action" 
                 value={formData.action}
-                onChange={(e) => setFormData({ ...formData, action: e.target.value as 'start' | 'stop' })}
+                onChange={(e) => {
+                  const newAction = e.target.value as 'start' | 'stop'
+                  // Update description if it exists
+                  if (formData.description) {
+                    const action = newAction === 'start' ? 'Start' : 'Stop'
+                    const oldAction = formData.action === 'start' ? 'Start' : 'Stop'
+                    const newDescription = formData.description.replace(oldAction, action)
+                    setFormData({ ...formData, action: newAction, description: newDescription })
+                  } else {
+                    setFormData({ ...formData, action: newAction })
+                  }
+                }}
               >
                 <MenuItem value="start">Start</MenuItem>
                 <MenuItem value="stop">Stop</MenuItem>
@@ -421,7 +432,34 @@ export default function Schedules() {
 
             <CronBuilder
               value={formData.cron_expression}
-              onChange={(value) => setFormData({ ...formData, cron_expression: value })}
+              onChange={(value) => {
+                // Auto-generate description
+                const tenant = tenants.find(t => t.namespace === formData.namespace)
+                const tenantName = tenant?.name || formData.namespace
+                const action = formData.action === 'start' ? 'Start' : 'Stop'
+                
+                // Get local time from cron
+                const parts = value.split(' ')
+                if (parts.length >= 5) {
+                  const [min, hr] = parts
+                  const utcHour = parseInt(hr)
+                  const utcMinute = parseInt(min)
+                  
+                  const now = new Date()
+                  const utcDate = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate(), utcHour, utcMinute))
+                  const localHour = utcDate.getHours()
+                  const localMinute = utcDate.getMinutes()
+                  const localHour12 = localHour % 12 || 12
+                  const amPm = localHour >= 12 ? 'PM' : 'AM'
+                  
+                  const timeStr = `${localHour12}:${localMinute.toString().padStart(2, '0')} ${amPm}`
+                  const description = `${action} ${tenantName} at ${timeStr}`
+                  
+                  setFormData({ ...formData, cron_expression: value, description })
+                } else {
+                  setFormData({ ...formData, cron_expression: value })
+                }
+              }}
             />
 
             <Alert severity="info" sx={{ mt: 1 }}>
